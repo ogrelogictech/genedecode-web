@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" /><title>Gene Decode — Deep Dives</title>
+<link rel="icon" href="assets/logo.png" /><link rel="stylesheet" href="styles.css" />
+</head><body data-page="deep-dives">
+<div id="site-header"></div>
+
+<section class="pagehero"><div class="wrap">
+  <span class="kicker">Members library</span>
+  <h1>Deep Dives</h1>
+  <p>Every Deep Dive video, Q&amp;A Zoom, exclusive decode, and the monthly content, in one place. Pick up where you left off on any device.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="chips">
+    <span class="chip on">All</span><span class="chip">Deep Dives</span><span class="chip">Pearls of Wisdom</span><span class="chip">Q&amp;A Zooms</span><span class="chip">Monthly content</span>
+  </div>
+
+  <div class="rowhead"><h2><span class="bar"></span>Continue watching</h2></div>
+  <div class="rowscroll" id="row-continue"></div>
+
+  <div class="rowhead" style="margin-top:34px"><h2><span class="bar"></span>Latest Deep Dives</h2><span class="all">See all</span></div>
+  <div class="rowscroll" id="row-deep"></div>
+
+  <div class="rowhead" style="margin-top:34px"><h2><span class="bar"></span>Pearls of Wisdom</h2><span class="all">See all</span></div>
+  <div class="rowscroll" id="row-pearls"></div>
+
+  <div class="rowhead" style="margin-top:34px"><h2><span class="bar"></span>Q&amp;A Zooms with Gene</h2><span class="all">See all</span></div>
+  <div class="rowscroll" id="row-qa"></div>
+</div></section>
+
+<div id="site-footer"></div>
+<script src="app.js"></script><script src="catalog.js"></script>
+<script>
+  render("row-continue", VIDEOS.filter(function(v){return v.p>0}));
+  render("row-deep", byCat("Deep Dive"));
+  render("row-pearls", byCat("Pearls of Wisdom"));
+  render("row-qa", byCat("Q&A"));
+</script>
+</body></html>

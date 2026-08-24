@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" /><title>Gene Decode — Interviews & Videos</title>
+<link rel="icon" href="assets/logo.png" /><link rel="stylesheet" href="styles.css" />
+</head><body data-page="interviews">
+<div id="site-header"></div>
+
+<section class="pagehero"><div class="wrap">
+  <span class="kicker">Free public library</span>
+  <h1>Interviews &amp; Videos</h1>
+  <p>Gene's interviews from across many platforms, free to watch. Topics include Current Events, DUMBs, World Government, True History, and more. For the full library, subscribe to Deep Dives.</p>
+  <div style="margin-top:16px"><a class="btn" href="join-us.html">Subscribe to Deep Dives</a></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="chips">
+    <span class="chip on">All</span><span class="chip">Newest</span><span class="chip">Most popular</span>
+  </div>
+  <div class="grid" id="grid-interviews"></div>
+</div></section>
+
+<div id="site-footer"></div>
+<script src="app.js"></script><script src="catalog.js"></script>
+<script>render("grid-interviews", byCat("Interview"));</script>
+</body></html>
