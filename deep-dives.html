@@ -13,29 +13,25 @@
 </div></section>
 
 <section><div class="wrap">
-  <div class="chips">
-    <span class="chip on">All</span><span class="chip">Deep Dives</span><span class="chip">Pearls of Wisdom</span><span class="chip">Q&amp;A Zooms</span><span class="chip">Monthly content</span>
-  </div>
-
   <div class="rowhead"><h2><span class="bar"></span>Continue watching</h2></div>
   <div class="rowscroll" id="row-continue"></div>
 
-  <div class="rowhead" style="margin-top:34px"><h2><span class="bar"></span>Latest Deep Dives</h2><span class="all">See all</span></div>
-  <div class="rowscroll" id="row-deep"></div>
-
-  <div class="rowhead" style="margin-top:34px"><h2><span class="bar"></span>Pearls of Wisdom</h2><span class="all">See all</span></div>
-  <div class="rowscroll" id="row-pearls"></div>
-
-  <div class="rowhead" style="margin-top:34px"><h2><span class="bar"></span>Q&amp;A Zooms with Gene</h2><span class="all">See all</span></div>
-  <div class="rowscroll" id="row-qa"></div>
+  <div class="rowhead" style="margin-top:40px"><h2><span class="bar"></span>Browse the library</h2></div>
+  <div class="chips" id="dd-chips">
+    <span class="chip on" data-val="All">All</span>
+    <span class="chip" data-val="Deep Dive">Deep Dives</span>
+    <span class="chip" data-val="Pearls of Wisdom">Pearls of Wisdom</span>
+    <span class="chip" data-val="Q&amp;A">Q&amp;A Zooms</span>
+  </div>
+  <div class="grid" id="grid-dd"></div>
 </div></section>
 
 <div id="site-footer"></div>
 <script src="app.js"></script><script src="catalog.js"></script>
 <script>
   render("row-continue", VIDEOS.filter(function(v){return v.p>0}));
-  render("row-deep", byCat("Deep Dive"));
-  render("row-pearls", byCat("Pearls of Wisdom"));
-  render("row-qa", byCat("Q&A"));
+  function ddList(val){ return val==="All" ? VIDEOS : byCat(val); }
+  render("grid-dd", ddList("All"));
+  wireChips("#dd-chips", "grid-dd", ddList);
 </script>
 </body></html>

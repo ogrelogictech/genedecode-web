@@ -14,13 +14,24 @@
 </div></section>
 
 <section><div class="wrap">
-  <div class="chips">
-    <span class="chip on">All</span><span class="chip">Newest</span><span class="chip">Most popular</span>
+  <div class="chips" id="iv-chips">
+    <span class="chip on" data-val="All">All</span>
+    <span class="chip" data-val="Newest">Newest</span>
+    <span class="chip" data-val="Most popular">Most popular</span>
   </div>
   <div class="grid" id="grid-interviews"></div>
 </div></section>
 
 <div id="site-footer"></div>
 <script src="app.js"></script><script src="catalog.js"></script>
-<script>render("grid-interviews", byCat("Interview"));</script>
+<script>
+  var IV = byCat("Interview");
+  function ivList(val){
+    if(val==="Newest") return IV.slice().reverse();
+    if(val==="Most popular") return IV.slice().sort(function(a,b){return (b.p||0)-(a.p||0)});
+    return IV;
+  }
+  render("grid-interviews", ivList("All"));
+  wireChips("#iv-chips", "grid-interviews", ivList);
+</script>
 </body></html>

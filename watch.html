@@ -4,19 +4,19 @@
 <meta name="color-scheme" content="dark" /><title>Gene Decode — Watch</title>
 <link rel="icon" href="assets/logo.png" /><link rel="stylesheet" href="styles.css" />
 </head><body data-page="deep-dives">
+<script>
+  // keep the correct nav tab active based on where the user came from (issue 17)
+  document.body.dataset.page = (new URLSearchParams(location.search)).get("from") || "deep-dives";
+</script>
 <div id="site-header"></div>
 
-<section><div class="wrap" style="display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:start" id="watch-cols">
+<section><div class="wrap watchgrid">
   <div>
-    <div class="player big" id="stage">
-      <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-      <div class="bar"><div class="track"><i></i></div>
-        <div class="ctrls"><span>▶</span><span id="time">00:00 / 0:00</span><span style="margin-left:auto">CC</span><span>⚙ 1080p</span><span>⤢</span></div></div>
-    </div>
+    <div id="stage"></div>
     <div style="margin-top:18px">
       <span class="chip on" style="cursor:default" id="cat">Deep Dive</span>
       <h1 style="font-family:var(--serif);font-size:27px;margin:14px 0 8px" id="title">Envisioning Freedom</h1>
-      <p style="color:var(--muted);max-width:720px" id="desc">Members get the complete session plus the companion notes and the live Q&amp;A replay. Your progress is saved automatically, so you can pick up where you left off on any device.</p>
+      <p style="color:var(--muted);max-width:820px" id="desc">Members get the complete session plus the companion notes and the live Q&amp;A replay. Your progress is saved automatically, so you can pick up where you left off on any device.</p>
       <div style="display:flex;gap:14px;color:var(--faint);font-size:13px;margin-top:12px" id="meta"><span>Included with membership</span></div>
     </div>
   </div>
@@ -31,10 +31,11 @@
 <script>
   var id=(new URLSearchParams(location.search)).get("v")||"v40vxe6";
   var v=VIDEOS.find(function(x){return x.id===id})||VIDEOS[0];
-  document.getElementById("stage").style.backgroundImage="url(assets/vid/"+v.id+".jpg)";
+  document.getElementById("stage").innerHTML =
+    '<video class="vplayer" poster="assets/vid/'+v.id+'.jpg" controls playsinline preload="none">'
+    +'<source src="'+SAMPLE_VIDEO+'" type="video/mp4">Your browser does not support the video tag.</video>';
   document.getElementById("title").textContent=v.t;
   document.getElementById("cat").textContent=tag(v.c);
-  document.getElementById("time").textContent="34:12 / "+v.d;
   document.getElementById("meta").innerHTML="<span>"+v.s+"</span><span>·</span><span>"+v.d+"</span><span>·</span><span>Included with membership</span>";
   var next=VIDEOS.filter(function(x){return x.id!==v.id}).slice(0,4);
   document.getElementById("upnext").innerHTML=next.map(function(x){return card(x,false)}).join("");

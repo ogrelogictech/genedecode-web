@@ -17,13 +17,20 @@
     return '<a href="'+n[2]+'"'+(n[0]===page?' class="on"':'')+'>'+n[1]+'</a>';
   }).join("");
 
+  var langs = ["Select Language","English","Español","Português","Français","Deutsch","Italiano","Nederlands"];
+  var langOpts = langs.map(function(l,i){return '<option'+(i===0?' selected':'')+'>'+l+'</option>'}).join("");
+
   var header =
     '<div class="ribbon">Refined design concept by <b>OgreLogic</b> for GeneDecode &nbsp;·&nbsp; page mockups on the unified dark/cosmic system</div>'+
+    '<div class="topbar">'+
     '<header class="site"><div class="wrap brandrow">'+
       '<a href="index.html"><img class="logo" src="assets/logo.png" alt="Gene Decode"></a>'+
-      '<span class="lang">Select Language ▾</span>'+
+      '<select class="lang" aria-label="Select language">'+langOpts+'</select>'+
     '</div></header>'+
-    '<nav class="main"><div class="wrap">'+links+'</div></nav>';
+    '<nav class="main"><div class="wrap navbar">'+
+      '<button class="navtoggle" aria-label="Toggle menu" aria-expanded="false"><span class="ham"></span> Menu</button>'+
+      '<div class="navlinks">'+links+'</div>'+
+    '</div></nav></div>';
 
   var footer =
     '<footer class="site"><div class="wrap foot-top">'+
@@ -38,11 +45,34 @@
       '</div>'+
     '</div>'+
     '<div class="wrap disc">Medical & health disclaimer: The content on this platform is for informational and educational purposes only and is not a substitute for professional medical advice. Always consult a qualified provider. By subscribing you agree to the Terms & Conditions and Subscriber Agreement.</div>'+
-    '<div class="wrap foot-copy">© 2026 Gene Decode. All Rights Reserved. &nbsp;·&nbsp; Owned-platform design concept by OgreLogic.</div>'+
+    '<div class="wrap foot-copy">© 2026 Gene Decode. All Rights Reserved. &nbsp;·&nbsp; Site by <a class="ogre" href="https://www.ogrelogic.com" target="_blank" rel="noopener">OgreLogic</a>.</div>'+
     '</footer>';
 
-  var h = document.getElementById("site-header");
-  if(h) h.outerHTML = header;
-  var f = document.getElementById("site-footer");
-  if(f) f.outerHTML = footer;
+  var h = document.getElementById("site-header"); if(h) h.outerHTML = header;
+  var f = document.getElementById("site-footer"); if(f) f.outerHTML = footer;
+
+  // hamburger toggle
+  var toggle = document.querySelector(".navtoggle");
+  var mainNav = document.querySelector("nav.main");
+  if(toggle && mainNav){
+    toggle.addEventListener("click", function(){
+      var open = mainNav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    mainNav.querySelectorAll(".navlinks a").forEach(function(a){
+      a.addEventListener("click", function(){ mainNav.classList.remove("open"); toggle.setAttribute("aria-expanded","false"); });
+    });
+  }
+
+  // generic tab panels (Account etc.): <div class="tabs"><a data-target="x" class="on">..</a>..</div> + <div data-panel="x">..</div>
+  document.querySelectorAll(".tabs").forEach(function(group){
+    group.addEventListener("click", function(e){
+      var a = e.target.closest("a"); if(!a || !group.contains(a)) return;
+      e.preventDefault();
+      group.querySelectorAll("a").forEach(function(x){ x.classList.remove("on"); });
+      a.classList.add("on");
+      var t = a.dataset.target;
+      if(t){ document.querySelectorAll("[data-panel]").forEach(function(p){ p.style.display = (p.dataset.panel === t ? "" : "none"); }); }
+    });
+  });
 })();
