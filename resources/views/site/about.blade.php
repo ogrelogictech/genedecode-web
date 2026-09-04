@@ -1,0 +1,89 @@
+@extends('site.layouts.app')
+
+@section('title', 'Gene Decode — About Gene Decode')
+
+@section('page', 'about')
+
+@section('content')
+
+<section class="pagehero">
+    <div class="wrap">
+        <span class="kicker">About</span>
+
+        <h1>About Gene Decode</h1>
+
+        <p>
+            The man behind Deep Dives, and the mission of Truth, Trust in God, and Service.
+        </p>
+    </div>
+</section>
+
+
+<section>
+    <div
+        class="wrap splitgrid"
+        style="grid-template-columns:.95fr 1.05fr;align-items:start"
+    >
+
+        <video
+            class="vplayer"
+            poster="{{ asset('site/assets/vid/v79kfo2.jpg') }}"
+            controls
+            playsinline
+            preload="none"
+        >
+            <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+            >
+
+            Your browser does not support the video tag.
+        </video>
+
+
+        <div class="prose" style="margin:0">
+
+            <h2>Gene's story</h2>
+
+            <p>
+                Gene is a U.S. Navy submarine veteran, a martial arts Sensei,
+                and a naturopathic practitioner. Through a series of life events
+                he was drawn onto a path of seeking and sharing the truth and
+                hidden knowledge of the world.
+            </p>
+
+            <p>
+                His mission is to help others in their personal and spiritual
+                growth, and to build a community of like-minded people encouraged
+                to know the truth that affects them on their journey into the
+                Great Awakening. This work is aligned with the Blessed For Service
+                ministry.
+            </p>
+
+
+            <h2>What you get as a member</h2>
+
+            <p>
+                Full-length monthly Deep Dive decodes, recorded and live Q&amp;A
+                Zoom sessions, exclusive content, and a members-only community,
+                all on a platform Gene owns.
+            </p>
+
+            <p style="color:var(--faint);font-size:13px">
+                Draft bio for layout. Final copy to be reproduced from the current
+                About page.
+            </p>
+
+
+            <div style="margin-top:8px">
+                <a class="btn" href="{{ url('/join-us') }}">
+                    Subscribe to Deep Dives
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+@endsection

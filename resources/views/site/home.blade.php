@@ -1,0 +1,318 @@
+@extends('site.layouts.app')
+
+@section('title', 'Gene Decode — Home')
+
+@section('page', 'home')
+
+@section('content')
+
+<section class="herotext">
+    <div class="wrap">
+        <h1>Deep Dives with gene Decode</h1>
+
+        <p>
+            Sharing the truth and hidden knowledge of the world, and facilitating
+            your personal and spiritual growth on the journey into the Great Awakening.
+        </p>
+
+        <div class="cta">
+            <a class="btn" href="{{ url('/join-us') }}">
+                Subscribe to Deep Dives
+            </a>
+
+            <a class="btn ghost" href="{{ url('/surface-area') }}">
+                Watch the introduction
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="banner">
+    <div class="frame">
+        <img
+            src="{{ asset('site/assets/hero.jpg') }}"
+            alt="Gene Decode Deep Dives"
+        >
+    </div>
+</div>
+
+
+<section>
+    <div class="wrap center">
+
+        <span class="kicker">Truth · Trust in God · Service</span>
+
+        <h2 class="head">gene Decode</h2>
+
+        <p class="subnote">
+            Sharing the truth and hidden knowledge of the world; facilitating the
+            individual's personal and spiritual growth; providing a community in
+            which they may share the same views and beliefs.
+        </p>
+
+        <div class="vgrid">
+
+            <div class="vcard">
+                <div class="ico">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3l2.5 5 5.5.8-4 3.9 1 5.5L12 16l-5 2.6 1-5.5-4-3.9 5.5-.8z"/>
+                    </svg>
+                </div>
+
+                <h3>Truth</h3>
+
+                <blockquote>
+                    "You shall know the truth, and the truth shall make you free."
+                    John 8:32
+                </blockquote>
+
+                <p>
+                    Knowing the Truth allows you to not be bound by the dictates of
+                    society, government, and institutions. We learn to discern the
+                    Truth ourselves and follow the highest path God has planned for us.
+                </p>
+            </div>
+
+
+            <div class="vcard">
+                <div class="ico">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/>
+                    </svg>
+                </div>
+
+                <h3>Trust In God</h3>
+
+                <blockquote>
+                    "Behold, God is my salvation; I will trust, and not be afraid."
+                    Isaiah 12:2
+                </blockquote>
+
+                <p>
+                    We cannot predict all eventualities, but we can choose the future
+                    we want through our choices and actions, to be good and in service
+                    to others. We have Hope, for we Trust in God and his plans for us.
+                </p>
+            </div>
+
+
+            <div class="vcard">
+                <div class="ico">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 21s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z"/>
+                    </svg>
+                </div>
+
+                <h3>Service</h3>
+
+                <blockquote>
+                    "Each of you should use whatever gift you have received to serve others."
+                    1 Peter 4:10
+                </blockquote>
+
+                <p>
+                    We are here to be in service to humanity, to the One True God of
+                    All Creation, and to all life everywhere. We share the Truth and
+                    Knowledge through developing life-changing resources.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<section style="background:linear-gradient(180deg,#0b1226,#070b16)">
+    <div class="wrap introwrap">
+
+        <video
+            class="vplayer"
+            poster="{{ asset('site/assets/vid/v40vxe6.jpg') }}"
+            controls
+            playsinline
+            preload="none"
+        >
+            <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+            >
+
+            Your browser does not support the video tag.
+        </video>
+
+        <div>
+            <span class="kicker">An introduction</span>
+
+            <h2>An Introduction into Deep Dives</h2>
+
+            <p>
+                A short welcome from Gene about what Deep Dives is, what you get as
+                a member, and how to make the most of the library, the monthly content,
+                and the live Q&amp;A sessions.
+            </p>
+
+            <a class="btn ghost" href="{{ url('/surface-area') }}">
+                Watch Gene's monthly update
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+<section class="center">
+    <div class="wrap">
+
+        <span class="kicker">Membership</span>
+
+        <h2 class="head">
+            Subscribe to Gene Decode Deep Dives
+        </h2>
+
+        <p class="subnote">
+            Unlimited access to all Deep Dive videos, Q&amp;A Zooms with gene,
+            new monthly content, exclusive decodes, and a community of like-minded
+            people to talk to.
+        </p>
+
+
+        <div class="tiers">
+
+            <div class="tier">
+
+                <div
+                    class="thumb"
+                    style="background-image:url('{{ asset('site/assets/monthly.jpg') }}')"
+                ></div>
+
+                <div class="body">
+
+                    <h3>Monthly</h3>
+
+                    <div class="price">
+                        $7<span>/month</span>
+                    </div>
+
+                    <ul>
+                        <li>
+                            <span class="ck">✓</span>
+                            All Deep Dive videos &amp; Q&amp;A Zooms
+                        </li>
+
+                        <li>
+                            <span class="ck">✓</span>
+                            New monthly content &amp; exclusive decodes
+                        </li>
+
+                        <li>
+                            <span class="ck">✓</span>
+                            Members-only community
+                        </li>
+                    </ul>
+
+                    <a
+                        class="btn"
+                        style="width:100%;justify-content:center"
+                        href="{{ url('/join-us') }}"
+                    >
+                        Choose monthly
+                    </a>
+
+                </div>
+            </div>
+
+
+            <div class="tier feat">
+
+                <span class="badge">BEST VALUE</span>
+
+                <div
+                    class="thumb"
+                    style="background-image:url('{{ asset('site/assets/annual.jpg') }}')"
+                ></div>
+
+                <div class="body">
+
+                    <h3>Annual</h3>
+
+                    <div class="price">
+                        $77<span>/year</span>
+                    </div>
+
+                    <ul>
+                        <li>
+                            <span class="ck">✓</span>
+                            Everything in monthly
+                        </li>
+
+                        <li>
+                            <span class="ck">✓</span>
+                            Two months free vs monthly
+                        </li>
+
+                        <li>
+                            <span class="ck">✓</span>
+                            Priority member support
+                        </li>
+                    </ul>
+
+                    <a
+                        class="btn"
+                        style="width:100%;justify-content:center"
+                        href="{{ url('/join-us') }}"
+                    >
+                        Choose annual
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<section
+    style="background:radial-gradient(900px 400px at 50% 0%,rgba(60,110,180,.18),transparent 60%),#0b1226;border-top:1px solid var(--line)"
+>
+    <div class="wrap center">
+
+        <span class="kicker">Prayer</span>
+
+        <h2 class="head">
+            Jesus Christ Invocation
+        </h2>
+
+        <div
+            class="card-panel"
+            style="max-width:900px;margin:22px auto 0;text-align:left"
+        >
+
+            <p style="color:#e9f0e6">
+                All Beings, Lifeforms, Thoughtforms, Entities, Assemblages,
+                Technologies, Beingnesses, Awarenesses, and all else that exists
+                that do not have my highest interest and the Highest Interest of
+                ALL Life Everywhere, and are not in the highest service to the One
+                True and Only Living God of ALL Creation, I AM, in thought, form,
+                mind, action, deed, word and in all ways.
+            </p>
+
+            <p style="color:var(--muted)">
+                All contracts, obligations, and agreements I have made that are not
+                in my highest interest and not in the highest service to the One True
+                Living God of ALL Creation, I AM, are now declared null and void.
+                All emptiness is now to be filled with the Divine Light of the Holy
+                Spirit and the Word of the One True Living God.
+            </p>
+
+            <p style="color:var(--faint);font-size:13px;margin:0">
+                Full invocation shown on the live site.
+            </p>
+
+        </div>
+
+    </div>
+</section>
+
+@endsection
