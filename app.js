@@ -20,17 +20,22 @@
   var langs = ["Select Language","English","Español","Português","Français","Deutsch","Italiano","Nederlands"];
   var langOpts = langs.map(function(l,i){return '<option'+(i===0?' selected':'')+'>'+l+'</option>'}).join("");
 
-  var header =
-    '<div class="ribbon">Refined design concept by <b>OgreLogic</b> for GeneDecode &nbsp;·&nbsp; page mockups on the unified dark/cosmic system</div>'+
-    '<div class="topbar">'+
+ var header =
+  '<div class="ribbon">Refined design concept by <b>OgreLogic</b> for GeneDecode &nbsp;·&nbsp; page mockups on the unified dark/cosmic system</div>'+
+  '<div class="topbar">'+
     '<header class="site"><div class="wrap brandrow">'+
       '<a href="index.html"><img class="logo" src="assets/logo.png" alt="Gene Decode"></a>'+
-      '<select class="lang" aria-label="Select language">'+langOpts+'</select>'+
+      
+      '<div class="header-actions">'+
+        '<select class="lang" aria-label="Select language">'+langOpts+'</select>'+
+        '<button class="navtoggle" aria-label="Toggle menu" aria-expanded="false"><span class="ham"></span> </button>'+
+      '</div>'+
+      
     '</div></header>'+
     '<nav class="main"><div class="wrap navbar">'+
-      '<button class="navtoggle" aria-label="Toggle menu" aria-expanded="false"><span class="ham"></span> Menu</button>'+
       '<div class="navlinks">'+links+'</div>'+
-    '</div></nav></div>';
+    '</div></nav>'+
+  '</div>';
 
   var footer =
     '<footer class="site"><div class="wrap foot-top">'+
