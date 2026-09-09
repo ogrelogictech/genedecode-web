@@ -44,7 +44,7 @@
   var sidebar =
     '<aside class="sidebar">'+
       '<div class="sb-brand"><img src="../assets/logo.png" alt="Gene Decode">'+
-        '<div class="t">Gene Decode<span>Admin</span></div></div>'+
+        '<span class="sb-tag">Admin</span></div>'+
       '<nav class="sb-nav">'+links+'</nav>'+
       '<div class="sb-user"><div class="avatar">MS</div>'+
         '<div class="who"><b>Michelle Slusser</b><span>Owner</span></div>'+
