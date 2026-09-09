@@ -141,12 +141,13 @@ def status_pill(s):
             "processing":pill("amber","Processing")}[s]
 rows = ""
 for vid,t,cat,st,views,date in VID:
+    href = 'content-edit.html?v=' + vid
     rows += ('<tr><td><div class="title-cell"><div class="thumb" style="background-image:url(../assets/vid/' + vid + '.jpg)"></div>'
-        '<div><b>' + t + '</b><span>' + vid + '.mp4</span></div></div></td>'
+        '<div><b><a href="' + href + '" style="color:inherit">' + t + '</a></b><span>' + vid + '.mp4</span></div></div></td>'
         '<td>' + cat + '</td><td>' + status_pill(st) + '</td><td>' + views + '</td><td>' + date + '</td>'
         '<td><div class="tbl-act">'
           '<button class="iconbtn" aria-label="Preview">' + ico(I["play"]) + '</button>'
-          '<button class="iconbtn" aria-label="Edit">' + ico(I["edit"]) + '</button>'
+          '<a class="iconbtn" href="' + href + '" aria-label="Edit">' + ico(I["edit"]) + '</a>'
           '<button class="iconbtn" aria-label="More">' + ico(I["dots"]) + '</button>'
         '</div></td></tr>')
 
@@ -278,10 +279,10 @@ def initials(n):
 mr = ""
 for n,em,plan,cl,st,joined,seen in mem:
     mr += ('<tr><td><div class="who"><div class="avatar">' + initials(n) + '</div>'
-        '<div style="min-width:0"><b style="color:#fff;display:block">' + n + '</b>'
+        '<div style="min-width:0"><b style="color:#fff;display:block"><a href="member-detail.html" style="color:inherit">' + n + '</a></b>'
         '<span style="color:var(--faint);font-size:12px">' + em + '</span></div></div></td>'
         '<td>' + plan + '</td><td>' + pill(cl, st) + '</td><td>' + joined + '</td><td>' + seen + '</td>'
-        '<td><div class="tbl-act"><button class="iconbtn" aria-label="View">' + ico(I["eye"]) + '</button>'
+        '<td><div class="tbl-act"><a class="iconbtn" href="member-detail.html" aria-label="View">' + ico(I["eye"]) + '</a>'
         '<button class="iconbtn" aria-label="More">' + ico(I["dots"]) + '</button></div></td></tr>')
 
 mem_body = (
@@ -362,7 +363,8 @@ a_bars = [62,58,66,71,68,76,80,84,79,88,93,100]
 a_cols = ""
 amx=float(max(a_bars))
 for i,m in enumerate(months):
-    a_cols += ('<div class="col"><div class="b" style="height:' + str(int(a_bars[i]/amx*100)) + '%"></div><small>' + m + '</small></div>')
+    a_cols += ('<div class="col"><div style="display:flex;align-items:flex-end;width:100%;height:150px;justify-content:center">'
+        '<div class="b" style="height:' + str(int(a_bars[i]/amx*100)) + '%;max-width:34px"></div></div><small>' + m + '</small></div>')
 top = [
  ("Envisioning Freedom — See It As Already Done!","Deep Dive","156,204","2:11:04","91%"),
  ("Time &amp; Space Collapsing — Race to the Black Swan","Deep Dive","98,410","1:32:18","84%"),
@@ -468,5 +470,92 @@ set_body = (
      '<div class="act-list">' + intr + '</div></div></div>'
 )
 page("settings.html","settings","Settings & Team", set_body)
+
+# ==============================================================================
+# 9. CONTENT EDIT (detail screen for a single video)
+# ==============================================================================
+ce_body = (
+ '<div class="crumbs"><a href="content.html">Content Library</a> / Edit video</div>' +
+ intro("Edit video","Update the details, access level, and publish status for this video. Changes save to the live site right away.") +
+ '<div class="grid-2">' +
+   '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Video details</h2></div>'
+     '<div class="field"><label>Title</label><input value="Envisioning Freedom — See It As Already Done!"></div>'
+     '<div class="form-grid"><div class="field"><label>Category</label><select><option>Deep Dive</option><option>Pearls of Wisdom</option><option>Q&amp;A</option><option>Interview</option></select></div>'
+       '<div class="field"><label>Access level</label><select><option>Members only</option><option>Annual members only</option><option>Public (free preview)</option></select></div></div>'
+     '<div class="form-grid"><div class="field"><label>Status</label><select><option>Published</option><option>Draft</option><option>Scheduled</option></select></div>'
+       '<div class="field"><label>Publish date</label><input type="date" value="2026-08-02"></div></div>'
+     '<div class="field"><label>Description</label><textarea rows="5">A full-length Deep Dive decode. Members get the complete session plus the companion notes and the live Q&amp;A replay. Progress is saved automatically across devices.</textarea></div>'
+     '<div class="field"><label>Tags</label><input value="freedom, manifestation, deep dive"></div>'
+     '<div style="display:flex;gap:10px"><button class="btn">Save changes</button><a class="btn ghost" href="content.html">Cancel</a></div></div>' +
+   '<div>'
+     '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Preview</h2></div>'
+       '<img src="../assets/vid/v40vxe6.jpg" alt="Envisioning Freedom thumbnail" style="width:100%;border-radius:10px;border:1px solid var(--line-2)">'
+       '<button class="btn ghost" style="width:100%;margin-top:12px">' + ico(I["upload"]) + 'Replace video file</button>'
+       '<div class="act-list" style="margin-top:8px">'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Views</b></p></div><b style="color:#fff">156,204</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Duration</b></p></div><b style="color:#fff">2:40:18</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Uploaded</b></p></div><b style="color:#fff">Aug 2, 2026</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Streaming</b></p></div>' + pill("green","Bunny · Ready") + '</div>'
+       '</div></div>'
+     '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Danger zone</h2></div>'
+       '<p class="panel-sub">Unpublishing hides the video from members. Deleting removes it for good.</p>'
+       '<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost">Unpublish</button><button class="btn danger">' + ico(I["trash"]) + 'Delete video</button></div></div>'
+   '</div>' +
+ '</div>'
+)
+page("content-edit.html","content","Content Library", ce_body)
+
+# ==============================================================================
+# 10. MEMBER DETAIL (detail screen for a single member)
+# ==============================================================================
+md_body = (
+ '<div class="crumbs"><a href="members.html">Members</a> / Karen Willis</div>' +
+ '<div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap">'
+   '<div class="avatar" style="width:52px;height:52px;font-size:16px">KW</div>'
+   '<div style="min-width:0"><h2 style="font-family:var(--serif);font-size:22px;margin:0;color:#fff">Karen Willis</h2>'
+     '<p style="color:var(--muted);margin:0;font-size:13.5px">karen.willis@gmail.com</p></div>'
+   '<div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + pill("green","Active") + pill("grey","Annual member") + '</div>'
+ '</div>' +
+ '<div class="grid-2">' +
+   '<div>'
+     '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Membership</h2><div class="act"><a href="subscriptions.html">Open in billing</a></div></div>'
+       '<div class="act-list">'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Plan</b></p></div><b style="color:#fff">Annual · $77 / year</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Status</b></p></div>' + pill("green","Active") + '</div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Next renewal</b></p></div><b style="color:#fff">Sep 9, 2027</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Payment method</b></p></div><b style="color:#fff">Visa ending 4242</b></div>'
+       '</div>'
+       '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button class="btn ghost sm">Change plan</button><button class="btn ghost sm">Issue refund</button><button class="btn danger sm">Cancel membership</button></div></div>'
+     '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Billing history</h2></div>'
+       '<div class="tablewrap"><table class="tbl"><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead><tbody>'
+         '<tr><td>Sep 9, 2026</td><td>Annual membership</td><td>$77.00</td><td>' + pill("green","Paid") + '</td></tr>'
+         '<tr><td>Sep 9, 2025</td><td>Annual membership</td><td>$77.00</td><td>' + pill("green","Paid") + '</td></tr>'
+         '<tr><td>Sep 9, 2024</td><td>Annual membership</td><td>$77.00</td><td>' + pill("green","Paid") + '</td></tr>'
+       '</tbody></table></div></div>'
+   '</div>' +
+   '<div>'
+     '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Profile</h2></div>'
+       '<div class="act-list">'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Member since</b></p></div><b style="color:#fff">Sep 2024</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Last active</b></p></div><b style="color:#fff">2 hours ago</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Location</b></p></div><b style="color:#fff">Phoenix, AZ</b></div>'
+         '<div class="act-item"><div class="ac" style="flex:1"><p><b>Videos watched</b></p></div><b style="color:#fff">142</b></div>'
+       '</div></div>'
+     '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Recent activity</h2></div>'
+       '<div class="act-list">'
+         '<div class="act-item"><div class="ai">' + ico(I["play"]) + '</div><div class="ac"><p>Watched <b>Envisioning Freedom</b></p><span>2 hours ago</span></div></div>'
+         '<div class="act-item"><div class="ai">' + ico(I["cast"]) + '</div><div class="ac"><p>Joined live <b>The General&#39;s Tent</b></p><span>Aug 28</span></div></div>'
+         '<div class="act-item"><div class="ai">' + ico(I["cash"]) + '</div><div class="ac"><p>Renewed <b>Annual membership</b></p><span>Sep 9</span></div></div>'
+       '</div></div>'
+     '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Actions</h2></div>'
+       '<div style="display:flex;flex-direction:column;gap:10px">'
+         '<button class="btn ghost">' + ico(I["mail"]) + 'Send password reset</button>'
+         '<button class="btn ghost">' + ico(I["mail"]) + 'Message member</button>'
+         '<button class="btn danger">Suspend account</button>'
+       '</div></div>'
+   '</div>' +
+ '</div>'
+)
+page("member-detail.html","members","Members", md_body)
 
 print("\nAll admin shell pages generated.")
