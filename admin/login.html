@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" /><title>Gene Decode Admin — Sign in</title>
+<link rel="icon" href="../assets/logo.png" /><link rel="stylesheet" href="admin.css" />
+</head><body>
+<div class="login-wrap">
+  <form class="login-card" onsubmit="event.preventDefault();window.location='index.html';">
+    <img src="../assets/logo.png" alt="Gene Decode" />
+    <h1>Team sign in</h1>
+    <p class="sub">Admin and internal team access for genedecode.org</p>
+    <div class="field">
+      <label for="em">Email</label>
+      <input id="em" type="email" placeholder="you@genedecode.org" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label for="pw">Password</label>
+      <input id="pw" type="password" placeholder="Your password" autocomplete="current-password" />
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:2px 0 18px">
+      <label style="display:flex;gap:8px;align-items:center;color:#d7e2d5;font-size:13px;margin:0">
+        <input type="checkbox" style="width:auto" /> Keep me signed in</label>
+      <a href="#" style="color:var(--green-l);font-size:13px">Forgot password?</a>
+    </div>
+    <button class="btn" type="submit">Sign in</button>
+    <p class="login-foot">Protected area. Access is limited to the Gene Decode team.<br>Two-factor authentication is required on first sign in.</p>
+  </form>
+</div>
+</body></html>
