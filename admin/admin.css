@@ -96,7 +96,7 @@ button{font-family:var(--sans)}
 .stat .d svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;flex:0 0 auto}
 
 /* generic panel */
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;margin-bottom:22px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;margin-bottom:22px;min-width:0}
 .panel-h{display:flex;align-items:center;gap:12px;margin:0 0 4px}
 .panel-h h2{font-family:var(--serif);font-size:18px;margin:0;color:#fff;font-weight:600}
 .panel-h .bar{width:4px;height:17px;background:var(--green);border-radius:2px}
@@ -105,8 +105,8 @@ button{font-family:var(--sans)}
 .panel-h .act a:hover{text-decoration:underline}
 .panel-sub{color:var(--muted);font-size:13.5px;margin:0 0 16px}
 
-.grid-2{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
-.grid-2>*{margin-bottom:0}
+.grid-2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+.grid-2>*{margin-bottom:0;min-width:0}
 
 /* tables */
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
@@ -215,7 +215,7 @@ table.tbl tr:hover td{background:rgba(255,255,255,.02)}
   .admin.open .sidebar{transform:translateX(0)}
   .admin.open .scrim{display:block}
   .topbar .htoggle{display:inline-flex}
-  .grid-2{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:minmax(0,1fr)}
   .stats{grid-template-columns:repeat(2,1fr)}
 }
 @media(prefers-reduced-motion:reduce){.sidebar{transition:none}}
