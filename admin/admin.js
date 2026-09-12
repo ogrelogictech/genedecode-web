@@ -6,10 +6,13 @@
     ["__lbl","Content",""],
     ["content","Content Library","content.html","film",""],
     ["live","Live Events","live.html","broadcast","2"],
+    ["pages","Pages & Site Content","pages.html","doc",""],
     ["announcements","Announcements","announcements.html","mail",""],
     ["__lbl","People & Revenue",""],
     ["members","Members","members.html","users",""],
+    ["community","Community","moderation.html","shield","3"],
     ["subscriptions","Subscriptions & Billing","subscriptions.html","card",""],
+    ["discounts","Discounts","discounts.html","tag",""],
     ["analytics","Analytics","analytics.html","chart",""],
     ["__lbl","Configuration",""],
     ["settings","Settings & Team","settings.html","gear",""]
@@ -26,7 +29,10 @@
     gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.6 5.6l1.7 1.7M16.7 16.7l1.7 1.7M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7"/>',
     search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
     bell:'<path d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6M10 20a2 2 0 004 0"/>',
-    out:'<path d="M15 4h4a1 1 0 011 1v14a1 1 0 01-1 1h-4M10 8l-4 4 4 4M6 12h9"/>'
+    out:'<path d="M15 4h4a1 1 0 011 1v14a1 1 0 01-1 1h-4M10 8l-4 4 4 4M6 12h9"/>',
+    doc:'<path d="M6 2h8l4 4v16H6z"/><path d="M14 2v4h4M9 12h6M9 16h6"/>',
+    tag:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0l-7-7a2 2 0 01-.6-1.4V4a1 1 0 011-1h7.8a2 2 0 011.4.6l7.4 7.4a2 2 0 010 2.6z"/><circle cx="7.5" cy="7.5" r="1.3"/>',
+    shield:'<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'
   };
   function svg(k){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(ic[k]||"")+'</svg>';}
 
@@ -37,8 +43,9 @@
   }).join("");
 
   var titles = {dashboard:"Dashboard",content:"Content Library",live:"Live Events",
-    announcements:"Announcements & Newsletters",members:"Members",
-    subscriptions:"Subscriptions & Billing",analytics:"Analytics",settings:"Settings & Team"};
+    pages:"Pages & Site Content",announcements:"Announcements & Newsletters",members:"Members",
+    community:"Community & Comments",subscriptions:"Subscriptions & Billing",
+    discounts:"Discounts & Coupons",analytics:"Analytics",settings:"Settings & Team"};
   var title = titles[page] || "Admin";
 
   var sidebar =

@@ -558,4 +558,146 @@ md_body = (
 )
 page("member-detail.html","members","Members", md_body)
 
+# ==============================================================================
+# 11. DISCOUNTS & COUPONS  (Stage 1 core: coupon/discount codes)
+# ==============================================================================
+disc_rows = [
+ ("WELCOME25","25% off","First payment","All plans","142","green","Active","No expiry"),
+ ("ANNUAL10","$10 off","Annual only","Annual","58","green","Active","Dec 31, 2026"),
+ ("GENELIVE","1 month free","New members","Monthly","31","green","Active","Sep 30, 2026"),
+ ("EASTER26","20% off","First payment","All plans","410","grey","Expired","Apr 30, 2026"),
+]
+dr = ""
+for code,typ,applies,plan,red,cl,st,exp in disc_rows:
+    dr += ('<tr><td><b style="color:#fff;font-family:var(--serif);letter-spacing:.5px">' + code + '</b></td>'
+        '<td>' + typ + '</td><td>' + plan + '</td><td>' + red + '</td><td>' + pill(cl, st) + '</td><td>' + exp + '</td>'
+        '<td><div class="tbl-act"><button class="iconbtn" aria-label="Edit">' + ico(I["edit"]) + '</button>'
+        '<button class="iconbtn" aria-label="More">' + ico(I["dots"]) + '</button></div></td></tr>')
+
+disc_body = (
+ intro("Discounts &amp; Coupons",
+   "Create and manage coupon codes for your membership plans. Codes work at checkout and are honored by your own Stripe account.") +
+ '<div class="grid-2">' +
+   '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Create a coupon</h2></div>'
+     '<div class="field"><label>Coupon code</label><input placeholder="e.g. WELCOME25" style="text-transform:uppercase"></div>'
+     '<div class="form-grid"><div class="field"><label>Discount type</label><select><option>Percentage off</option><option>Fixed amount off</option><option>Free time (months)</option></select></div>'
+       '<div class="field"><label>Amount</label><input placeholder="25"></div></div>'
+     '<div class="form-grid"><div class="field"><label>Applies to</label><select><option>All plans</option><option>Monthly only</option><option>Annual only</option></select></div>'
+       '<div class="field"><label>Duration</label><select><option>First payment only</option><option>Forever</option><option>First 3 payments</option></select></div></div>'
+     '<div class="form-grid"><div class="field"><label>Usage limit</label><input placeholder="Unlimited"></div>'
+       '<div class="field"><label>Expires</label><input type="date"></div></div>'
+     '<button class="btn" style="width:100%">' + ico(I["plus"]) + 'Create coupon</button></div>' +
+   '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>This month</h2></div>'
+     '<div class="act-list">'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>Active codes</b></p></div><b style="color:#fff">3</b></div>'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>Redemptions</b></p></div><b style="color:var(--green-l)">231</b></div>'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>New members from codes</b></p></div><b style="color:#fff">88</b></div>'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>Discount given</b></p></div><b style="color:#fff">$1,940</b></div>'
+     '</div>'
+     '<p class="panel-sub" style="margin-top:16px">Coupons apply at checkout and are validated against Stripe, so discounts always match what members are actually billed.</p></div>' +
+ '</div>' +
+ '<div class="panel-h" style="margin-bottom:14px"><span class="bar"></span><h2>All coupons</h2></div>'
+ '<div class="tablewrap"><table class="tbl"><thead><tr>'
+   '<th>Code</th><th>Discount</th><th>Applies to</th><th>Redemptions</th><th>Status</th><th>Expires</th><th style="text-align:right">Actions</th>'
+   '</tr></thead><tbody>' + dr + '</tbody></table></div>'
+)
+page("discounts.html","discounts","Discounts & Coupons", disc_body)
+
+# ==============================================================================
+# 12. PAGES & SITE CONTENT  (content management for the non-video pages)
+# ==============================================================================
+site_pages = [
+ ("Home","/","Published","Sep 4, 2026"),
+ ("About Gene Decode","/about","Published","Aug 30, 2026"),
+ ("Schedule &amp; Newsletters","/schedule","Published","Sep 2, 2026"),
+ ("Surface Area","/surface-area","Published","Aug 28, 2026"),
+ ("Interviews &amp; Videos","/interviews","Published","Sep 1, 2026"),
+ ("Join Us (pricing)","/join-us","Published","Aug 18, 2026"),
+ ("Donate","/donate","Published","Aug 15, 2026"),
+ ("FAQ","/faq","Published","Aug 20, 2026"),
+ ("Contact Us","/contact","Published","Aug 15, 2026"),
+ ("Privacy Policy","/privacy","Draft","Pending copy"),
+ ("Terms &amp; Conditions","/terms","Draft","Pending copy"),
+ ("Subscriber Agreement","/subscriber-agreement","Draft","Pending copy"),
+]
+pr = ""
+for name,path,st,upd in site_pages:
+    stp = pill("green","Published") if st=="Published" else pill("amber","Draft")
+    pr += ('<tr><td><b style="color:#fff">' + name + '</b></td><td style="color:var(--muted)">' + path + '</td>'
+        '<td>' + stp + '</td><td>' + upd + '</td>'
+        '<td><div class="tbl-act"><button class="iconbtn" aria-label="Edit">' + ico(I["edit"]) + '</button>'
+        '<button class="iconbtn" aria-label="View">' + ico(I["eye"]) + '</button></div></td></tr>')
+
+pages_body = (
+ intro("Pages &amp; Site Content",
+   "Edit the words and images on your public pages, without touching code. Video and live content are managed in their own sections.") +
+ '<div class="notice">' + ico(I["info"]) + '<div>The three legal pages are marked <b>Draft</b> until you provide the final approved copy. Everything else is live.</div></div>' +
+ '<div class="grid-2">' +
+   '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Quick edit — Home hero</h2><div class="act"><a href="../index.html" target="_blank">View live</a></div></div>'
+     '<div class="field"><label>Headline</label><input value="Deep Dives with Gene Decode"></div>'
+     '<div class="field"><label>Sub-headline</label><textarea rows="3">Sharing the truth and hidden knowledge of the world, and facilitating your personal and spiritual growth on the journey into the Great Awakening.</textarea></div>'
+     '<div class="form-grid"><div class="field"><label>Primary button</label><input value="Subscribe to Deep Dives"></div>'
+       '<div class="field"><label>Secondary button</label><input value="Watch the introduction"></div></div>'
+     '<button class="btn">Save changes</button></div>' +
+   '<div class="panel"><div class="panel-h"><span class="bar"></span><h2>Site basics</h2></div>'
+     '<div class="act-list">'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>Pages published</b></p></div><b style="color:#fff">9</b></div>'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>Drafts</b></p></div><b style="color:var(--amber)">3</b></div>'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>Navigation</b></p></div><b style="color:#fff">11 links</b></div>'
+       '<div class="act-item"><div class="ac" style="flex:1"><p><b>Footer &amp; social</b></p></div>' + pill("green","Set") + '</div>'
+     '</div>'
+     '<button class="btn ghost" style="width:100%;margin-top:8px">' + ico(I["edit"]) + 'Edit navigation &amp; footer</button></div>' +
+ '</div>' +
+ '<div class="panel-h" style="margin-bottom:14px"><span class="bar"></span><h2>All pages</h2></div>'
+ '<div class="tablewrap"><table class="tbl"><thead><tr>'
+   '<th>Page</th><th>URL</th><th>Status</th><th>Last updated</th><th style="text-align:right">Actions</th>'
+   '</tr></thead><tbody>' + pr + '</tbody></table></div>'
+)
+page("pages.html","pages","Pages & Site Content", pages_body)
+
+# ==============================================================================
+# 13. COMMUNITY & COMMENTS moderation  (supports the community feature)
+# ==============================================================================
+mod_items = [
+ ("James P.","JP","Comment on <b>Envisioning Freedom</b>","This changed how I see everything, thank you Gene.","2 hours ago","clean"),
+ ("Sandra K.","SK","Community post in <b>Prayer &amp; Support</b>","Please keep my family in your prayers this week.","5 hours ago","clean"),
+ ("hidden_user_88","H8","Comment on <b>Iran War Smokescreen</b>","Check out this link for free crypto&#8230;","Yesterday","flag"),
+ ("Robert S.","RS","Community post in <b>Deep Dive Discussion</b>","What did everyone think of the timeline in part 2?","Yesterday","clean"),
+]
+mi = ""
+for name,ini,where,text,tm,flag in mod_items:
+    tagp = pill("red","Flagged") if flag=="flag" else pill("grey","New")
+    remove_btn = ('<button class="btn danger sm">' + ico(I["trash"]) + 'Remove</button>' if flag=="flag"
+                  else '<button class="btn ghost sm">' + ico(I["trash"]) + 'Remove</button>')
+    mi += ('<div class="panel" style="margin-bottom:14px"><div style="display:flex;gap:12px;align-items:flex-start">'
+        '<div class="avatar">' + ini + '</div>'
+        '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">'
+          '<b style="color:#fff">' + name + '</b>' + tagp + '<span style="color:var(--faint);font-size:12px">' + tm + '</span></div>'
+          '<p style="color:var(--muted);font-size:13px;margin:0 0 6px">' + where + '</p>'
+          '<p style="color:#dbe5ee;font-size:14px;margin:0">&ldquo;' + text + '&rdquo;</p></div></div>'
+        '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:flex-end">'
+          '<button class="btn ghost sm">' + ico(I["check"]) + 'Approve</button>' + remove_btn +
+          '<button class="btn ghost sm">Ban user</button></div></div>')
+
+mod_body = (
+ intro("Community &amp; Comments",
+   "Keep the community safe. Review flagged items, moderate posts and video comments, and manage members who break the rules.") +
+ '<div class="notice">' + ico(I["info"]) + '<div>Community and live chat are part of the <b>fast-follow (Stage 2)</b> plan. This screen shows how your team will moderate them once they are live.</div></div>' +
+ '<div class="stats">' +
+   stat("info","Pending review","3","","flat") +
+   stat("users","Posts this week","48","+12","up") +
+   stat("mail","Comments this week","214","+31","up") +
+   stat("info","Flagged","1","Needs action","flat") +
+ '</div>' +
+ '<div class="tabs">'
+   '<button class="tab on" data-target="queue">Needs review</button>'
+   '<button class="tab" data-target="posts">Community posts</button>'
+   '<button class="tab" data-target="comments">Video comments</button>'
+ '</div>' +
+ '<div data-panel="queue">' + mi + '</div>'
+ '<div data-panel="posts" style="display:none"><div class="panel"><p class="panel-sub" style="margin:0">All community posts appear here with the same approve, remove, and ban controls.</p></div></div>'
+ '<div data-panel="comments" style="display:none"><div class="panel"><p class="panel-sub" style="margin:0">All video comments appear here, grouped by video, with the same moderation controls.</p></div></div>'
+)
+page("moderation.html","community","Community & Comments", mod_body)
+
 print("\nAll admin shell pages generated.")
