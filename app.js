@@ -2,23 +2,25 @@
 
   var page = document.body.dataset.page || "";
 
+  // Logged-out top bar (per client edits, Sep 2026).
+  // Removed from top bar: Interviews & Videos + Community (Interviews now reached
+  // from Surface Area; Community returns in the logged-in member nav). FAQ moved
+  // to the footer. Account replaced by the highlighted Login link.
   var nav = [
     ["home","Home","index.html"],
     ["about","About Gene Decode","about.html"],
-    ["schedule","Schedule","schedule.html"],
+    ["schedule","Calendar","schedule.html"],
     ["surface","Surface Area","surface-area.html"],
-    ["interviews","Interviews & Videos","interviews.html"],
-    ["deep-dives","Deep Dives","deep-dives.html"],
-    ["community","Community","community.html"],
+    ["deep-dives","Deep Dives Catalog","deep-dives.html"],
     ["donate","Donate","donate.html"],
-    ["faq","FAQ","faq.html"],
     ["join","Join Us","join-us.html"],
-    ["account","Account","account.html"]
+    ["login","Login","login.html"]
   ];
 
   var links = nav.map(function(n){
+    var cls = (n[0] === page ? "on" : "") + (n[0] === "login" ? " nav-login" : "");
     return '<a href="' + n[2] + '"' +
-      (n[0] === page ? ' class="on"' : '') +
+      (cls.trim() ? ' class="' + cls.trim() + '"' : '') +
       '>' + n[1] + '</a>';
   }).join("");
 
@@ -104,6 +106,7 @@
           '<a href="privacy.html">Privacy</a>' +
           '<a href="terms.html">Terms & Conditions</a>' +
           '<a href="subscriber-agreement.html">Subscriber Agreement</a>' +
+          '<a href="faq.html">FAQ</a>' +
           '<a href="contact.html">Contact Us</a>' +
           '<a href="#">Blessedforservice.org</a>' +
           '<a href="live.html">Live</a>' +
@@ -138,6 +141,49 @@
 
   var f = document.getElementById("site-footer");
   if(f) f.outerHTML = footer;
+
+
+  /* =========================
+     SUPPORT CHAT (AI first line, escalates to a human)
+  ========================= */
+
+  if(!document.getElementById("support-widget")){
+
+    var sw = document.createElement("div");
+    sw.id = "support-widget";
+    sw.innerHTML =
+      '<button class="support-fab" aria-label="Open support chat" aria-expanded="false">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 11.5a8.5 8.5 0 01-12.2 7.6L3 21l1.9-5.8A8.5 8.5 0 1121 11.5z"/></svg>' +
+        '<span>Support</span>' +
+      '</button>' +
+      '<div class="support-panel" hidden>' +
+        '<div class="support-head">' +
+          '<div><b>Gene Decode Support</b><span>AI assistant · replies in seconds</span></div>' +
+          '<button class="support-close" aria-label="Close support chat">&times;</button>' +
+        '</div>' +
+        '<div class="support-body">' +
+          '<div class="support-msg bot">Hi! I can help with membership, sign in, billing, and playback. What do you need?</div>' +
+          '<div class="support-quick">' +
+            '<button>How do I become a member?</button>' +
+            '<button>I can\'t sign in</button>' +
+            '<button>Billing question</button>' +
+          '</div>' +
+          '<div class="support-msg bot">If I can\'t solve it, I\'ll connect you with a person.</div>' +
+        '</div>' +
+        '<div class="support-foot">' +
+          '<input class="support-input" placeholder="Type your message">' +
+          '<button class="support-human">Talk to a human</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(sw);
+
+    var fab = sw.querySelector(".support-fab");
+    var panel = sw.querySelector(".support-panel");
+    var closeBtn = sw.querySelector(".support-close");
+    function openPanel(o){ panel.hidden = !o; fab.setAttribute("aria-expanded", o ? "true" : "false"); }
+    fab.addEventListener("click", function(){ openPanel(panel.hidden); });
+    closeBtn.addEventListener("click", function(){ openPanel(false); });
+  }
 
 
   /* =========================
