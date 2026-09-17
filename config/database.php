@@ -32,6 +32,12 @@ return [
 
     'connections' => [
 
+        'sqlite_old' => [
+            'driver' => 'sqlite',
+            'database' => database_path('database.sqlite'),
+            'prefix' => '',
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),

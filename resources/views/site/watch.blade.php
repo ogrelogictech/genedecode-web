@@ -72,9 +72,47 @@
 
     document.getElementById("stage").innerHTML =
         '<video class="vplayer" poster="/site/assets/vid/' + v.id + '.jpg" controls playsinline preload="none">' +
-            '<source src="' + SAMPLE_VIDEO + '" type="video/mp4">' +
+            // '<source src="' + SAMPLE_VIDEO + '" type="video/mp4">' +
+            '<source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">' +
             'Your browser does not support the video tag.' +
         '</video>';
+
+    // Load saved video progress for logged-in users
+    var videoElement = document.querySelector("#stage video");
+
+    if (videoElement) {
+        fetch("{{ url('/video-progress') }}/" + encodeURIComponent(v.id), {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error("Unable to load video progress.");
+            }
+
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success && data.progress) {
+                var savedProgress = parseFloat(data.progress.progress_seconds);
+
+                if (savedProgress > 0) {
+                    videoElement.addEventListener("loadedmetadata", function() {
+                        if (savedProgress < videoElement.duration) {
+                            videoElement.currentTime = savedProgress;
+                        }
+                    }, { once: true });
+                }
+
+                console.log("Resuming video from:", savedProgress, "seconds");
+            }
+        })
+        .catch(function(error) {
+            console.error("Unable to load video progress:", error);
+        });
+    }
 
     document.getElementById("title").textContent = v.t;
 
@@ -97,6 +135,80 @@
         next.map(function(x) {
             return card(x, false);
         }).join("");
+
+    // Save video progress for logged-in users
+    var videoElement = document.querySelector("#stage video");
+
+    if (videoElement) {
+        var lastSavedTime = 0;
+
+        videoElement.addEventListener("timeupdate", function() {
+            var currentTime = videoElement.currentTime;
+            var duration = videoElement.duration;
+
+            if (!duration || !isFinite(duration)) {
+                return;
+            }
+
+            // Save progress approximately every 10 seconds
+            // if (currentTime - lastSavedTime < 10) {
+            if (currentTime - lastSavedTime < 2) {
+                return;
+            }
+
+            lastSavedTime = currentTime;
+
+            var progressPercent = (currentTime / duration) * 100;
+
+            fetch("{{ route('video.progress.store') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    video_id: v.id,
+                    progress_seconds: currentTime,
+                    duration_seconds: duration,
+                    progress_percent: progressPercent
+                })
+            })
+            .catch(function(error) {
+                console.error("Unable to save video progress:", error);
+            });
+        });
+
+        videoElement.addEventListener("ended", function() {
+            fetch("{{ route('video.progress.store') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    video_id: v.id,
+                    progress_seconds: videoElement.duration,
+                    duration_seconds: videoElement.duration,
+                    progress_percent: 100
+                })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error("Unable to save completed video progress.");
+                }
+
+                return response.json();
+            })
+            .then(function(data) {
+                console.log("Video completed. Progress saved at 100%:", data);
+            })
+            .catch(function(error) {
+                console.error("Unable to save completed video progress:", error);
+            });
+        });
+    }
 </script>
 
 @endpush

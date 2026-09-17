@@ -6,17 +6,21 @@
 @section('content')
 
 <section>
+
     <div class="wrap" style="max-width:1080px">
 
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
-            <div class="avatar" style="width:52px;height:52px;font-size:16px">MS</div>
+            <div class="avatar" style="width:52px;height:52px;font-size:16px">
+                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+            </div>
 
             <div>
                 <h1 style="font-family:var(--serif);font-size:26px;margin:0">
                     Your account
                 </h1>
+
                 <p style="color:var(--muted);margin:0;font-size:14px">
-                    michelle@genedecode.org · Annual member
+                    {{ auth()->user()->email }}
                 </p>
             </div>
         </div>
@@ -41,7 +45,9 @@
                 </p>
 
                 <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-                    <div class="avatar" style="width:56px;height:56px">MS</div>
+                    <div class="avatar" style="width:56px;height:56px">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    </div>
                     <button class="btn sm ghost">Change photo</button>
                 </div>
 
@@ -76,26 +82,158 @@
                     My private info
                 </h3>
 
-                <div class="acct-grid">
+                <form method="POST" action="{{ route('account.profile.update') }}">
+                    @csrf
+                    @method('PUT')
 
-                    <div class="field">
-                        <label>Full name</label>
-                        <input value="Michelle Slusser">
+                    <div class="acct-grid">
+
+                        <div class="field">
+                            <label for="name">Full name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value="{{ old('name', auth()->user()->name) }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ old('email', auth()->user()->email) }}"
+                                required
+                            >
+                        </div>
+
                     </div>
 
-                    <div class="field">
-                        <label>Email</label>
-                        <input value="michelle@genedecode.org">
+                    
+
+                    <button type="submit" class="btn sm">
+                        Save changes
+                    </button>
+
+                </form>
+
+                <div class="account-password-section">
+
+                    <div class="account-password-header">
+                        <h3>Change password</h3>
+                        <p>Update your password to keep your account secure.</p>
                     </div>
 
-                </div>
+                    <form method="POST"
+                        action="{{ route('account.password.update') }}"
+                        id="passwordUpdateForm">
 
-                <div class="field" style="max-width:320px">
-                    <label>Password</label>
-                    <input type="password" value="••••••••••">
-                </div>
+                        @csrf
+                        @method('PUT')
 
-                <button class="btn sm">Save changes</button>
+                        <div class="field password-field" style="max-width:320px">
+                            <label for="current_password">Current password</label>
+
+                            <div class="password-input-wrapper">
+                                <input
+                                    type="password"
+                                    id="current_password"
+                                    name="current_password"
+                                    autocomplete="current-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    onclick="togglePassword('current_password', this)"
+                                    aria-label="Show password">
+                                    <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 3l18 18"/>
+                                        <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                                        <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
+                                        <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="password-row">
+
+                            <div class="field password-field">
+                                <label for="password">New password</label>
+
+                                <div class="password-input-wrapper">
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        onclick="togglePassword('password', this)"
+                                        aria-label="Show password"
+                                    >
+                                        <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 3l18 18"/>
+                                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                                            <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
+                                            <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="field password-field">
+                                <label for="password_confirmation">Confirm new password</label>
+
+                                <div class="password-input-wrapper">
+                                    <input
+                                        type="password"
+                                        id="password_confirmation"
+                                        name="password_confirmation"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        onclick="togglePassword('password_confirmation', this)"
+                                        aria-label="Show password"
+                                    >
+                                        <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 3l18 18"/>
+                                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                                            <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
+                                            <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn sm">
+                            Change password
+                        </button>
+
+                    </form>
+
+                </div>
 
             </div>
         </div>

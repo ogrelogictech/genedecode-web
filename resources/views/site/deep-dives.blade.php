@@ -24,14 +24,18 @@
 <section>
     <div class="wrap">
 
-        <div class="rowhead">
-            <h2>
-                <span class="bar"></span>
-                Continue watching
-            </h2>
-        </div>
+        <div id="continue-watching-section" style="display:none;">
 
-        <div class="rowscroll" id="row-continue"></div>
+            <div class="rowhead">
+                <h2>
+                    <span class="bar"></span>
+                    Continue watching
+                </h2>
+            </div>
+
+            <div class="rowscroll" id="row-continue"></div>
+
+        </div>
 
         <div class="rowhead" style="margin-top:40px">
             <h2>
@@ -56,13 +60,64 @@
 
 @push('scripts')
 <script>
-    render(
-        "row-continue",
-        VIDEOS.filter(function(v) {
-            return v.p > 0;
+    @auth
+        
+        fetch("{{ route('video.progress.index') }}", {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
         })
-    );
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error("Unable to load Continue Watching data.");
+            }
 
+            return response.json();
+        })
+        .then(function(data) {
+            if (!data.success || !Array.isArray(data.progress)) {
+                render("row-continue", []);
+                return;
+            }
+
+            var continueVideos = data.progress
+                .map(function(progress) {
+                    var video = VIDEOS.find(function(v) {
+                        return v.id === progress.video_id;
+                    });
+
+                    if (!video) {
+                        return null;
+                    }
+
+                    return Object.assign({}, video, {
+                        p: parseFloat(progress.progress_percent) || 0
+                    });
+                })
+                .filter(function(video) {
+                    return video !== null && video.c === "Deep Dive";
+                });
+
+            if (continueVideos.length > 0) {
+                document.getElementById("continue-watching-section").style.display = "";
+                render("row-continue", continueVideos);
+            } else {
+                document.getElementById("continue-watching-section").style.display = "none";
+                render("row-continue", []);
+            }
+        })
+        .catch(function(error) {
+            console.error("Unable to load Continue Watching:", error);
+
+            document.getElementById("continue-watching-section").style.display = "none";
+            render("row-continue", []);
+        });
+    @else
+        document.getElementById("continue-watching-section").style.display = "none";
+        render("row-continue", []);
+    @endauth
+    
     function ddList(val) {
         return val === "All" ? VIDEOS : byCat(val);
     }

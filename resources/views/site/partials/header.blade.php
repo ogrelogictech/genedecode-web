@@ -11,16 +11,37 @@
                 <img class="logo" src="{{ asset('site/assets/logo.png') }}" alt="Gene Decode">
             </a>
 
-            <select class="lang" aria-label="Select language">
-                <option selected>Select Language</option>
-                <option>English</option>
-                <option>Español</option>
-                <option>Português</option>
-                <option>Français</option>
-                <option>Deutsch</option>
-                <option>Italiano</option>
-                <option>Nederlands</option>
-            </select>
+            <div class="header-actions">
+
+                @auth
+                    <form method="POST" action="{{ route('logout') }}" class="header-logout-form">
+                        @csrf
+
+                        <button type="submit" class="header-logout">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                @endauth
+
+                <select class="lang" aria-label="Select language">
+                    <option selected>Select Language</option>
+                    <option>English</option>
+                    <option>Español</option>
+                    <option>Português</option>
+                    <option>Français</option>
+                    <option>Deutsch</option>
+                    <option>Italiano</option>
+                    <option>Nederlands</option>
+                </select>
+            </div>
 
         </div>
     </header>
@@ -73,15 +94,26 @@
                     FAQ
                 </a>
 
-                <a href="{{ url('/join-us') }}"
-                   class="{{ request()->is('join-us') ? 'on' : '' }}">
-                    Join Us
-                </a>
+                @guest
+                    <a href="{{ url('/login') }}"
+                    class="{{ request()->is('login') ? 'on' : '' }}">
+                        Login
+                    </a>
 
-                <a href="{{ url('/account') }}"
-                   class="{{ request()->is('account') ? 'on' : '' }}">
-                    Account
-                </a>
+                    <a href="{{ url('/join-us') }}"
+                    class="{{ request()->is('join-us') ? 'on' : '' }}">
+                        Join Us
+                    </a>
+                @endguest
+
+                @auth
+                    <a href="{{ url('/account') }}"
+                    class="{{ request()->is('account') ? 'on' : '' }}">
+                        Account
+                    </a>
+
+                    
+                @endauth
 
             </div>
         </div>

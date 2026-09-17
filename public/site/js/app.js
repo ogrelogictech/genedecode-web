@@ -76,3 +76,237 @@
     });
   });
 })();
+
+
+function closeSiteNotification() {
+    const notification = document.getElementById('siteNotification');
+
+    if (notification) {
+        notification.remove();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const profileForm = document.querySelector('form[action*="/account/profile"]');
+
+    if (!profileForm) {
+        return;
+    }
+
+    profileForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(profileForm);
+
+        try {
+            const response = await fetch(profileForm.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                showSiteNotification('success', data.message);
+            } else {
+                showSiteNotification('error', data.message, data.errors);
+            }
+
+        } catch (error) {
+            showSiteNotification(
+                'error',
+                'Something went wrong. Please try again.'
+            );
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const passwordForm = document.getElementById('passwordUpdateForm');
+
+    if (!passwordForm) {
+        return;
+    }
+
+    passwordForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(passwordForm);
+
+        try {
+            const response = await fetch(passwordForm.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': passwordForm.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                showSiteNotification('success', data.message);
+
+                passwordForm.reset();
+            } else {
+                showSiteNotification('error', data.message, data.errors);
+            }
+
+        } catch (error) {
+            showSiteNotification(
+                'error',
+                'Something went wrong. Please try again.'
+            );
+        }
+    });
+});
+
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+
+    if (!input) {
+        return;
+    }
+
+    const eyeIcon = button.querySelector('.eye-icon');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        button.setAttribute('aria-label', 'Hide password');
+
+        eyeIcon.innerHTML = `
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+            <circle cx="12" cy="12" r="3"/>
+        `;
+    } else {
+        input.type = 'password';
+        button.setAttribute('aria-label', 'Show password');
+
+        eyeIcon.innerHTML = `
+            <path d="M3 3l18 18"/>
+            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+            <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
+            <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
+        `;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const forgotPasswordForm = document.querySelector(
+        'form[action*="/forgot-password"]'
+    );
+
+    if (!forgotPasswordForm) {
+        return;
+    }
+
+    forgotPasswordForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(forgotPasswordForm);
+
+        try {
+            const response = await fetch(forgotPasswordForm.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': forgotPasswordForm.querySelector(
+                        'input[name="_token"]'
+                    ).value,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                showSiteNotification('success', data.message);
+                forgotPasswordForm.reset();
+            } else {
+                showSiteNotification(
+                    'error',
+                    data.message,
+                    data.errors
+                );
+            }
+
+        } catch (error) {
+            showSiteNotification(
+                'error',
+                'Something went wrong. Please try again.'
+            );
+        }
+    });
+});
+
+function showSiteNotification(type, message, errors = null) {
+    const existing = document.getElementById('siteNotification');
+
+    if (existing) {
+        existing.remove();
+    }
+
+    let content = '';
+
+    if (type === 'success') {
+        content = `
+            <div class="site-notification-icon success">
+                ✓
+            </div>
+
+            <h3>Success</h3>
+
+            <p>${message}</p>
+        `;
+    } else {
+        let errorList = '';
+
+        if (errors) {
+            Object.values(errors).flat().forEach(function (error) {
+                errorList += `<li>${error}</li>`;
+            });
+        }
+
+        content = `
+            <div class="site-notification-icon error">
+                !
+            </div>
+
+            <h3>Please check the following</h3>
+
+            ${errorList ? `<ul>${errorList}</ul>` : `<p>${message}</p>`}
+        `;
+    }
+
+    const notification = document.createElement('div');
+
+    notification.id = 'siteNotification';
+    notification.className = 'site-notification-overlay';
+
+    notification.innerHTML = `
+        <div class="site-notification">
+
+            <button
+                type="button"
+                class="site-notification-close"
+                onclick="closeSiteNotification()"
+                aria-label="Close notification"
+            >
+                &times;
+            </button>
+
+            ${content}
+
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+}

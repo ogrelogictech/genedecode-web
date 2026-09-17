@@ -15,6 +15,7 @@
     @include('site.partials.header')
 
     <main>
+        @include('site.partials.notification')
         @yield('content')
     </main>
 

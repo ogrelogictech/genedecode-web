@@ -233,3 +233,273 @@ footer.site{background:linear-gradient(180deg,#0a1428,#070b16);border-top:2px so
   .foot-top{gap:12px}
   .news{flex-direction:column}
 }
+
+
+/* =========================================
+   SITE NOTIFICATION POPUP
+   ========================================= */
+
+.site-notification-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.site-notification {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    padding: 32px;
+    text-align: center;
+    background: #101914;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.site-notification h3 {
+    margin: 12px 0 8px;
+    font-size: 20px;
+}
+
+.site-notification p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.site-notification ul {
+    margin: 12px 0 0;
+    padding-left: 20px;
+    text-align: left;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.site-notification-icon {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.site-notification-icon.success {
+    background: rgba(100, 180, 120, 0.15);
+}
+
+.site-notification-icon.error {
+    background: rgba(220, 100, 100, 0.15);
+}
+
+.site-notification-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.site-notification-close:hover {
+    color: #fff;
+}
+
+
+/* =========================================
+   HEADER AUTH ACTIONS
+   ========================================= */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.header-logout-form {
+    margin: 0;
+    padding: 0;
+}
+
+.header-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    height: 36px;
+    padding: 0 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 7px;
+
+    background: rgba(67, 92, 126, 0.55);
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.header-logout svg {
+    flex-shrink: 0;
+}
+
+.header-logout:hover {
+    background: rgba(80, 108, 145, 0.75);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.header-logout:active {
+    transform: translateY(1px);
+}
+
+/* =========================================
+   ACCOUNT PASSWORD SECTION
+   ========================================= */
+
+.account-password-section {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.account-password-header {
+    margin-bottom: 22px;
+}
+
+.account-password-header h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.account-password-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================================
+   PASSWORD FIELDS
+   ========================================= */
+
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 44px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+    border: 0;
+    background: transparent;
+
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    color: #fff;
+}
+
+.password-row {
+    display: flex;
+    gap: 16px;
+}
+
+.password-row .field {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .password-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* =========================================
+   LOGIN PASSWORD FIELD
+   ========================================= */
+
+.login-password-field .password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.login-password-field .password-input-wrapper input {
+    width: 100%;
+    padding-right: 44px;
+}
+
+.login-password-field .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    border: 0;
+    background: transparent;
+
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.login-password-field .password-toggle:hover {
+    color: #fff;
+}
