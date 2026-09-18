@@ -23,7 +23,7 @@ function fromParam(){return document.body.dataset.page||"";}
 function card(v,locked){
   var prog = v.p>0 ? '<div class="progress"><i style="width:'+v.p+'%"></i></div>' : '';
   var lock = locked ? '<span class="lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span>' : '';
-  return '<a class="card" href="/watch?v='+v.id+'&from='+fromParam()+'"><div class="thumb" style="background-image:url(/site/assets/vid/'+v.id+'.jpg)">'
+  return '<a class="card'+(locked?' locked':'')+'" href="watch?v='+v.id+'&from='+fromParam()+'"><div class="thumb" style="background-image:url(site/assets/vid/'+v.id+'.jpg)">'
     +'<span class="tag">'+tag(v.c)+'</span><span class="dur">'+v.d+'</span>'+lock+'</div>'+prog
     +'<div class="body"><h3>'+v.t+'</h3><p>'+v.s+'</p></div></a>';
 }

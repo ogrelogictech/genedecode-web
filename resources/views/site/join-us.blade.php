@@ -16,7 +16,20 @@
     </div>
 </section>
 
-<section>
+<section style="padding-top:0">
+    <div class="wrap">
+        <div class="linkbox">
+            <div class="lb-ic"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8V21M12 8S9.5 3.5 7.5 5s1 3 4.5 3M12 8s2.5-4.5 4.5-3-1 3-4.5 3"/></svg></div>
+            <div style="min-width:0">
+                <h3>Buying for someone else?</h3>
+                <p>Gift a membership and we will send you a shareable link to give.</p>
+            </div>
+            <a class="btn ghost" href="{{ URL('gift') }}">Gift a membership</a>
+        </div>
+    </div>
+</section>
+
+<section style="padding-top:0">
     <div class="wrap">
         <form method="POST" action="{{ route('register.store') }}">
             @csrf

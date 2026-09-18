@@ -77,7 +77,7 @@
 
             <div style="margin-top:8px">
                 <a class="btn" href="{{ url('/join-us') }}">
-                    Subscribe to Deep Dives
+                    Get Membership
                 </a>
             </div>
 
@@ -85,5 +85,6 @@
 
     </div>
 </section>
+<div class="fullband"><div class="ph">Full-width feature image across the page &mdash; client to supply.<br>Recommended: 2560 &times; 760 px (JPG or WebP, under 400 KB).</div></div>
 
 @endsection

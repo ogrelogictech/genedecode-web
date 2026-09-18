@@ -67,43 +67,47 @@
 
                 <a href="{{ url('/schedule') }}"
                    class="{{ request()->is('schedule') ? 'on' : '' }}">
-                    Schedule
+                    Calendar
                 </a>
+                
 
                 <a href="{{ url('/surface-area') }}"
                    class="{{ request()->is('surface-area') ? 'on' : '' }}">
                     Surface Area
                 </a>
 
-                <a href="{{ url('/interviews') }}" class="{{ request()->is('interviews') || (request()->is('watch') && request('from') === 'interviews') ? 'on' : '' }}">Interviews & Videos</a>
+                {{-- <a href="{{ url('/interviews') }}" class="{{ request()->is('interviews') || (request()->is('watch') && request('from') === 'interviews') ? 'on' : '' }}">Interviews & Videos</a> --}}
 
-                <a href="{{ url('/deep-dives') }}" class="{{ request()->is('deep-dives') || (request()->is('watch') && request('from') === 'deep-dives') ? 'on' : '' }}">Deep Dives</a>
+                <a href="{{ url('/deep-dives') }}" class="{{ request()->is('deep-dives') || (request()->is('watch') && request('from') === 'deep-dives') ? 'on' : '' }}">Deep Dives Catalog</a>
 
-                <a href="{{ url('/community') }}"
+                {{-- <a href="{{ url('/community') }}"
                    class="{{ request()->is('community') ? 'on' : '' }}">
                     Community
-                </a>
+                </a> --}}
 
                 <a href="{{ url('/donate') }}"
                    class="{{ request()->is('donate') ? 'on' : '' }}">
                     Donate
                 </a>
 
-                <a href="{{ url('/faq') }}"
+                {{-- <a href="{{ url('/faq') }}"
                    class="{{ request()->is('faq') ? 'on' : '' }}">
                     FAQ
-                </a>
+                </a> --}}
 
                 @guest
-                    <a href="{{ url('/login') }}"
-                    class="{{ request()->is('login') ? 'on' : '' }}">
-                        Login
-                    </a>
 
                     <a href="{{ url('/join-us') }}"
                     class="{{ request()->is('join-us') ? 'on' : '' }}">
                         Join Us
                     </a>
+                    
+                    <a href="{{ url('/login') }}"
+                    class="{{ request()->is('login') ? 'on nav-login' : 'nav-login' }}">
+                        Login
+                    </a>
+
+                   
                 @endguest
 
                 @auth

@@ -51,6 +51,213 @@
   var h = document.getElementById("site-header"); if(h) h.outerHTML = header;
   var f = document.getElementById("site-footer"); if(f) f.outerHTML = footer;
 
+
+    /* =========================
+     SUPPORT CHAT (AI first line, escalates to a human)
+  ========================= */
+
+  if(!document.getElementById("support-widget")){
+
+    var sw = document.createElement("div");
+    sw.id = "support-widget";
+    sw.innerHTML =
+      '<button class="support-fab" aria-label="Open support chat" aria-expanded="false">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 11.5a8.5 8.5 0 01-12.2 7.6L3 21l1.9-5.8A8.5 8.5 0 1121 11.5z"/></svg>' +
+        '<span>Support</span>' +
+      '</button>' +
+      '<div class="support-panel" hidden>' +
+        '<div class="support-head">' +
+          '<div><b>Gene Decode Support</b><span>AI assistant · replies in seconds</span></div>' +
+          '<button class="support-close" aria-label="Close support chat">&times;</button>' +
+        '</div>' +
+        '<div class="support-body">' +
+          '<div class="support-msg bot">Hi! I can help with membership, sign in, billing, and playback. What do you need?</div>' +
+          '<div class="support-quick">' +
+            '<button>How do I become a member?</button>' +
+            '<button>I can\'t sign in</button>' +
+            '<button>Billing question</button>' +
+          '</div>' +
+          '<div class="support-msg bot">If I can\'t solve it, I\'ll connect you with a person.</div>' +
+        '</div>' +
+        '<div class="support-foot">' +
+          '<input class="support-input" placeholder="Type your message">' +
+          '<button class="support-human">Talk to a human</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(sw);
+
+    var fab = sw.querySelector(".support-fab");
+    var panel = sw.querySelector(".support-panel");
+    var closeBtn = sw.querySelector(".support-close");
+    function openPanel(o){ panel.hidden = !o; fab.setAttribute("aria-expanded", o ? "true" : "false"); }
+    fab.addEventListener("click", function(){ openPanel(panel.hidden); });
+    closeBtn.addEventListener("click", function(){ openPanel(false); });
+  }
+
+
+  /* =========================
+     GOOGLE TRANSLATE CONTAINER
+  ========================= */
+
+  if(!document.getElementById("google_translate_element")){
+
+    var translateDiv = document.createElement("div");
+
+    translateDiv.id = "google_translate_element";
+
+    translateDiv.style.display = "none";
+
+    document.body.appendChild(translateDiv);
+
+  }
+
+
+  /* =========================
+     GOOGLE TRANSLATE INIT
+  ========================= */
+
+  window.googleTranslateElementInit = function(){
+
+    if(
+      window.google &&
+      google.translate &&
+      google.translate.TranslateElement
+    ){
+
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: "en",
+          autoDisplay: false,
+          includedLanguages: "en,es,pt,fr,de,it,nl"
+        },
+        "google_translate_element"
+      );
+
+    }
+
+  };
+
+
+  /* =========================
+     LOAD GOOGLE TRANSLATE
+  ========================= */
+
+  if(!document.querySelector('script[src*="translate.google.com"]')){
+
+    var googleScript = document.createElement("script");
+
+    googleScript.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+
+    googleScript.async = true;
+
+    document.head.appendChild(googleScript);
+
+  }
+
+
+  /* =========================
+     LANGUAGE CHANGE
+  ========================= */
+
+  var langSelect = document.querySelector(".lang");
+
+  if(langSelect){
+
+    langSelect.addEventListener("change", function(){
+
+      var selectedLanguage = this.value;
+
+      if(!selectedLanguage){
+        return;
+      }
+
+      /*
+       * Google Translate dropdown load hone me
+       * thoda time lag sakta hai.
+       */
+
+      var attempts = 0;
+
+      var changeLanguage = setInterval(function(){
+
+        attempts++;
+
+        var googleSelect = document.querySelector(".goog-te-combo");
+
+        if(googleSelect){
+
+          googleSelect.value = selectedLanguage;
+
+          googleSelect.dispatchEvent(
+            new Event("change", {
+              bubbles: true
+            })
+          );
+
+          clearInterval(changeLanguage);
+
+        }
+
+        /*
+         * Maximum 5 seconds wait
+         */
+
+        if(attempts >= 25){
+
+          clearInterval(changeLanguage);
+
+        }
+
+      }, 200);
+
+    });
+
+  }
+
+
+  /* =========================
+     RESTORE SELECTED LANGUAGE
+     ========================= */
+
+  try{
+
+    var savedLanguage = localStorage.getItem("geneDecodeLanguage");
+
+    if(savedLanguage && langSelect){
+
+      langSelect.value = savedLanguage;
+
+    }
+
+  }catch(e){}
+
+
+  /* Save language selection */
+
+  if(langSelect){
+
+    langSelect.addEventListener("change", function(){
+
+      try{
+
+        if(this.value){
+
+          localStorage.setItem(
+            "geneDecodeLanguage",
+            this.value
+          );
+
+        }
+
+      }catch(e){}
+
+    });
+
+  }
+
+
+
   // hamburger toggle
   var toggle = document.querySelector(".navtoggle");
   var mainNav = document.querySelector("nav.main");

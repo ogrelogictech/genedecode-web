@@ -17,7 +17,7 @@
 
         <div class="cta">
             <a class="btn" href="{{ url('/join-us') }}">
-                Subscribe to Deep Dives
+                Get Membership
             </a>
 
             <a class="btn ghost" href="{{ url('/surface-area') }}">
@@ -166,7 +166,7 @@
         <span class="kicker">Membership</span>
 
         <h2 class="head">
-            Subscribe to Gene Decode Deep Dives
+            Gene Decode Membership
         </h2>
 
         <p class="subnote">
@@ -267,6 +267,15 @@
                 </div>
             </div>
 
+        </div>
+        <div class="card-panel" style="max-width:720px;margin:26px auto 0;display:flex;align-items:center;gap:18px;text-align:left;flex-wrap:wrap">
+            <div style="width:52px;height:52px;border-radius:12px;background:rgba(124,194,66,.15);border:1px solid rgba(124,194,66,.4);display:flex;align-items:center;justify-content:center;color:var(--green-l);flex:0 0 auto">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8V21M12 8S9.5 3.5 7.5 5s1 3 4.5 3M12 8s2.5-4.5 4.5-3-1 3-4.5 3"/></svg>
+            </div>
+            <div style="min-width:0"><h3 style="font-family:var(--serif);font-size:20px;margin:0 0 3px;color:#fff">Gift a Membership</h3>
+                <p style="margin:0;color:var(--muted);font-size:14px">Give someone full access to Deep Dives. You get a shareable gift link to send.</p>
+            </div>
+            <a class="btn ghost" style="margin-left:auto" href="{{ URL('gift') }}">Gift a membership</a>
         </div>
 
     </div>

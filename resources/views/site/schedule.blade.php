@@ -8,13 +8,12 @@
 
 <section class="pagehero">
     <div class="wrap">
-        <span class="kicker">Schedule</span>
+        <span class="kicker">Calendar</span>
 
-        <h1>Schedule &amp; Newsletters</h1>
+        <h1>Calendar</h1>
 
         <p>
-            Upcoming interviews, community chats, Q&amp;A Zooms, and Deep Dive releases.
-            Sign up to get them in your inbox.
+            Upcoming interviews, community chats, Q&amp;A Zooms, and Deep Dive releases. Members can join live events right from here.
         </p>
     </div>
 </section>

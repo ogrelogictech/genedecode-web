@@ -9,6 +9,10 @@ Route::get('/', function () {
     return view('site.home');
 });
 
+Route::get('/gift', function () {
+    return view('site.gift');
+});
+
 Route::get('/about', function () {
     return view('site.about');
 });

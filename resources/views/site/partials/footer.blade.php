@@ -12,6 +12,7 @@
             <a href="{{ url('/privacy') }}">Privacy</a>
             <a href="{{ url('/terms') }}">Terms & Conditions</a>
             <a href="{{ url('/subscriber-agreement') }}">Subscriber Agreement</a>
+            <a href="{{ url('/faq') }}">FAQ</a>
             <a href="{{ url('/contact') }}">Contact Us</a>
             <a href="https://blessedforservice.org/" target="_blank">Blessedforservice.org</a>
             <a href="{{ url('/live') }}">Live</a>
