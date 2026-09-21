@@ -72,8 +72,8 @@
 
     document.getElementById("stage").innerHTML =
         '<video class="vplayer" poster="/site/assets/vid/' + v.id + '.jpg" controls playsinline preload="none">' +
-            // '<source src="' + SAMPLE_VIDEO + '" type="video/mp4">' +
-            '<source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">' +
+            '<source src="' + SAMPLE_VIDEO + '" type="video/mp4">' +
+            // '<source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">' +
             'Your browser does not support the video tag.' +
         '</video>';
 
