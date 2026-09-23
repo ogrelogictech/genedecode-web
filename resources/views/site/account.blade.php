@@ -43,37 +43,100 @@
                     Shown when you participate in the community or comment on videos
                     and live events.
                 </p>
+                
+                <form method="POST" action="{{ route('account.publicprofile.update') }}" enctype="multipart/form-data" >
+                    @csrf
+                    @method('PUT')
 
-                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-                    <div class="avatar" style="width:56px;height:56px">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+                        <div class="avatar" id="avatarContainer" style="width:56px;height:56px;overflow:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#1a2332;">
+                            @if(auth()->user()->profilepic)
+                                <img src="{{ asset('storage/' . auth()->user()->profilepic) }}" alt="Avatar" id="avatarPreview" style="width:100%;height:100%;object-fit:cover;">
+                            @else
+                                <span id="avatarText">{{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}</span>
+                            @endif
+                        </div>
+
+                        <input type="file" name="avatar" id="avatarInput" accept="image/*" style="display:none;" onchange="previewImage(this)">
+                        
+                        <div>
+                            <button type="button" class="btn sm ghost" onclick="document.getElementById('avatarInput').click();">
+                                Change photo
+                            </button>
+                            <span style="display:block; color:var(--muted); font-size:12px; margin-top:4px;">
+                                JPG, PNG or WEBP. Max size 2MB.
+                            </span>
+                        </div>
                     </div>
-                    <button class="btn sm ghost">Change photo</button>
-                </div>
 
-                <div class="acct-grid">
+                    <div class="acct-grid">
+
+                        <div class="field">
+                            <label for="display_name">Display name</label>
+                            <input 
+                                type="text" 
+                                id="display_name" 
+                                name="display_name" 
+                                placeholder="Your nickname" required
+                                value="{{ old('display_name', auth()->user()->display_name) }}"
+                                oninput="this.value = this.value.replace(/^\s+/, '')"
+                            >
+                            @error('display_name')
+                                <span style="color: #ff4d4d; font-size: 12px;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="field">
+                            <label for="location">Location</label>
+                            <input 
+                                type="text" 
+                                id="location" 
+                                name="location" 
+                                placeholder="Your city" required
+                                value="{{ old('location', auth()->user()->location) }}"
+                                oninput="this.value = this.value.replace(/^\s+/, '')"
+                            >
+                            @error('location')
+                                <span style="color: #ff4d4d; font-size: 12px;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                    </div>
 
                     <div class="field">
-                        <label>Display name</label>
-                        <input placeholder="Your nickname">
+                        <label for="bio">Bio</label>
+                        <textarea 
+                            id="bio" 
+                            name="bio" 
+                            rows="3" 
+                            placeholder="A little about you" required
+                            oninput="this.value = this.value.replace(/^\s+/, '')"
+                        >{{ old('bio', auth()->user()->bio) }}</textarea>
+                        @error('bio')
+                            <span style="color: #ff4d4d; font-size: 12px;">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="field">
-                        <label>Location</label>
-                        <input placeholder="Select your city">
+                        <label for="website">Website / socials</label>
+                        <input 
+                            type="text" 
+                            id="website" 
+                            name="website" 
+                            placeholder="http://example.com" 
+                            value="{{ old('website', auth()->user()->website) }}"
+                            oninput="this.value = this.value.replace(/\s/g, '')"
+                        >
+                        @error('website')
+                            <span style="color: #ff4d4d; font-size: 12px;">{{ $message }}</span>
+                        @enderror
                     </div>
 
-                </div>
+                    <button type="submit" class="btn sm">
+                        Save changes
+                    </button>
 
-                <div class="field">
-                    <label>Bio</label>
-                    <textarea rows="3" placeholder="A little about you"></textarea>
-                </div>
-
-                <div class="field">
-                    <label>Website / socials</label>
-                    <input placeholder="http://example.com">
-                </div>
+                </form>
             </div>
 
             <div class="card-panel">
@@ -107,7 +170,7 @@
                                 id="email"
                                 name="email"
                                 value="{{ old('email', auth()->user()->email) }}"
-                                required
+                                required readonly
                                 oninput="this.value = this.value.replace(/\s/g, '')"
                             >
                         </div>
@@ -341,4 +404,46 @@
     </div>
 </section>
 
+
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
+
+        // Check if file size exceeds 2MB
+        if (file.size > maxSizeInBytes) {
+            showSiteNotification('error', 'Image size is too large. Please select an image under 2MB.');
+            input.value = ''; // Reset file input
+            return;
+        }
+
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            var container = document.getElementById('avatarContainer');
+            var preview = document.getElementById('avatarPreview');
+            var avatarText = document.getElementById('avatarText');
+
+            if (avatarText) {
+                avatarText.style.display = 'none';
+            }
+
+            if (!preview) {
+                preview = document.createElement('img');
+                preview.id = 'avatarPreview';
+                preview.style.width = '100%';
+                preview.style.height = '100%';
+                preview.style.objectFit = 'cover';
+                container.appendChild(preview);
+            }
+
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+</script>
 @endsection

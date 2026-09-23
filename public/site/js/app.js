@@ -334,6 +334,47 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+    const publicProfileForm = document.querySelector('form[action*="/account/publicprofile"]');
+
+    if (!publicProfileForm) {
+        return;
+    }
+
+    publicProfileForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(publicProfileForm);
+
+        try {
+            const response = await fetch(publicProfileForm.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': publicProfileForm.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Same styled popup notification show karega
+                showSiteNotification('success', data.message);
+            } else {
+                showSiteNotification('error', data.message, data.errors);
+            }
+
+        } catch (error) {
+            showSiteNotification(
+                'error',
+                'Something went wrong. Please try again.'
+            );
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
     const passwordForm = document.getElementById('passwordUpdateForm');
 
     if (!passwordForm) {

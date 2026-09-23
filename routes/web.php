@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Site\AuthController;
 use App\Http\Controllers\Site\AccountController;
 use App\Http\Controllers\Site\VideoProgressController;
+use App\Http\Controllers\Site\WatchController;
 
 Route::get('/', function () {
     return view('site.home');
@@ -53,6 +54,7 @@ Route::get('/account', function () {
     return view('site.account');
 })->middleware('auth');
 Route::put('/account/profile', [AccountController::class, 'updateProfile'])->middleware('auth')->name('account.profile.update');
+Route::put('/account/publicprofile', [AccountController::class, 'updatePublicProfile'])->middleware('auth')->name('account.publicprofile.update');
 Route::put('/account/password', [AccountController::class, 'updatePassword'])->middleware('auth')->name('account.password.update');
 
 Route::get('/contact', function () {
@@ -75,9 +77,9 @@ Route::get('/subscriber-agreement', function () {
     return view('site.subscriber-agreement');
 });
 
-Route::get('/watch', function () {
-    return view('site.watch');
-});
+// Route::get('/watch', function () {
+//     return view('site.watch');
+// });
 
 Route::post('/register', [AuthController::class, 'register'])
     ->middleware('guest')
@@ -118,6 +120,11 @@ Route::post('/video-progress', [VideoProgressController::class, 'store'])
 Route::get('/video-progress/{videoId}', [VideoProgressController::class, 'show'])
     ->middleware('auth')
     ->name('video.progress.show');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/watch/{videoId?}', [WatchController::class, 'show'])->name('watch');
+});
 
 
     
