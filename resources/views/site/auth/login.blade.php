@@ -24,6 +24,7 @@
                             value="{{ old('email') }}"
                             autocomplete="off"
                             required
+                            oninput="this.value = this.value.replace(/\s/g, '')"
                         >
                     </div>
                     <div class="field">
@@ -36,6 +37,7 @@
                                 placeholder="Enter your password"
                                 autocomplete="off"
                                 required
+                                oninput="this.value = this.value.replace(/\s/g, '')"
                             >
 
                             <button
