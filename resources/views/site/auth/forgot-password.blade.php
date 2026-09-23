@@ -20,7 +20,11 @@
 
         <div class="card-panel">
 
-            <form method="POST" action="{{ url('/forgot-password') }}">
+            <form
+                method="POST"
+                action="{{ url('/forgot-password') }}"
+                onsubmit="showResetLoading(this)"
+            >
                 @csrf
 
                 <div class="field">
@@ -34,15 +38,21 @@
                         value="{{ old('email') }}"
                         autocomplete="email"
                         required
+                        oninput="this.value = this.value.replace(/\s/g, '')"
                     >
                 </div>
 
                 <button
                     type="submit"
                     class="btn"
-                    style="width:100%; justify-content: center;"
+                    id="reset-password-btn"
+                    style="width:100%; justify-content:center;"
                 >
-                    Send reset link
+                    <span id="reset-button-text">Send reset link</span>
+                    <span id="reset-button-spinner" style="display:none;">
+                        <span class="loading-spinner"></span>
+                        Sending...
+                    </span>
                 </button>
 
             </form>
@@ -63,4 +73,48 @@
     </div>
 </section>
 
+<style>
+    .loading-spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255,255,255,.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: resetSpinner .7s linear infinite;
+        vertical-align: -2px;
+        margin-right: 7px;
+    }
+
+    @keyframes resetSpinner {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<script>
+    function showResetLoading(form) {
+        const button = form.querySelector('#reset-password-btn');
+        const buttonText = form.querySelector('#reset-button-text');
+        const spinner = form.querySelector('#reset-button-spinner');
+
+        button.disabled = true;
+        button.style.cursor = 'default';
+        
+        buttonText.style.display = 'none';
+        spinner.style.display = 'inline-flex';
+        spinner.style.alignItems = 'center';
+    }
+
+    document.addEventListener('click', function (event) {
+        const closeButton = event.target.closest('.site-notification-close');
+
+        if (closeButton) {
+            window.location.href = '{{ url('/') }}';
+        }
+    });
+</script>
+
 @endsection
+
