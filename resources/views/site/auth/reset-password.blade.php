@@ -19,7 +19,7 @@
 
         <div class="card-panel">
 
-            <form method="POST" action="{{ url('/reset-password') }}">
+            <form method="POST" action="{{ url('/reset-password') }}" onsubmit="showResetPasswordLoading(this)">
                 @csrf
 
                 <input type="hidden" name="token" value="{{ $token }}">
@@ -33,7 +33,7 @@
                         name="email"
                         value="{{ old('email', $email) }}"
                         autocomplete="email"
-                        required
+                        required readonly
                     >
                 </div>
 
@@ -47,6 +47,7 @@
                             name="password"
                             autocomplete="new-password"
                             required
+                            oninput="this.value = this.value.replace(/\s/g, '')"
                         >
 
                         <button
@@ -85,6 +86,7 @@
                             name="password_confirmation"
                             autocomplete="new-password"
                             required
+                            oninput="this.value = this.value.replace(/\s/g, '')"
                         >
 
                         <button
@@ -116,9 +118,15 @@
                 <button
                     type="submit"
                     class="btn"
+                    id="reset-password-btn"
                     style="width:100%;justify-content:center;"
                 >
-                    Reset password
+                    <span id="reset-password-button-text">Reset password</span>
+
+                    <span id="reset-password-button-spinner" style="display:none;">
+                        <span class="loading-spinner"></span>
+                        Resetting...
+                    </span>
                 </button>
             </form>
 
@@ -132,4 +140,39 @@
         </div>
     </div>
 </section>
+
+<style>
+    .loading-spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255,255,255,.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: resetPasswordSpinner .7s linear infinite;
+        vertical-align: -2px;
+        margin-right: 7px;
+    }
+
+    @keyframes resetPasswordSpinner {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<script>
+    function showResetPasswordLoading(form) {
+        const button = form.querySelector('#reset-password-btn');
+        const buttonText = form.querySelector('#reset-password-button-text');
+        const spinner = form.querySelector('#reset-password-button-spinner');
+
+        button.disabled = true;
+        button.style.cursor = 'default';
+
+        buttonText.style.display = 'none';
+        spinner.style.display = 'inline-flex';
+        spinner.style.alignItems = 'center';
+    }
+</script>
 @endsection
