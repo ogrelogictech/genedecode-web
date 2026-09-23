@@ -96,6 +96,7 @@
                                 name="name"
                                 value="{{ old('name', auth()->user()->name) }}"
                                 required
+                                oninput="this.value = this.value.replace(/^\s+/, '')" autocomplete="off"
                             >
                         </div>
 
@@ -107,6 +108,7 @@
                                 name="email"
                                 value="{{ old('email', auth()->user()->email) }}"
                                 required
+                                oninput="this.value = this.value.replace(/\s/g, '')"
                             >
                         </div>
 
@@ -144,6 +146,7 @@
                                     name="current_password"
                                     autocomplete="current-password"
                                     required
+                                    oninput="this.value = this.value.replace(/\s/g, '')"
                                 >
 
                                 <button
@@ -175,6 +178,7 @@
                                         name="password"
                                         autocomplete="new-password"
                                         required
+                                        oninput="this.value = this.value.replace(/\s/g, '')"
                                     >
 
                                     <button
@@ -205,6 +209,7 @@
                                         name="password_confirmation"
                                         autocomplete="new-password"
                                         required
+                                        oninput="this.value = this.value.replace(/\s/g, '')"
                                     >
 
                                     <button
