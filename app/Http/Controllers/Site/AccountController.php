@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
 {
@@ -73,9 +74,14 @@ class AccountController extends Controller
             'password' => $validated['password'],
         ]);
 
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return response()->json([
-            'success' => true,
-            'message' => 'Your password has been changed successfully.',
+            'success'  => true,
+            'message'  => 'Your password has been changed successfully. Please log in again.',
+            'redirect' => route('login'), 
         ]);
     }
 }

@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Donate')
+@section('title', 'gene Decode — Donate')
 
 @section('page', 'donate')
 
@@ -40,7 +40,7 @@
                 Prefer to send a check or money order? Mail to:<br>
 
                 <b style="color:var(--text)">
-                    Gene Decode · PO Box 0000 · Your City, ST 00000
+                    gene Decode · PO Box 0000 · Your City, ST 00000
                 </b>
             </div>
 

@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Surface Area')
+@section('title', 'gene Decode — Surface Area')
 
 @section('page', 'surface')
 

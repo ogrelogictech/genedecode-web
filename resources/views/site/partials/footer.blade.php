@@ -45,7 +45,7 @@
     </div>
 
     <div class="wrap foot-copy">
-        © 2026 Gene Decode. All Rights Reserved.
+        © 2026 gene Decode. All Rights Reserved.
         &nbsp;·&nbsp;
         Site by
         <a

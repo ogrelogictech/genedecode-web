@@ -51,7 +51,7 @@
                     <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
                         <div class="avatar" id="avatarContainer" style="width:56px;height:56px;overflow:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#1a2332;">
                             @if(auth()->user()->profilepic)
-                                <img src="{{ asset('storage/' . auth()->user()->profilepic) }}" alt="Avatar" id="avatarPreview" style="width:100%;height:100%;object-fit:cover;">
+                                <img src="{{ url('/user-avatar/' . basename(auth()->user()->profilepic)) }}" alt="Avatar" id="avatarPreview" style="width:100%;height:100%;object-fit:cover;">
                             @else
                                 <span id="avatarText">{{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}</span>
                             @endif
@@ -411,10 +411,9 @@ function previewImage(input) {
         const file = input.files[0];
         const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
 
-        // Check if file size exceeds 2MB
         if (file.size > maxSizeInBytes) {
             showSiteNotification('error', 'Image size is too large. Please select an image under 2MB.');
-            input.value = ''; // Reset file input
+            input.value = '';
             return;
         }
 

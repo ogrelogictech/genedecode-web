@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Join Us')
+@section('title', 'gene Decode — Join Us')
 @section('page', 'join')
 
 @section('content')
@@ -8,7 +8,7 @@
 <section class="pagehero">
     <div class="wrap">
         <span class="kicker">Membership</span>
-        <h1>Join Gene Decode Deep Dives</h1>
+        <h1>Join gene Decode Deep Dives</h1>
         <p>
             Choose a plan, create your account, and get instant access to the full library,
             the monthly content, live Q&amp;A Zooms, and the community.
@@ -16,7 +16,7 @@
     </div>
 </section>
 
-<section style="padding-top:0">
+<section style="padding-top:10">
     <div class="wrap">
         <div class="linkbox">
             <div class="lb-ic"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8V21M12 8S9.5 3.5 7.5 5s1 3 4.5 3M12 8s2.5-4.5 4.5-3-1 3-4.5 3"/></svg></div>
@@ -101,6 +101,7 @@
                                     value="{{ old('name') }}"
                                     autocomplete="name"
                                     required
+                                    oninput="this.value = this.value.replace(/^\s+/, '')"
                                 >
                             </div>
 
@@ -114,6 +115,7 @@
                                     value="{{ old('email') }}"
                                     autocomplete="email"
                                     required
+                                    oninput="this.value = this.value.replace(/\s/g, '')"
                                 >
                             </div>
 
@@ -131,6 +133,7 @@
                                         placeholder="Create a password"
                                         autocomplete="new-password"
                                         required
+                                        oninput="this.value = this.value.replace(/\s/g, '')"
                                     >
 
                                     <button
@@ -160,6 +163,7 @@
                                         placeholder="Confirm your password"
                                         autocomplete="new-password"
                                         required
+                                        oninput="this.value = this.value.replace(/\s/g, '')"
                                     >
                                     <button
                                         type="button"
@@ -230,7 +234,7 @@
 
                         <div style="display:flex;gap:8px">
                             <input placeholder="Enter code">
-                            <button class="btn sm ghost">Apply</button>
+                            <button class="btn sm ghost" disabled>Apply</button>
                         </div>
                     </div>
 

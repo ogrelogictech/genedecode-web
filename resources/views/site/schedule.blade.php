@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Schedule & Newsletters')
+@section('title', 'gene Decode — Schedule & Newsletters')
 
 @section('page', 'schedule')
 

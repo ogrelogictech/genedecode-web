@@ -284,12 +284,19 @@
   });
 })();
 
+window.onNotificationClose = null;
 
 function closeSiteNotification() {
     const notification = document.getElementById('siteNotification');
 
     if (notification) {
         notification.remove();
+    }
+
+    if (typeof window.onNotificationClose === 'function') {
+        const callback = window.onNotificationClose;
+        window.onNotificationClose = null;
+        callback();
     }
 }
 
@@ -359,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Same styled popup notification show karega
                 showSiteNotification('success', data.message);
             } else {
                 showSiteNotification('error', data.message, data.errors);
@@ -400,7 +406,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                showSiteNotification('success', data.message);
+                showSiteNotification('success', data.message, null, function () {
+                    window.location.href = data.redirect || '/login';
+                });
 
                 passwordForm.reset();
             } else {
@@ -495,42 +503,104 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function showSiteNotification(type, message, errors = null) {
+function confirmLogout(event) {
+    if (event) event.preventDefault();
+
+    const existing = document.getElementById('logoutConfirmModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'logoutConfirmModal';
+    modal.className = 'site-notification-overlay';
+
+    modal.innerHTML = `
+        <div class="site-notification" style="background: #e2e8f0; color: #000000; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 24px;">
+            <button
+                type="button"
+                class="site-notification-close"
+                onclick="closeLogoutModal()"
+                aria-label="Close"
+                style="color: #1e293b; font-weight: bold;"
+            >
+                &times;
+            </button>
+
+            <div class="site-notification-icon" style="background: rgba(245, 158, 11, 0.2); color: #b45309; border: 1.5px solid #d97706;">
+                ?
+            </div>
+
+            <h3 style="color: #000000; font-size: 20px; margin-top: 10px; margin-bottom: 8px; font-weight: 700;">Confirm Logout</h3>
+
+            <p style="margin-bottom: 20px; color: #111827; font-size: 14.5px; font-weight: 500;">Are you sure you want to logout?</p>
+
+            <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+                <button
+                    type="button"
+                    class="btn sm"
+                    onclick="document.getElementById('headerLogoutForm').submit()"
+                >
+                    Yes
+                </button>
+
+                <button
+                    type="button"
+                    class="btn sm"
+                    onclick="closeLogoutModal()"
+                >
+                    No
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function closeLogoutModal() {
+    const modal = document.getElementById('logoutConfirmModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function showSiteNotification(type, message, errors = null, onClose = null) {
     const existing = document.getElementById('siteNotification');
 
     if (existing) {
         existing.remove();
     }
 
+    window.onNotificationClose = onClose;
+
     let content = '';
 
     if (type === 'success') {
         content = `
-            <div class="site-notification-icon success">
+            <div class="site-notification-icon success" style="background: rgba(111, 182, 70, 0.25); color: #1e5622; border: 1.5px solid #489325;">
                 ✓
             </div>
 
-            <h3>Success</h3>
+            <h3 style="color: #000000; font-size: 20px; margin-top: 10px; margin-bottom: 8px; font-weight: 700;">Success</h3>
 
-            <p>${message}</p>
+            <p style="color: #111827; font-size: 14.5px; margin: 0; font-weight: 500;">${message}</p>
         `;
     } else {
         let errorList = '';
 
         if (errors) {
             Object.values(errors).flat().forEach(function (error) {
-                errorList += `<li>${error}</li>`;
+                errorList += `<li style="color: #111827; font-weight: 500; font-size: 14px; margin-bottom: 4px;">${error}</li>`;
             });
         }
 
         content = `
-            <div class="site-notification-icon error">
+            <div class="site-notification-icon error" style="background: rgba(229, 62, 62, 0.2); color: #991b1b; border: 1.5px solid #dc2626;">
                 !
             </div>
 
-            <h3>Please check the following</h3>
+            <h3 style="color: #000000; font-size: 20px; margin-top: 10px; margin-bottom: 8px; font-weight: 700;">Please check the following</h3>
 
-            ${errorList ? `<ul>${errorList}</ul>` : `<p>${message}</p>`}
+            ${errorList ? `<ul style="text-align: left; margin: 10px 0; padding-left: 20px; display: inline-block;">${errorList}</ul>` : `<p style="color: #111827; font-size: 14.5px; margin: 0; font-weight: 500;">${message}</p>`}
         `;
     }
 
@@ -540,18 +610,30 @@ function showSiteNotification(type, message, errors = null) {
     notification.className = 'site-notification-overlay';
 
     notification.innerHTML = `
-        <div class="site-notification">
+        <div class="site-notification" style="background: #e2e8f0 !important; color: #000000 !important; border: 1px solid #cbd5e1; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 24px;">
 
             <button
                 type="button"
                 class="site-notification-close"
                 onclick="closeSiteNotification()"
                 aria-label="Close notification"
+                style="color: #1e293b; font-weight: bold;"
             >
                 &times;
             </button>
 
             ${content}
+
+            <div style="margin-top: 20px; display: flex; justify-content: center; width: 100%;">
+                <button
+                    type="button"
+                    class="btn sm"
+                    onclick="closeSiteNotification()"
+                    style="text-align: center;"
+                >
+                    OK
+                </button>
+            </div>
 
         </div>
     `;

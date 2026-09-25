@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Deep Dives')
+@section('title', 'gene Decode — Deep Dives')
 
 @section('page', 'deep-dives')
 

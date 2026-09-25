@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Watch')
+@section('title', 'gene Decode — Watch')
 @section('page', 'deep-dives')
 
 @section('content')
@@ -9,7 +9,7 @@
     <div class="wrap">
         <span class="kicker">Membership</span>
         <h1>Gift a Membership</h1>
-        <p>Give someone full access to Gene Decode Deep Dives. After payment you get a shareable gift link to send whenever you like.</p>
+        <p>Give someone full access to gene Decode Deep Dives. After payment you get a shareable gift link to send whenever you like.</p>
     </div>
 </section>
 
@@ -39,7 +39,7 @@
             <button class="btn" style="width:100%;justify-content:center">Go to payment</button>
             <p style="color:var(--faint);font-size:12px;margin:12px 0 0;text-align:center">Payments are processed securely through Stripe.</p>
         </div>
-        <p style="text-align:center;margin-top:16px"><a href="join-us.html" style="color:var(--green-l);font-size:14px">Or buy a membership for yourself</a></p>
+        <p style="text-align:center;margin-top:16px"><a href="{{ URL('join-us') }}" style="color:var(--green-l);font-size:14px">Or buy a membership for yourself</a></p>
     </div>
 </section>
 
