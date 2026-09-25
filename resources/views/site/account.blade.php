@@ -44,9 +44,31 @@
                     and live events.
                 </p>
 
+<<<<<<< Updated upstream
                 <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
                     <div class="avatar" style="width:56px;height:56px">
                         {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+=======
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+                        <div class="avatar" id="avatarContainer" style="width:56px;height:56px;overflow:hidden;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#1a2332;">
+                            @if(auth()->user()->profilepic)
+                                <img src="{{ url('/user-avatar/' . basename(auth()->user()->profilepic)) }}" alt="Avatar" id="avatarPreview" style="width:100%;height:100%;object-fit:cover;">
+                            @else
+                                <span id="avatarText">{{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}</span>
+                            @endif
+                        </div>
+
+                        <input type="file" name="avatar" id="avatarInput" accept="image/*" style="display:none;" onchange="previewImage(this)">
+                        
+                        <div>
+                            <button type="button" class="btn sm ghost" onclick="document.getElementById('avatarInput').click();">
+                                Change photo
+                            </button>
+                            <span style="display:block; color:var(--muted); font-size:12px; margin-top:4px;">
+                                JPG, PNG or WEBP. Max size 2MB.
+                            </span>
+                        </div>
+>>>>>>> Stashed changes
                     </div>
                     <button class="btn sm ghost">Change photo</button>
                 </div>

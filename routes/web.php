@@ -5,6 +5,68 @@ use App\Http\Controllers\Site\AuthController;
 use App\Http\Controllers\Site\AccountController;
 use App\Http\Controllers\Site\VideoProgressController;
 
+// use Illuminate\Support\Facades\Artisan;
+
+// Route::get('/run-storage-link', function () {
+//     $target = storage_path('app/public');
+//     $shortcut = public_path('storage');
+
+//     if (File::exists($shortcut)) {
+//         return 'Storage link or folder already exists!';
+//     }
+
+//     try {
+//         // Attempt native PHP symlink
+//         symlink($target, $shortcut);
+//         return 'Storage link created successfully using native symlink!';
+//     } catch (\Throwable $e) {
+//         // Fallback for hosting environments where symlinks are restricted
+//         if (function_exists('exec')) {
+//             exec("ln -s {$target} {$shortcut}");
+//             return 'Storage link created using exec() fallback!';
+//         }
+        
+//         return 'Symlinks are restricted on this server. Please create a folder shortcut via cPanel File Manager or request SSH access from sysadmin.';
+//     }
+// });
+
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
+
+Route::get('/clear-view-cache', function () {
+    // Clear view cache
+    Artisan::call('view:clear');
+    
+    // Clean storage view files manually if needed
+    $files = File::files(storage_path('framework/views'));
+    foreach ($files as $file) {
+        if ($file->getFilename() !== '.gitignore') {
+            @unlink($file->getRealPath());
+        }
+    }
+
+    return 'View cache cleared successfully!';
+});
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+
+Route::get('/user-avatar/{filename}', function ($filename) {
+    $path = 'avatars/' . $filename;
+
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+
+    $file = Storage::disk('public')->get($path);
+    $type = Storage::disk('public')->mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+})->name('avatar.show');
+
 Route::get('/', function () {
     return view('site.home');
 });

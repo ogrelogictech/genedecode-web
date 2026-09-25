@@ -1,7 +1,7 @@
-<div class="ribbon">
-    Refined design concept by <b>OgreLogic</b> for GeneDecode
+{{-- <div class="ribbon">
+    Refined design concept by <b>OgreLogic</b> for geneDecode
     &nbsp;·&nbsp; page mockups on the unified dark/cosmic system
-</div>
+</div> --}}
 
 <div class="topbar">
     <header class="site">
@@ -14,10 +14,10 @@
             <div class="header-actions">
 
                 @auth
-                    <form method="POST" action="{{ route('logout') }}" class="header-logout-form">
+                    <form method="POST" action="{{ route('logout') }}" id="headerLogoutForm" class="header-logout-form">
                         @csrf
 
-                        <button type="submit" class="header-logout">
+                        <button type="button" onclick="confirmLogout(event)" class="header-logout">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -62,7 +62,7 @@
 
                 <a href="{{ url('/about') }}"
                    class="{{ request()->is('about') ? 'on' : '' }}">
-                    About Gene Decode
+                    About gene Decode
                 </a>
 
                 <a href="{{ url('/schedule') }}"
@@ -103,7 +103,7 @@
                     </a>
                     
                     <a href="{{ url('/login') }}"
-                    class="{{ request()->is('login') ? 'on nav-login' : 'nav-login' }}">
+                    class="{{ request()->is('login') ? 'on' : '' }}">
                         Login
                     </a>
 

@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Home')
+@section('title', 'gene Decode — Home')
 
 @section('page', 'home')
 
@@ -166,7 +166,7 @@
         <span class="kicker">Membership</span>
 
         <h2 class="head">
-            Gene Decode Membership
+            gene Decode Membership
         </h2>
 
         <p class="subnote">

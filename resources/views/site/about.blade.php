@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — About Gene Decode')
+@section('title', 'gene Decode — About gene Decode')
 
 @section('page', 'about')
 
@@ -10,7 +10,7 @@
     <div class="wrap">
         <span class="kicker">About</span>
 
-        <h1>About Gene Decode</h1>
+        <h1>About gene Decode</h1>
 
         <p>
             The man behind Deep Dives, and the mission of Truth, Trust in God, and Service.
