@@ -32,7 +32,7 @@
                 One-time or recurring donations are handled through Ko-fi.
             </p>
 
-            <a class="btn" href="#">
+            <a class="btn" target="_blank" href="https://ko-fi.com/bfsgenedecode7">
                 Donate on Ko-fi
             </a>
 

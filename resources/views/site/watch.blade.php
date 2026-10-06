@@ -1,6 +1,6 @@
 @extends('site.layouts.app')
 
-@section('title', 'Gene Decode — Watch')
+@section('title', 'Gene Decode — ' . ($video['title'] ?? 'Watch'))
 @section('page', 'deep-dives')
 
 @section('content')
@@ -24,24 +24,25 @@
             <div style="margin-top:18px">
 
                 <span class="chip on" style="cursor:default" id="cat">
-                    Deep Dive
+                    {{ $video['category'] ?? 'Deep Dive' }}
                 </span>
 
                 <h1 id="title"
                     style="font-family:var(--serif);font-size:27px;margin:14px 0 8px">
-                    Envisioning Freedom
+                    {{ $video['title'] ?? 'Gene Decode Video' }}
                 </h1>
 
                 <p id="desc"
                    style="color:var(--muted);max-width:820px">
-                    Members get the complete session plus the companion notes
-                    and the live Q&A replay. Your progress is saved automatically,
-                    so you can pick up where you left off on any device.
+                    {{ $video['description'] ?? 'Your progress is saved automatically, so you can pick up where you left off on any device.' }}
                 </p>
 
                 <div id="meta"
                      style="display:flex;gap:14px;color:var(--faint);font-size:13px;margin-top:12px">
-                    <span>Included with membership</span>
+                    <span>{{ $video['meta'] ?? 'Included with membership' }}</span>
+                    @if(!empty($video['duration']))
+                        <span>· {{ $video['duration'] }}</span>
+                    @endif
                 </div>
 
             </div>
@@ -54,10 +55,41 @@
                     Up next
                 </h2>
             </div>
+            <div id="upnext" class="upnext-cards">
+                @forelse($upNextVideos as $item)
+                    <a
+                        class="card"
+                        href="{{ route('watch', ['videoId' => $item['id']]) }}"
+                    >
+                        <div
+                            class="thumb"
+                            style="background-image: url('{{ asset('site/assets/vid/' . $item['id'] . '.jpg') }}')"
+                        >
+                            <span class="tag">
+                                {{ $item['category'] ?? 'Deep Dive' }}
+                            </span>
 
-            <div id="upnext"
-                 style="display:flex;flex-direction:column;gap:14px">
+                            <span class="dur">
+                                {{ $item['duration'] ?? '' }}
+                            </span>
+                        </div>
+
+                        <div class="body">
+                            <h3>{{ $item['title'] }}</h3>
+
+                            <p>
+                                {{ $item['meta'] ?? 'Included with membership' }}
+                            </p>
+                        </div>
+                    </a>
+                @empty
+                    <p style="color:var(--muted);font-size:13px;">
+                        No more videos in this series.
+                    </p>
+                @endforelse
             </div>
+
+
         </div>
 
     </div>
@@ -68,23 +100,18 @@
 @push('scripts')
 
 <script>
-    var params = new URLSearchParams(window.location.search);
     document.body.dataset.page = "deep-dives";
 
     var currentVideoId = "{{ $videoId }}";
-
-    // Progress Saving logic for Bunny Embed Player via postMessage API
     var iframe = document.getElementById('bunny-player');
     var lastSavedTime = 0;
 
     window.addEventListener('message', function(event) {
-        // Ensure message comes from Bunny player
         if (!event.origin.includes('mediadelivery.net')) return;
 
         try {
             var data = JSON.parse(event.data);
 
-            // Playback progress update from Bunny player
             if (data.event === 'timeupdate') {
                 var currentTime = data.value.currentTime;
                 var duration = data.value.duration;
