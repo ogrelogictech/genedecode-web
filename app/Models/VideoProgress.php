@@ -27,4 +27,9 @@ class VideoProgress extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function video(): BelongsTo
+    {
+        return $this->belongsTo(Video::class, 'video_id', 'id');
+    }
 }

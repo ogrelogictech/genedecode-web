@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\Video;
 use App\Services\BunnyStreamService;
 use Illuminate\Http\Request;
 
@@ -17,64 +18,61 @@ class WatchController extends Controller
 
     public function show(Request $request, string $videoId = null)
     {
-        if (!auth()->check()) {
+        // 1. Check if user is logged in
+        if (! auth()->check()) {
             return redirect()->route('login')->with('error', 'Please log in to access this video.');
         }
 
-        $catalog = [
-            'v40vxe6' => [
-                'id'          => 'v40vxe6',
-                'title'       => 'Envisioning Freedom',
-                'category'    => 'Deep Dive',
-                'description' => 'Members get the complete session plus the companion notes and the live Q&A replay. Your progress is saved automatically.',
-                'meta'        => 'Included with membership',
-                'duration'    => '45 mins'
-            ],
-            'v40vxe7' => [
-                'id'          => 'v40vxe7',
-                'title'       => 'Unlocking Gene Codes',
-                'category'    => 'Deep Dive',
-                'description' => 'An in-depth session exploring fundamental frequency alignments and personal decoding strategies.',
-                'meta'        => 'Included with membership',
-                'duration'    => '38 mins'
-            ],
-            'v40vxe8' => [
-                'id'          => 'v40vxe8',
-                'title'       => 'Live Q&A Session Replay',
-                'category'    => 'Community',
-                'description' => 'Replay of the monthly live Q&A covering subscriber questions and system updates.',
-                'meta'        => 'Included with membership',
-                'duration'    => '52 mins'
-            ],
-            '76a8eecd-f70e-4097-a01a-f2f663a3cf74' => [
-                'id' => '76a8eecd-f70e-4097-a01a-f2f663a3cf74',
-                'title' => 'GeneDecode Test Video',
-                'category' => 'Deep Dive',
-                'duration' => 'Test',
-                'description' => 'Test video for Bunny.net integration.',
-                'meta' => 'Bunny test video',
-            ],
-        ];
+        $user = auth()->user();
 
-        $id = $videoId ?? $request->query('v') ?? 'v40vxe6';
-        $video = $catalog[$id] ?? [
-            'id'          => $id,
-            'title'       => 'Gene Decode Video',
-            'category'    => 'Deep Dive',
-            'description' => 'Members get full access to session recordings and companion notes.',
-            'meta'        => 'Included with membership',
-            'duration'    => ''
-        ];
+        // 2. Check if user has active membership subscription
+        if (! $user->hasActiveSubscription()) {
+            return redirect()->route('deep-dives')->with('error', 'Active membership required to access this video.');
+        }
 
-        $embedUrl = $this->bunnyService->generateEmbedUrl($id);
+        // Fetch video by ID, uscreen_id, or bunny_guid
+        $id = $videoId ?? $request->query('v');
+        $video = null;
 
-        $upNextVideos = array_filter($catalog, fn($item) => $item['id'] !== $id);
+        if ($id) {
+            $video = Video::where('id', $id)
+                ->orWhere('uscreen_id', $id)
+                ->orWhere('bunny_guid', $id)
+                ->first();
+        }
+
+        if (! $video) {
+            $video = Video::whereNotNull('bunny_guid')->first() ?? Video::first();
+        }
+
+        if (! $video) {
+            abort(404, 'No videos found in database.');
+        }
+
+        // Generate embed stream URL if bunny_guid exists
+        $guidToPlay = $video->bunny_guid ?: 'd9e6fdb3-2092-4770-9ecf-ceb9524590fb';
+        $embedUrl = $this->bunnyService->generateEmbedUrl($guidToPlay);
+
+        $resumeSeconds = 0;
+        $saved = \App\Models\VideoProgress::where('user_id', $user->id)
+            ->where('video_id', (string) $video->id)
+            ->first();
+
+        if ($saved && $saved->progress_percent < 95 && $saved->progress_seconds > 5) {
+            $resumeSeconds = (int) $saved->progress_seconds;
+        }
+
+        $upNextVideos = Video::where('id', '!=', $video->id)
+            ->latest()
+            ->take(10)
+            ->get();
 
         return view('site.watch', [
             'embedUrl'     => $embedUrl,
-            'videoId'      => $id,
+            'videoId'      => $video->id,
             'video'        => $video,
-            'upNextVideos' => $upNextVideos
+            'upNextVideos' => $upNextVideos,
+            'resumeSeconds' => $resumeSeconds,
         ]);
     }
 }

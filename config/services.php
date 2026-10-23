@@ -33,6 +33,8 @@ return [
         'api_key' => env('BUNNY_STREAM_API_KEY'),
         'token_key' => env('BUNNY_STREAM_TOKEN_KEY'),
         'cdn_url' => env('BUNNY_STREAM_CDN_URL', 'https://iframe.mediadelivery.net'),
+        'webhook_token' => env('BUNNY_WEBHOOK_TOKEN'),
+        'pull_zone_url' => env('BUNNY_PULL_ZONE_URL'), 
     ],
 
     'slack' => [

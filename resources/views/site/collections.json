@@ -1,0 +1,268 @@
+{
+    "errors": null,
+    "ok": true,
+    "error": null,
+    "collections": [
+        {
+            "errors": null,
+            "id": 3875187,
+            "title": "Soul Mission - SERIES",
+            "permalink": "collection-qycp8w-mqa4",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2025-11-08T23:38:26Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3875187/horizontal/small_3025dd1a-5237-4181-8f99-4b0c457d1bbd.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                161934
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3689060,
+            "title": "gene Decode Truth Gems - SERIES",
+            "permalink": "collection-cjptfp4jw44",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2025-06-30T02:54:07Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3689060/horizontal/small_c1b57915-77b5-45f1-9608-0e37280d1273.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                177487
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3658256,
+            "title": "Antarctica: The Remnants of Atlantis & Lemuria - SERIES",
+            "permalink": "collection-azay-dnmvfw",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2025-06-05T01:58:22Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3658256/horizontal/small_d0b7ae35-1014-40bc-9ee7-06574b06ed88.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                177489,
+                156282
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3460054,
+            "title": "The Truth Behind 9/11 - SERIES",
+            "permalink": "collection-zyn79c0mdxi",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2025-02-12T03:39:56Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3460054/horizontal/small_1e66698e-ff9c-45dc-b719-83277e7cbd47.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                164591,
+                156282
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3344115,
+            "title": "Manifest Destiny - SERIES",
+            "permalink": "collection-fdcjzp3gbey",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-11-25T17:02:39Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3344115/horizontal/small_e63107cb-16fd-4e9d-83a0-3b1955d80464.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                156282
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3306883,
+            "title": "Powerful Prose - SERIES",
+            "permalink": "collection-qsiznojrdbo",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-10-30T00:37:04Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3306883/horizontal/small_1e00472b-b3e4-4e70-afe1-88ff87c75890.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                161954,
+                177487
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3282790,
+            "title": "Decoding Truth in Scripture Reflections - SERIES",
+            "permalink": "collection-rmsb2jlf9-4",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-10-15T02:10:01Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3282790/horizontal/small_5f5bf8db-8f36-4013-9ed8-5e95c9e1464d.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                161934
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3267624,
+            "title": "Golden Nuggets of Truth from the Throne of God - SERIES",
+            "permalink": "collection-54pevkkj5-i",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-10-06T03:02:17Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3267624/horizontal/small_87297feb-8450-4a82-acd2-ec1a2b4c7489.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                161934
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3191907,
+            "title": "Pearls of Wisdom - SERIES",
+            "permalink": "collection-ob5wxb__fm0",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-08-12T15:51:17Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3191907/horizontal/small_00781982-4c41-4d50-bb10-0491e693c071.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [],
+            "category_ids": [
+                177487,
+                164591
+            ]
+        },
+        {
+            "errors": null,
+            "id": 3176948,
+            "title": "Navigating Deep Dives - SERIES",
+            "permalink": "collection-psagw0u9iom",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-07-30T05:31:41Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/3176948/horizontal/small_f21464d6-29d8-4ee7-ad8c-91825a0380cc.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [],
+            "category_ids": [
+                164591
+            ]
+        },
+        {
+            "errors": null,
+            "id": 2976483,
+            "title": "Titanic Decode - SERIES",
+            "permalink": "collection-3bfdttxzbk4",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-04-22T06:15:50Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/2976483/horizontal/small_60349a0b-bb4f-4dca-bb16-a3d29d1e8900.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                177489,
+                156282
+            ]
+        },
+        {
+            "errors": null,
+            "id": 2957838,
+            "title": "Nature of Planets - SERIES",
+            "permalink": "collection-soubwuq-tj0",
+            "status": "published",
+            "badge_title": "Published",
+            "badge_color": "green",
+            "release_at": null,
+            "created_at": "2024-04-08T09:07:50Z",
+            "horizontal_preview_url": "https://alpha.uscreencdn.com/images/programs/2957838/horizontal/small_decefe75-1efe-4cf1-86a3-17838889d75e.jpg",
+            "store_url": "https://genedecode.org",
+            "deleted_at": null,
+            "subscription_plan_ids": [
+                76559,
+                76973
+            ],
+            "category_ids": [
+                156282,
+                177487
+            ]
+        }
+    ],
+    "pagination": {
+        "total_pages": 4,
+        "current_page": 1,
+        "next_page": 2,
+        "prev_page": null,
+        "is_first_page": true,
+        "is_last_page": false
+    },
+    "has_collections": true
+}

@@ -53,6 +53,11 @@
                 <span class="ham"></span> Menu
             </button>
 
+            @php
+                $pageYield = View::yieldContent('page');
+                $fromParam = request('from');
+            @endphp
+
             <div class="navlinks">
 
                 <a href="{{ url('/') }}"
@@ -72,18 +77,14 @@
                 
 
                 <a href="{{ url('/surface-area') }}"
-                   class="{{ request()->is('surface-area') ? 'on' : '' }}">
+                   class="{{ request()->is('surface-area') || (request()->is('watch*') && $fromParam === 'surface-area') || $pageYield === 'surface' ? 'on' : '' }}">
                     Surface Area
                 </a>
 
-                {{-- <a href="{{ url('/interviews') }}" class="{{ request()->is('interviews') || (request()->is('watch') && request('from') === 'interviews') ? 'on' : '' }}">Interviews & Videos</a> --}}
-
-                <a href="{{ url('/deep-dives') }}" class="{{ request()->is('deep-dives') || (request()->is('watch') && request('from') === 'deep-dives') ? 'on' : '' }}">Deep Dives Catalog</a>
-
-                {{-- <a href="{{ url('/community') }}"
-                   class="{{ request()->is('community') ? 'on' : '' }}">
-                    Community
-                </a> --}}
+                <a href="{{ url('/deep-dives') }}"
+                   class="{{ request()->is('deep-dives') || (request()->is('watch*') && $fromParam === 'deep-dives') || $pageYield === 'deep-dives' ? 'on' : '' }}">
+                    Deep Dives Catalog
+                </a>
 
                 <a href="{{ url('/donate') }}"
                    class="{{ request()->is('donate') ? 'on' : '' }}">

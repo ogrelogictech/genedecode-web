@@ -1,0 +1,836 @@
+{
+    "errors": null,
+    "collection": {
+        "errors": null,
+        "id": 3875187,
+        "title": "Soul Mission - SERIES",
+        "description": "<div class=\"editor-content\"><p>In this SERIES you will learn what determines your mission on Earth in this incarnation. We will be looking at different aspects of our appearances like eye color and other characteristics of your soul's mission. </p></div>",
+        "short_description": "In this SERIES you will learn what determines your mission on Earth in this incarnation. We will be look at different aspects of this.",
+        "permalink": "collection-qycp8w-mqa4",
+        "meta_title": "Draft Collection",
+        "meta_description": "",
+        "price_cents": null,
+        "rental_price_cents": null,
+        "rental_period": 24,
+        "checkout_text": "",
+        "release_stage": "published",
+        "author_ids": [
+            68552
+        ],
+        "file_resource_ids": [],
+        "slider_video_id": null,
+        "trailer_id": null,
+        "publish_notification_subject": null,
+        "publish_notification_message": null,
+        "created_at": "2025-11-08T23:38:26Z",
+        "updated_at": "2026-03-06T03:30:28Z",
+        "published_at": "2025-11-08T23:43:15Z",
+        "release_at": null,
+        "unpublish_at": null,
+        "giveaway_funnels": [],
+        "free": false,
+        "currency": "USD",
+        "tags": [
+            "souls",
+            "mission",
+            "eye color",
+            "brown",
+            "green",
+            "blue",
+            "amber",
+            "Jung",
+            "Dolores Cannon"
+        ],
+        "catalog_filters": {},
+        "subscription_plan_ids": [
+            76559,
+            76973
+        ],
+        "bundle_ids": [],
+        "category_ids": [
+            161934
+        ],
+        "small_horizontal_image_url": "https://alpha.uscreencdn.com/images/programs/3875187/horizontal/small_3025dd1a-5237-4181-8f99-4b0c457d1bbd.jpg",
+        "big_horizontal_image_url": "https://alpha.uscreencdn.com/images/programs/3875187/horizontal/big_3025dd1a-5237-4181-8f99-4b0c457d1bbd.jpg",
+        "small_vertical_image_url": "https://alpha.uscreencdn.com/fallback/vertical_default.png",
+        "big_vertical_image_url": "https://alpha.uscreencdn.com/fallback/vertical_default.png",
+        "small_square_image_url": "https://alpha.uscreencdn.com/fallback/square_default.png",
+        "big_square_image_url": "https://alpha.uscreencdn.com/fallback/square_default.png",
+        "featured_category_image_url": null,
+        "preview_type": "none",
+        "blocked_countries": [],
+        "publish_notification_enabled": false,
+        "included_in_recommendations": true,
+        "native_tvod_tier_id": null,
+        "challenges_in_progress": [],
+        "playlist_items": [
+            {
+                "errors": null,
+                "id": 4666353,
+                "title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 5 Heterochromia Pigmentation & Dolores Cannon ",
+                "position": 1,
+                "chapter_type": "video",
+                "days_to_drip": 0,
+                "drip_email_title": null,
+                "drip_email_body": null,
+                "subject_id": 4077675,
+                "free": false,
+                "subject_title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 5 Heterochromia Pigmentation & Dolores Cannon ",
+                "subject_thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4077675/horizontal/small_73b91979-56c3-47de-9e9d-35d5e589ce16.jpg",
+                "scheduled_for": null,
+                "moderation_approved": true
+            },
+            {
+                "errors": null,
+                "id": 4626659,
+                "title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 4 Gray, Green and Violet Eye Pigmentation",
+                "position": 2,
+                "chapter_type": "video",
+                "days_to_drip": 0,
+                "drip_email_title": null,
+                "drip_email_body": null,
+                "subject_id": 4057619,
+                "free": false,
+                "subject_title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 4 Gray, Green and Violet Eye Pigmentation",
+                "subject_thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4057619/horizontal/small_d0f70421-aed2-4ea8-89d9-e5200c29e270.jpg",
+                "scheduled_for": null,
+                "moderation_approved": true
+            },
+            {
+                "errors": null,
+                "id": 4594364,
+                "title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 3 Hazel & Amber Eye Pigmentation",
+                "position": 3,
+                "chapter_type": "video",
+                "days_to_drip": 0,
+                "drip_email_title": null,
+                "drip_email_body": null,
+                "subject_id": 3992149,
+                "free": false,
+                "subject_title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 3 Hazel & Amber Eye Pigmentation",
+                "subject_thumbnail_url": "https://alpha.uscreencdn.com/images/programs/3992149/horizontal/small_e9506dae-587e-4394-9554-57fd6dcd49bb.jpg",
+                "scheduled_for": null,
+                "moderation_approved": true
+            },
+            {
+                "errors": null,
+                "id": 4517489,
+                "title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 2 Brown, \"Black\" and Blue Eye Pigmentation",
+                "position": 4,
+                "chapter_type": "video",
+                "days_to_drip": 0,
+                "drip_email_title": null,
+                "drip_email_body": null,
+                "subject_id": 3922992,
+                "free": false,
+                "subject_title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 2 Brown, \"Black\" and Blue Eye Pigmentation",
+                "subject_thumbnail_url": "https://alpha.uscreencdn.com/images/programs/3922992/horizontal/small_8fd3dd20-c065-4f91-ba43-e461226a24e9.jpg",
+                "scheduled_for": null,
+                "moderation_approved": true
+            },
+            {
+                "errors": null,
+                "id": 4477082,
+                "title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 1 Introduction",
+                "position": 5,
+                "chapter_type": "video",
+                "days_to_drip": 0,
+                "drip_email_title": null,
+                "drip_email_body": null,
+                "subject_id": 3878400,
+                "free": false,
+                "subject_title": "Your Soul's Mission on Earth - The Eye Color You Chose - Chapter 1 Introduction",
+                "subject_thumbnail_url": "https://alpha.uscreencdn.com/images/programs/3878400/horizontal/small_6c565fc2-cbf1-4490-a618-5a2b6eab6e46.jpg",
+                "scheduled_for": null,
+                "moderation_approved": true
+            }
+        ]
+    },
+    "can_update": true,
+    "content_free_quota_enabled": true,
+    "localized_pricing_allowed": true,
+    "supports_multiple_thumbnails": false,
+    "time_zone": "America/New_York",
+    "store_url": "https://genedecode.org",
+    "ai_storefront_related_video_collections_enabled": false,
+    "available_plans": [
+        {
+            "id": 76559,
+            "title": "Deep Dives $77 Annual Subscription ",
+            "price": "$77.00"
+        },
+        {
+            "id": 76973,
+            "title": "Deep Dives $7 Monthly Subscription",
+            "price": "$7.00"
+        }
+    ],
+    "available_bundles": [],
+    "available_categories": [
+        {
+            "id": 164591,
+            "title": "Surface Area 😎 FREE Access 👉 Click here"
+        },
+        {
+            "id": 116838,
+            "title": "Deep Dives Featured"
+        },
+        {
+            "id": 128644,
+            "title": "RECENTLY ADDED VIDEOS"
+        },
+        {
+            "id": 118712,
+            "title": "UPCOMING LIVES & PREMIERES"
+        },
+        {
+            "id": 177487,
+            "title": "SPEND TIME WITH GENE DECODE"
+        },
+        {
+            "id": 117692,
+            "title": "ALIEN AGENDA & SPACE PROGRAMS"
+        },
+        {
+            "id": 132519,
+            "title": "ARTS, MEDIA & ENTERTAINMENT"
+        },
+        {
+            "id": 158493,
+            "title": "COMMUNITY"
+        },
+        {
+            "id": 117695,
+            "title": "DUMBs: Deep Underground Military Bases and Facilities"
+        },
+        {
+            "id": 127522,
+            "title": "ENVISIONING"
+        },
+        {
+            "id": 177489,
+            "title": "GOVERNMENT & POLITICS"
+        },
+        {
+            "id": 161954,
+            "title": "HEALTH, HOME & FAMILY"
+        },
+        {
+            "id": 161934,
+            "title": "SPIRITUALITY, FAITH & PRAYER"
+        },
+        {
+            "id": 156282,
+            "title": "TRUE HISTORY & SCIENCE"
+        },
+        {
+            "id": 161948,
+            "title": "WORLD EVENTS & NEWS UPDATES"
+        },
+        {
+            "id": 290734,
+            "title": "Coming Soon"
+        }
+    ],
+    "available_authors": [
+        {
+            "id": 101164,
+            "title": "Alex",
+            "image_url": ""
+        },
+        {
+            "id": 69426,
+            "title": "American Decode Team (AKA USA Decode Team)",
+            "image_url": "https://alpha.uscreencdn.com/images/author/69426/small_small_screenshot-2023-06-12-at-90318-pm.1686621930.png"
+        },
+        {
+            "id": 99510,
+            "title": "Author",
+            "image_url": ""
+        },
+        {
+            "id": 107863,
+            "title": "Author",
+            "image_url": ""
+        },
+        {
+            "id": 108786,
+            "title": "Avery",
+            "image_url": ""
+        },
+        {
+            "id": 71294,
+            "title": "Brynn",
+            "image_url": ""
+        },
+        {
+            "id": 70006,
+            "title": "Ellis",
+            "image_url": "https://alpha.uscreencdn.com/images/author/70006/screenshot-2023-05-30-at-82929-pm.1685496713.png"
+        },
+        {
+            "id": 117714,
+            "title": "European Team",
+            "image_url": ""
+        },
+        {
+            "id": 64758,
+            "title": "Faith heals",
+            "image_url": "https://alpha.uscreencdn.com/images/author/64758/small_faith-avatar-img_1308.1725410613.jpeg"
+        },
+        {
+            "id": 64757,
+            "title": "gene Decode",
+            "image_url": "https://alpha.uscreencdn.com/images/author/64757/genedecode-logo-final-copy2-1.1680269673.png"
+        },
+        {
+            "id": 110419,
+            "title": "Jena",
+            "image_url": ""
+        },
+        {
+            "id": 107862,
+            "title": "Karin",
+            "image_url": ""
+        },
+        {
+            "id": 70278,
+            "title": "Love To Serve",
+            "image_url": "https://alpha.uscreencdn.com/images/author/70278/to-serve.1685812684.png"
+        },
+        {
+            "id": 68552,
+            "title": "Mabel",
+            "image_url": "https://alpha.uscreencdn.com/images/author/68552/adobestock_619095597-copyjpeg.1720579269.jpeg"
+        },
+        {
+            "id": 68646,
+            "title": "Marie",
+            "image_url": "https://alpha.uscreencdn.com/images/author/68646/img_8052.1702529011.jpeg"
+        },
+        {
+            "id": 123370,
+            "title": "Max",
+            "image_url": ""
+        },
+        {
+            "id": 70280,
+            "title": "Sanrata",
+            "image_url": "https://alpha.uscreencdn.com/images/author/70280/20210619_1942280.1685813143.jpg"
+        },
+        {
+            "id": 69058,
+            "title": "Sergio ~ Español",
+            "image_url": "https://alpha.uscreencdn.com/images/author/69058/small_screenshot-2023-05-18-at-81635-pm.1684459117.png"
+        },
+        {
+            "id": 107667,
+            "title": "Sophie",
+            "image_url": ""
+        },
+        {
+            "id": 98157,
+            "title": "Stephanie Willow",
+            "image_url": "https://alpha.uscreencdn.com/images/author/98157/stephwillow.1689269049.jpg"
+        },
+        {
+            "id": 115704,
+            "title": "Thane",
+            "image_url": ""
+        },
+        {
+            "id": 108809,
+            "title": "Zina",
+            "image_url": ""
+        }
+    ],
+    "available_catalog_filters": [],
+    "rental_period_options": [
+        {
+            "value": 24,
+            "label": "1 day"
+        },
+        {
+            "value": 48,
+            "label": "2 days"
+        },
+        {
+            "value": 72,
+            "label": "3 days"
+        },
+        {
+            "value": 96,
+            "label": "4 days"
+        },
+        {
+            "value": 120,
+            "label": "5 days"
+        },
+        {
+            "value": 144,
+            "label": "6 days"
+        },
+        {
+            "value": 168,
+            "label": "1 week"
+        },
+        {
+            "value": 336,
+            "label": "2 weeks"
+        },
+        {
+            "value": 720,
+            "label": "1 month"
+        },
+        {
+            "value": 2160,
+            "label": "3 months"
+        },
+        {
+            "value": 4320,
+            "label": "6 months"
+        },
+        {
+            "value": 8760,
+            "label": "1 year"
+        }
+    ],
+    "localized_amounts": [],
+    "available_file_resources": [
+        {
+            "id": 210299,
+            "title": "chat-from-reincarnation-part-1--2-7-24.docx",
+            "file_size": "106 KB"
+        },
+        {
+            "id": 239472,
+            "title": "david-mahoney-1-16-24.docx",
+            "file_size": "13.4 KB"
+        },
+        {
+            "id": 226993,
+            "title": "deep-dives-website-resource-document-j-4august2024-final.pdf",
+            "file_size": "230 KB"
+        },
+        {
+            "id": 192226,
+            "title": "DOWNLOAD (Croatian) invokacija-isusa-krista-croatian-jesus-christ-invocationdocx.pdf",
+            "file_size": "77 KB"
+        },
+        {
+            "id": 169916,
+            "title": "DOWNLOAD - Jesucristo Invocacion",
+            "file_size": "55.3 KB"
+        },
+        {
+            "id": 195462,
+            "title": "DOWNLOAD Jesus Christ Invocation in Japanese.pdf",
+            "file_size": "414 KB"
+        },
+        {
+            "id": 171119,
+            "title": "DOWNLOAD jesus-christ-invocation.pdf",
+            "file_size": "137 KB"
+        },
+        {
+            "id": 190679,
+            "title": "DOWNLOAD - jesus-cristo-invocacao-de-deus-invocation-in-portuguese.pdf",
+            "file_size": "37.6 KB"
+        },
+        {
+            "id": 203443,
+            "title": "envisioning-freedom-with-platform-hosts-and-support--resources-and-credits-final-gene-edit--5-dec-2023.pdf",
+            "file_size": "692 KB"
+        },
+        {
+            "id": 248621,
+            "title": "envisioning-freedom-with-platform-hosts-and-support--resources-and-credits-final-gene-edit--6-dec-2023.pdf",
+            "file_size": "648 KB"
+        },
+        {
+            "id": 148368,
+            "title": "espanol-actualizacion-de-la-situation-marzo-21-2023.pdf",
+            "file_size": "162 KB"
+        },
+        {
+            "id": 139672,
+            "title": "ESPAÑOL FLASH 10-18-2022.pdf",
+            "file_size": "563 KB"
+        },
+        {
+            "id": 139674,
+            "title": "ESPAÑOL UPDATE 12-15-2022 SEMANA 2.pdf",
+            "file_size": "1.93 MB"
+        },
+        {
+            "id": 139673,
+            "title": "ESPAÑOL UPDATE 12-5-2022 SEMANA 1.pdf",
+            "file_size": "635 KB"
+        },
+        {
+            "id": 141381,
+            "title": "ESP Primera Actualización 2023.docx.pdf",
+            "file_size": "458 KB"
+        },
+        {
+            "id": 145221,
+            "title": "invocacion-a-jesucristo.pdf",
+            "file_size": "58.5 KB"
+        },
+        {
+            "id": 143472,
+            "title": "invocation-au-jesus-christ--french.pdf",
+            "file_size": "544 KB"
+        },
+        {
+            "id": 144175,
+            "title": "Japanese-deep-dives--first-situation-update-2023.pdf",
+            "file_size": "731 KB"
+        },
+        {
+            "id": 137875,
+            "title": "JAPANESE Situation Update 2nd Week Dec. 2022.pdf",
+            "file_size": "2.36 MB"
+        },
+        {
+            "id": 137874,
+            "title": "JAPANESE Translation Situation update Dec. (week 1) 2022.pdf",
+            "file_size": "1.18 MB"
+        },
+        {
+            "id": 147272,
+            "title": "Japanes-march-21st-2023-flash-situation-update.pdf",
+            "file_size": "728 KB"
+        },
+        {
+            "id": 234852,
+            "title": "jesus-christ-invocation-french.pdf",
+            "file_size": "88.5 KB"
+        },
+        {
+            "id": 141547,
+            "title": "Jesus Christ Invocation_GER.pdf",
+            "file_size": "49.2 KB"
+        },
+        {
+            "id": 140883,
+            "title": "Jesus Christ Invocation Individual (gene writeup).pdf",
+            "file_size": "137 KB"
+        },
+        {
+            "id": 234849,
+            "title": "jesus-christ-invocation-japanese-.pdf",
+            "file_size": "210 KB"
+        },
+        {
+            "id": 149475,
+            "title": "jesus-christ-invocation-japanese-read-by-karin-tobi--edited-by-eric.pdf",
+            "file_size": "457 KB"
+        },
+        {
+            "id": 216151,
+            "title": "jesus-christ-invocation--newest-update-12-2023.docx",
+            "file_size": "37.2 KB"
+        },
+        {
+            "id": 234848,
+            "title": "jesus-christ-invocation--romanian-for-recording.pdf",
+            "file_size": "147 KB"
+        },
+        {
+            "id": 145121,
+            "title": "jesus-christ-invocation-romanian-with-zina.pdf",
+            "file_size": "206 KB"
+        },
+        {
+            "id": 234851,
+            "title": "jesus-christ-invocation-spanish.pdf",
+            "file_size": "144 KB"
+        },
+        {
+            "id": 234915,
+            "title": "jesus-christ-invocation-spanish.pdf",
+            "file_size": "144 KB"
+        },
+        {
+            "id": 234850,
+            "title": "jesus-christ-invocation-swedish-.pdf",
+            "file_size": "26.6 KB"
+        },
+        {
+            "id": 148773,
+            "title": "portugues-actualizacao-21-marco-2023.pdf",
+            "file_size": "187 KB"
+        },
+        {
+            "id": 226989,
+            "title": "resource-sheet-dd-is-open-borders-a-modern-day-manifest-destiny---j-11august2024-final.pdf",
+            "file_size": "264 KB"
+        },
+        {
+            "id": 224859,
+            "title": "resource-sheet--deep-dives---hollow-earth-part-2---admiral-byrd-and-other-polar-explorers-j-28july2024.pdf",
+            "file_size": "221 KB"
+        },
+        {
+            "id": 228522,
+            "title": "resource-sheet--deep-dives---ukraine-under-nazi-custody-for-almost-100-years---part-4-revised-2024-j-17sept2024.pdf",
+            "file_size": "229 KB"
+        },
+        {
+            "id": 143391,
+            "title": "swedishinvocation.pdf",
+            "file_size": "70 KB"
+        },
+        {
+            "id": 231213,
+            "title": "tea-scones-9-12-24.docx",
+            "file_size": "15.3 KB"
+        }
+    ],
+    "available_trailers": [
+        {
+            "id": 4386655,
+            "title": "Golden Nuggets of Truth from the Throne of God #7 - Creation and the Fall Event Chapter 3 [Wednesday, October 7th, 2026 @ 7:00 P.M. MT/ 9:00 P.M. ET]",
+            "duration": 2897,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4386655/horizontal/small_b8dda50d-d9eb-4833-8137-597c56a7a5da.jpg"
+        },
+        {
+            "id": 4384426,
+            "title": "Decoding Truth in Scripture - Sermon on the Mount Part 33 [Tuesday, October 6th, 2026 @ 7:00 P.M. MDT/ 9:00 P.M. EDT (GMT-04:00)",
+            "duration": 3015,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4384426/horizontal/small_7f70ec23-2e54-411c-a1ae-2b320dce5d57.jpg"
+        },
+        {
+            "id": 4382691,
+            "title": "Golden Nuggets of Truth from the Throne of God #7 - Creation and the Fall Event - Chapter 3 ",
+            "duration": 2899,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4382691/horizontal/small_20643815-258c-4371-8e4c-cf57a82084e1.jpg"
+        },
+        {
+            "id": 4380151,
+            "title": "2026-09-30 News Talk with gene Decode & Sergio (Bi-Weekly) Current News Items",
+            "duration": 3756,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4380151/horizontal/small_d69a5772-0a5d-41a6-8d87-2606f7afd391.jpg"
+        },
+        {
+            "id": 4371314,
+            "title": "DUMBs: Underground U.S. Bases & Facilities Listed By State - California Chapter 1 ",
+            "duration": 2260,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4371314/horizontal/small_a3af281c-2a67-46de-a885-105a8900e5c3.jpg"
+        },
+        {
+            "id": 4368056,
+            "title": "Decoding Truth in Scripture - The Sermon on the Mount - Part 33 ",
+            "duration": 3017,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4368056/horizontal/small_07ba1cb7-cd5e-4032-b72a-32afc756bcbf.png"
+        },
+        {
+            "id": 4366695,
+            "title": "2026-09-23 Q&A with gene Decode ",
+            "duration": 4093,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4366695/horizontal/small_ea904a94-1708-45d3-ba55-254a323a3208.jpg"
+        },
+        {
+            "id": 4363739,
+            "title": "COVID-19: Part 7 - A 10,000 Foot View Deep Dive Chapter 1 ",
+            "duration": 2808,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4363739/horizontal/small_427f8f78-6e77-482d-af29-9a3829206816.png"
+        },
+        {
+            "id": 4355191,
+            "title": "gene Decode Truth Gems - Submarine Life Part 1 ",
+            "duration": 3136,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4355191/horizontal/small_26495ed1-4998-40dc-bc0d-501307493ed1.png"
+        },
+        {
+            "id": 4353826,
+            "title": "2026-09-16 News Talk with gene Decode & Sergio (Bi-Weekly) Current News Items",
+            "duration": 3452,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4353826/horizontal/small_51397c78-13e6-416e-8d98-76acd346f0cc.jpg"
+        },
+        {
+            "id": 4353507,
+            "title": "Decoding Truth in Scripture Reflections #27- Step By Step Journey to the Inner Path ",
+            "duration": 4304,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4353507/horizontal/small_d4c242dc-732c-4b6b-818e-cb581cded5c2.jpg"
+        },
+        {
+            "id": 4353499,
+            "title": "Golden Nuggets of Truth from the Throne of God #10 - Who Is Elohim? ",
+            "duration": 1827,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4353499/horizontal/small_cf24fc8a-0a2b-418f-8850-db3455727280.png"
+        },
+        {
+            "id": 4340425,
+            "title": "gene Decode Truth Gems - Soul Projection ",
+            "duration": 2338,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4340425/horizontal/small_91bc47d4-30c9-48f6-9c03-99064ad4e01c.jpg"
+        },
+        {
+            "id": 4340282,
+            "title": "Is Earth a Plane or Planet, Geocentric or Heliocentric or As Above So Below - Chapter 3 Epistemology ",
+            "duration": 2329,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4340282/horizontal/small_bf6c18be-3e67-4d65-bdea-bb5be42a43ae.jpg"
+        },
+        {
+            "id": 4338523,
+            "title": "2026-09-02 News Talk with gene Decode & Sergio (Bi-Weekly) Current News Items",
+            "duration": 3638,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4338523/horizontal/small_979b7f75-b9c9-4939-a001-72b643e720db.jpg"
+        },
+        {
+            "id": 4332510,
+            "title": "2026-08-27 Deep Dives Community Share ",
+            "duration": 4627,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4332510/horizontal/small_b2eb6248-c742-4d20-8de6-6fe937a8d28f.jpg"
+        },
+        {
+            "id": 4329710,
+            "title": "Hollow Earth-Part 3 The Smoky God Chapter 3 ",
+            "duration": 2429,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4329710/horizontal/small_41f7a9eb-1818-424d-b220-8a4d020da381.jpg"
+        },
+        {
+            "id": 4328155,
+            "title": "2026-08-26: Q&A with gene Decode ",
+            "duration": 3942,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4328155/horizontal/small_5be79229-d6d4-4d9f-ae1d-7c63852e9991.jpg"
+        },
+        {
+            "id": 4325762,
+            "title": "The Science of Prayer II",
+            "duration": 839,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4325762/horizontal/small_b64f9616-3a2a-4215-a099-fd961dbb9274.jpg"
+        },
+        {
+            "id": 4325655,
+            "title": "2026-08-17: Part 1 Exopolitics Today with Dr Michael Salla interviews gene Decode: Area 51 Cleared, Moon Was Attacked and Revealed Earth Alliance War ",
+            "duration": 3291,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4325655/horizontal/small_aa5cc95b-1bf2-4dbc-b4f7-dee3931918fc.jpg"
+        }
+    ],
+    "available_featured_videos": [
+        {
+            "id": 4386655,
+            "title": "Golden Nuggets of Truth from the Throne of God #7 - Creation and the Fall Event Chapter 3 [Wednesday, October 7th, 2026 @ 7:00 P.M. MT/ 9:00 P.M. ET]",
+            "duration": 2897,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4386655/horizontal/small_b8dda50d-d9eb-4833-8137-597c56a7a5da.jpg"
+        },
+        {
+            "id": 4384426,
+            "title": "Decoding Truth in Scripture - Sermon on the Mount Part 33 [Tuesday, October 6th, 2026 @ 7:00 P.M. MDT/ 9:00 P.M. EDT (GMT-04:00)",
+            "duration": 3015,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4384426/horizontal/small_7f70ec23-2e54-411c-a1ae-2b320dce5d57.jpg"
+        },
+        {
+            "id": 4382691,
+            "title": "Golden Nuggets of Truth from the Throne of God #7 - Creation and the Fall Event - Chapter 3 ",
+            "duration": 2899,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4382691/horizontal/small_20643815-258c-4371-8e4c-cf57a82084e1.jpg"
+        },
+        {
+            "id": 4380151,
+            "title": "2026-09-30 News Talk with gene Decode & Sergio (Bi-Weekly) Current News Items",
+            "duration": 3756,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4380151/horizontal/small_d69a5772-0a5d-41a6-8d87-2606f7afd391.jpg"
+        },
+        {
+            "id": 4371314,
+            "title": "DUMBs: Underground U.S. Bases & Facilities Listed By State - California Chapter 1 ",
+            "duration": 2260,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4371314/horizontal/small_a3af281c-2a67-46de-a885-105a8900e5c3.jpg"
+        },
+        {
+            "id": 4368056,
+            "title": "Decoding Truth in Scripture - The Sermon on the Mount - Part 33 ",
+            "duration": 3017,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4368056/horizontal/small_07ba1cb7-cd5e-4032-b72a-32afc756bcbf.png"
+        },
+        {
+            "id": 4366695,
+            "title": "2026-09-23 Q&A with gene Decode ",
+            "duration": 4093,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4366695/horizontal/small_ea904a94-1708-45d3-ba55-254a323a3208.jpg"
+        },
+        {
+            "id": 4363739,
+            "title": "COVID-19: Part 7 - A 10,000 Foot View Deep Dive Chapter 1 ",
+            "duration": 2808,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4363739/horizontal/small_427f8f78-6e77-482d-af29-9a3829206816.png"
+        },
+        {
+            "id": 4355191,
+            "title": "gene Decode Truth Gems - Submarine Life Part 1 ",
+            "duration": 3136,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4355191/horizontal/small_26495ed1-4998-40dc-bc0d-501307493ed1.png"
+        },
+        {
+            "id": 4353826,
+            "title": "2026-09-16 News Talk with gene Decode & Sergio (Bi-Weekly) Current News Items",
+            "duration": 3452,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4353826/horizontal/small_51397c78-13e6-416e-8d98-76acd346f0cc.jpg"
+        },
+        {
+            "id": 4353507,
+            "title": "Decoding Truth in Scripture Reflections #27- Step By Step Journey to the Inner Path ",
+            "duration": 4304,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4353507/horizontal/small_d4c242dc-732c-4b6b-818e-cb581cded5c2.jpg"
+        },
+        {
+            "id": 4353499,
+            "title": "Golden Nuggets of Truth from the Throne of God #10 - Who Is Elohim? ",
+            "duration": 1827,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4353499/horizontal/small_cf24fc8a-0a2b-418f-8850-db3455727280.png"
+        },
+        {
+            "id": 4340425,
+            "title": "gene Decode Truth Gems - Soul Projection ",
+            "duration": 2338,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4340425/horizontal/small_91bc47d4-30c9-48f6-9c03-99064ad4e01c.jpg"
+        },
+        {
+            "id": 4340282,
+            "title": "Is Earth a Plane or Planet, Geocentric or Heliocentric or As Above So Below - Chapter 3 Epistemology ",
+            "duration": 2329,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4340282/horizontal/small_bf6c18be-3e67-4d65-bdea-bb5be42a43ae.jpg"
+        },
+        {
+            "id": 4338523,
+            "title": "2026-09-02 News Talk with gene Decode & Sergio (Bi-Weekly) Current News Items",
+            "duration": 3638,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4338523/horizontal/small_979b7f75-b9c9-4939-a001-72b643e720db.jpg"
+        },
+        {
+            "id": 4332510,
+            "title": "2026-08-27 Deep Dives Community Share ",
+            "duration": 4627,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4332510/horizontal/small_b2eb6248-c742-4d20-8de6-6fe937a8d28f.jpg"
+        },
+        {
+            "id": 4329710,
+            "title": "Hollow Earth-Part 3 The Smoky God Chapter 3 ",
+            "duration": 2429,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4329710/horizontal/small_41f7a9eb-1818-424d-b220-8a4d020da381.jpg"
+        },
+        {
+            "id": 4328155,
+            "title": "2026-08-26: Q&A with gene Decode ",
+            "duration": 3942,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4328155/horizontal/small_5be79229-d6d4-4d9f-ae1d-7c63852e9991.jpg"
+        },
+        {
+            "id": 4325762,
+            "title": "The Science of Prayer II",
+            "duration": 839,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4325762/horizontal/small_b64f9616-3a2a-4215-a099-fd961dbb9274.jpg"
+        },
+        {
+            "id": 4325655,
+            "title": "2026-08-17: Part 1 Exopolitics Today with Dr Michael Salla interviews gene Decode: Area 51 Cleared, Moon Was Attacked and Revealed Earth Alliance War ",
+            "duration": 3291,
+            "thumbnail_url": "https://alpha.uscreencdn.com/images/programs/4325655/horizontal/small_aa5cc95b-1bf2-4dbc-b4f7-dee3931918fc.jpg"
+        }
+    ],
+    "available_tvod_tiers": []
+}

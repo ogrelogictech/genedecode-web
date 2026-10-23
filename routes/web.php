@@ -5,6 +5,9 @@ use App\Http\Controllers\Site\AuthController;
 use App\Http\Controllers\Site\AccountController;
 use App\Http\Controllers\Site\VideoProgressController;
 use App\Http\Controllers\Site\WatchController;
+use App\Http\Controllers\Site\CatalogController;
+use App\Http\Controllers\Site\BunnyWebhookController;
+
 
 // use Illuminate\Support\Facades\Artisan;
 
@@ -84,17 +87,10 @@ Route::get('/schedule', function () {
     return view('site.schedule');
 });
 
-Route::get('/surface-area', function () {
-    return view('site.surface-area');
-});
-
-Route::get('/interviews', function () {
-    return view('site.interviews');
-});
-
-Route::get('/deep-dives', function () {
-    return view('site.deep-dives');
-});
+Route::get('/surface-area', [CatalogController::class, 'surfaceArea'])->name('surface-area');
+Route::get('/interviews', [CatalogController::class, 'interviews'])->name('interviews');
+Route::get('/deep-dives', [CatalogController::class, 'deepDives'])->name('deep-dives');
+Route::post('/webhooks/bunny', [BunnyWebhookController::class, 'handle']);
 
 Route::get('/community', function () {
     return view('site.community');
