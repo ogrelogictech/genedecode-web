@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Password;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\UserActivity;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
+use Stripe\Customer;
 
 class AuthController extends Controller
 {
@@ -42,29 +45,98 @@ class AuthController extends Controller
             ->withInput($request->only('email'));
     }
 
+    // public function register(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'name' => ['required', 'string', 'max:255'],
+    //         'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+    //         'password' => ['required', 'string', 'min:8', 'confirmed'],
+    //         // 'plan' => ['required', 'in:monthly,annual']
+    //     ]);
+
+    //     $user = User::create([
+    //         'name' => $validated['name'],
+    //         'email' => $validated['email'],
+    //         'password' => $validated['password'],
+    //     ]);
+
+    //     Auth::login($user);
+
+    //     $request->session()->regenerate();
+
+    //     return redirect('/account')->with(
+    //         'success',
+    //         'Your account has been created successfully.'
+    //     );
+    // }
+
+
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            // 'plan' => ['required', 'in:monthly,annual']
+            'plan'     => ['required', 'in:monthly,annual'],
         ]);
 
+        
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         Auth::login($user);
-
         $request->session()->regenerate();
 
-        return redirect('/account')->with(
-            'success',
-            'Your account has been created successfully.'
-        );
+        
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $customer = Customer::create([
+            'email'    => $user->email,
+            'name'     => $user->name,
+            'metadata' => [
+                'user_id' => $user->id,
+            ],
+        ]);
+
+        $user->stripe_id = $customer->id;
+        $user->save();
+
+       
+        $priceId = $validated['plan'] === 'monthly'
+            ? config('services.stripe.price_monthly')
+            : config('services.stripe.price_annual');
+
+    
+        $sessionParams = [
+            'customer' => $user->stripe_id,
+            'line_items' => [[
+                'price'    => $priceId,
+                'quantity' => 1,
+            ]],
+            'mode' => 'subscription',
+            'allow_promotion_codes' => true,
+            'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url'  => route('subscription.cancel'),
+            'metadata' => [
+                'user_id' => $user->id,
+                'plan'    => $validated['plan'],
+            ],
+        ];
+
+        
+        if ($request->filled('stripe_promo_id')) {
+            $sessionParams['discounts'] = [[
+                'promotion_code' => $request->stripe_promo_id,
+            ]];
+            unset($sessionParams['allow_promotion_codes']); 
+        }
+
+        $session = Session::create($sessionParams);
+
+        return redirect($session->url);
     }
 
     public function logout(Request $request)

@@ -2,9 +2,19 @@
 
 @section('title', $video->title . ' — gene Decode')
 
-@section('page', request('from') === 'surface-area' ? 'surface' : (request('from') === 'deep-dives' ? 'deep-dives' : 'watch'))
+{{-- @section('page', request('from') === 'surface-area' ? 'surface' : (request('from') === 'deep-dives' ? 'deep-dives' : 'watch')) --}}
+@section('page', $from === 'surface-area' ? 'surface' : ($from === 'deep-dives' ? 'deep-dives' : 'watch'))
 
 @section('content')
+@php
+    $fromLabels = [
+        'surface-area' => 'Surface Area',
+        'deep-dives'   => 'Deep Dives',
+        'interviews'   => 'Interviews',
+    ];
+    // $badgeLabel = $fromLabels[request('from')] ?? ($video->section ?: 'Deep Dive');
+    $badgeLabel = $fromLabels[$from] ?? ($video->section ?: 'Deep Dive');
+@endphp
 
 <section class="watch-hero" style="padding: 30px 0 60px;">
     <div class="wrap">
@@ -34,8 +44,8 @@
                 <!-- Video Meta Info -->
                 <div class="vdetails" style="margin-top: 24px;">
                     <div style="margin-bottom: 12px;">
-                        <span class="chip-badge" style="display: inline-block; background: #68d391; color: #0a101d; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 20px; text-transform: capitalize;">
-                            {{ $video->section ?: 'Deep Dive' }}
+                        <span class="chip-badge" style="display: inline-block; background: #7cc242; color: #0a101d; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 20px; text-transform: capitalize;">
+                            {{ $badgeLabel }}
                         </span>
                     </div>
 
@@ -50,13 +60,26 @@
                     <div class="vmeta-bar" style="font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 12px; align-items: center;">
                         @if($video->uploaded_at)
                             <span>{{ \Carbon\Carbon::parse($video->uploaded_at)->format('M d, Y') }}</span>
-                            <span>•</span>
+                            {{-- <span>•</span> --}}
                         @endif
+                        
                         @if($video->duration_seconds)
-                            <span>{{ floor($video->duration_seconds / 60) }}:{{ sprintf('%02d', $video->duration_seconds % 60) }}</span>
-                            <span>•</span>
+                            <span>
+                                @php
+                                    $hours = floor($video->duration_seconds / 3600);
+                                    $minutes = floor(($video->duration_seconds % 3600) / 60);
+                                    $seconds = $video->duration_seconds % 60;
+                                @endphp
+
+                                @if($hours > 0)
+                                    {{ $hours }}:{{ sprintf('%02d', $minutes) }}:{{ sprintf('%02d', $seconds) }}
+                                @else
+                                    {{ $minutes }}:{{ sprintf('%02d', $seconds) }}
+                                @endif
+                            </span>
                         @endif
-                        <span>Included with membership</span>
+                        {{-- <span>{{ in_array(request('from'), ['surface-area', 'interviews']) ? 'Free to watch' : 'Included with membership' }}</span> --}}
+                        <span>{{ in_array($from, ['surface-area', 'interviews']) ? 'Free to watch' : 'Included with membership' }}</span>
                     </div>
                 </div>
 
@@ -73,7 +96,7 @@
 
                 <div class="upnext-cards" style="display: flex; flex-direction: column; gap: 20px;">
                     @foreach($upNextVideos as $next)
-                        <a href="{{ route('watch', ['videoId' => $next->id, 'from' => request('from', 'deep-dives')]) }}" style="text-decoration: none; display: block;">
+                        <a href="{{ route('watch', ['videoId' => $next->id, 'from' => $from]) }}" style="text-decoration: none; display: block;">
                             <div class="sidebar-vcard" style="background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; transition: transform 0.2s ease, border-color 0.2s ease;">
                                 
                                 <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden;">
@@ -83,13 +106,23 @@
                                         style="width: 100%; height: 100%; object-fit: cover;"
                                     >
                                     
-                                    <span style="position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.8); color: #68d391; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px; text-transform: uppercase;">
-                                        {{ strtoupper($next->section ?: 'DEEP DIVE') }}
+                                    <span style="position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.8); color: #7cc242; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px; text-transform: uppercase;">
+                                        {{ $badgeLabel }}
                                     </span>
 
                                     @if($next->duration_seconds)
                                         <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 3px;">
-                                            {{ floor($next->duration_seconds / 60) }}:{{ sprintf('%02d', $next->duration_seconds % 60) }}
+                                            @php
+                                                $hours = floor($next->duration_seconds / 3600);
+                                                $minutes = floor(($next->duration_seconds % 3600) / 60);
+                                                $seconds = $next->duration_seconds % 60;
+                                            @endphp
+
+                                            @if($hours > 0)
+                                                {{ $hours }}:{{ sprintf('%02d', $minutes) }}:{{ sprintf('%02d', $seconds) }}
+                                            @else
+                                                {{ $minutes }}:{{ sprintf('%02d', $seconds) }}
+                                            @endif
                                         </span>
                                     @endif
                                 </div>
@@ -99,7 +132,8 @@
                                         {{ $next->title }}
                                     </h3>
                                     <span style="font-size: 12px; color: rgba(255,255,255,0.5);">
-                                        Included with membership
+                                        {{-- {{ in_array(request('from'), ['surface-area', 'interviews']) ? 'Free to watch' : 'Included with membership' }} --}}
+                                        {{ in_array($from, ['surface-area', 'interviews']) ? 'Free to watch' : 'Included with membership' }}
                                     </span>
                                 </div>
 
@@ -127,6 +161,7 @@
     var lastSavedSecond = -1;
     var lastSaveAt      = 0;
     var latest          = { seconds: 0, duration: totalDuration };
+    var isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
 
     var resumeAt = {{ (int) ($resumeSeconds ?? 0) }};
     var canSave  = resumeAt <= 0;
@@ -135,7 +170,8 @@
         var sec = Math.round(latest.seconds);
         var dur = Math.round(latest.duration || totalDuration);
 
-        if (!canSave || sec <= 0 || dur <= 0) return;
+        // if (!canSave || sec <= 0 || dur <= 0) return;
+        if (!isLoggedIn || !canSave || sec <= 0 || dur <= 0) return;
         if (!force && sec === lastSavedSecond) return;
 
         lastSavedSecond = sec;

@@ -33,21 +33,26 @@ class BunnyWebhookController extends Controller
             return response()->json(['ok' => false], 502); 
         }
 
+        $title = preg_replace('/\.(mp4|mov|mkv|avi|webm|m4v|wmv|flv)$/i', '', (string) ($data['title'] ?? ''));
+        $title = trim($title) !== '' ? trim($title) : 'Untitled';
+
         $thumb = rtrim((string) config('services.bunny.pull_zone_url'), '/')
             . '/' . $guid . '/' . ($data['thumbnailFileName'] ?? 'thumbnail.jpg');
 
-        Video::updateOrCreate(
-            ['bunny_guid' => $guid],
-            [
-                'title'            => $data['title'] ?? 'Untitled',
-                'duration_seconds' => (int) ($data['length'] ?? 0),
-                'uploaded_at'      => isset($data['dateUploaded'])
-                                        ? Carbon::parse($data['dateUploaded'])
-                                        : now(),
-                'thumbnail_url'    => $thumb,
-            ]
-        );
+        $video = Video::firstOrNew(['bunny_guid' => $guid]);
 
-        return response()->json(['ok' => true]);
+        if (! $video->exists) {
+            $video->uscreen_id = 'bunny-' . $guid;
+        }
+
+        $video->fill([
+            'title'            => $title,
+            'duration_seconds' => (int) ($data['length'] ?? 0),
+            'uploaded_at'      => isset($data['dateUploaded'])
+                                    ? Carbon::parse($data['dateUploaded'])
+                                    : now(),
+            'thumbnail_url'    => $thumb,
+        ]);
+        $video->save();
     }
 }

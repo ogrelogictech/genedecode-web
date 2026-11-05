@@ -70,7 +70,17 @@
 
                             @if($item->duration_seconds)
                                 <span style="position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.85); color: #ffffff; font-size: 10px; padding: 2px 5px; border-radius: 2px; font-weight: 600;">
-                                    {{ floor($item->duration_seconds / 60) }}:{{ sprintf('%02d', $item->duration_seconds % 60) }}
+                                    @php
+                                        $hours = floor($item->duration_seconds / 3600);
+                                        $minutes = floor(($item->duration_seconds % 3600) / 60);
+                                        $seconds = $item->duration_seconds % 60;
+                                    @endphp
+
+                                    @if($hours > 0)
+                                        {{ $hours }}:{{ sprintf('%02d', $minutes) }}:{{ sprintf('%02d', $seconds) }}
+                                    @else
+                                        {{ $minutes }}:{{ sprintf('%02d', $seconds) }}
+                                    @endif
                                 </span>
                             @endif
                         </div>

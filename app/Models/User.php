@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'email', 'password', 'profilepic', 'display_name', 'location', 'bio', 'website'])]
+#[Fillable(['name', 'email', 'password', 'profilepic', 'display_name', 'location', 'bio', 'website', 'stripe_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -55,5 +55,12 @@ class User extends Authenticatable
                     ->orWhere('expires_at', '>', now());
             })
             ->exists();
+    }
+
+    public function activeMembership()
+    {
+        return $this->hasOne(Membership::class)
+            ->where('status', 'active')
+            ->latestOfMany();
     }
 }

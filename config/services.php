@@ -37,6 +37,14 @@ return [
         'pull_zone_url' => env('BUNNY_PULL_ZONE_URL'), 
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_PUBLISHABLE_KEY'),
+        'secret' => env('STRIPE_SECRET_KEY'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'price_monthly' => env('STRIPE_PRICE_MONTHLY'),
+        'price_annual' => env('STRIPE_PRICE_ANNUAL'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

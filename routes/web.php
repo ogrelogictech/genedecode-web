@@ -7,6 +7,10 @@ use App\Http\Controllers\Site\VideoProgressController;
 use App\Http\Controllers\Site\WatchController;
 use App\Http\Controllers\Site\CatalogController;
 use App\Http\Controllers\Site\BunnyWebhookController;
+use App\Http\Controllers\Site\SubscriptionController;
+use App\Http\Controllers\Site\StripeWebhookController;
+
+
 
 
 // use Illuminate\Support\Facades\Artisan;
@@ -90,7 +94,7 @@ Route::get('/schedule', function () {
 Route::get('/surface-area', [CatalogController::class, 'surfaceArea'])->name('surface-area');
 Route::get('/interviews', [CatalogController::class, 'interviews'])->name('interviews');
 Route::get('/deep-dives', [CatalogController::class, 'deepDives'])->name('deep-dives');
-Route::post('/webhooks/bunny', [BunnyWebhookController::class, 'handle']);
+Route::post('/api/webhooks/bunny', [BunnyWebhookController::class, 'handle']);
 
 Route::get('/community', function () {
     return view('site.community');
@@ -108,12 +112,20 @@ Route::get('/join-us', function () {
     return view('site.join-us');
 });
 
-Route::get('/account', function () {
-    return view('site.account');
-})->middleware('auth');
-Route::put('/account/profile', [AccountController::class, 'updateProfile'])->middleware('auth')->name('account.profile.update');
-Route::put('/account/publicprofile', [AccountController::class, 'updatePublicProfile'])->middleware('auth')->name('account.publicprofile.update');
-Route::put('/account/password', [AccountController::class, 'updatePassword'])->middleware('auth')->name('account.password.update');
+// Route::get('/account', function () {
+//     return view('site.account');
+// })->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/account', [AccountController::class, 'index'])->name('account.index');
+    Route::post('/account/billing/portal', [AccountController::class, 'customerPortal'])->name('account.billing.portal');
+    Route::post('/account/billing/cancel', [AccountController::class, 'cancelMembership'])->name('account.billing.cancel');
+    Route::post('/account/billing/change-plan', [AccountController::class, 'changePlan'])->name('account.billing.change_plan');
+    Route::put('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile.update');
+    Route::put('/account/publicprofile', [AccountController::class, 'updatePublicProfile'])->name('account.publicprofile.update');
+    Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password.update');
+});
+
+
 
 Route::get('/contact', function () {
     return view('site.contact');
@@ -180,9 +192,21 @@ Route::get('/video-progress/{videoId}', [VideoProgressController::class, 'show']
     ->name('video.progress.show');
 
 
-Route::middleware(['auth'])->group(function () {
+// Route::middleware(['auth'])->group(function () {
     Route::get('/watch/{videoId?}', [WatchController::class, 'show'])->name('watch');
+// });
+
+
+Route::middleware(['auth'])->group(function () {
+    // Checkout initiation route
+    Route::post('/subscribe/checkout', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
+
+    // Success & Cancel callback routes
+    Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+    Route::get('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 });
 
+Route::post('/api/webhooks/stripe', [StripeWebhookController::class, 'handle']);
+Route::post('/validate-coupon', [SubscriptionController::class, 'validateCoupon'])->name('coupon.validate');
 
     

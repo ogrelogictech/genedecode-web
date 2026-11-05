@@ -9,12 +9,14 @@ class Membership extends Model
 {
     protected $fillable = [
         'user_id',
+        'uscreen_subscription_id',
+        'stripe_subscription_id',
+        'stripe_price_id',
         'plan',
         'status',
         'started_at',
         'expires_at',
         'canceled_at',
-        'uscreen_subscription_id',
     ];
 
     protected $casts = [

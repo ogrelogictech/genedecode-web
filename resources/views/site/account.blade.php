@@ -263,7 +263,7 @@
                             </div>
 
                             <div class="field password-field">
-                                <label for="password_confirmation">Confirm new password</label>
+                                <lab el for="password_confirmation">Confirm new password</label>
 
                                 <div class="password-input-wrapper">
                                     <input
@@ -307,7 +307,7 @@
         </div>
 
         {{-- Purchases & Billing --}}
-        <div data-panel="purchases" style="display:none">
+        {{-- <div data-panel="purchases" style="display:none">
 
             <div class="card-panel" style="margin-bottom:18px">
 
@@ -360,6 +360,121 @@
                         <span>$77.00 · Paid</span>
                     </div>
 
+                </div>
+
+            </div>
+        </div> --}}
+        {{-- Purchases & Billing --}}
+        <div data-panel="purchases" style="display:none">
+
+            @if(session('success'))
+                <div style="background:rgba(34,197,94,0.15);border:1px solid #22c55e;color:#22c55e;padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:14px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div style="background:rgba(239,68,68,0.15);border:1px solid #ef4444;color:#ef4444;padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:14px;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            <div class="card-panel" style="margin-bottom:18px">
+
+                <h3 style="margin:0 0 10px;font-size:16px">
+                    Membership
+                </h3>
+
+                @if($membership && in_array($membership->status, ['active', 'cancelling']))
+                    <div class="summary" style="background:transparent;border:none;padding:0">
+
+                        <div class="row">
+                            <span>Plan</span>
+                            <span>{{ ucfirst($membership->plan) }} · {{ $membership->plan === 'annual' ? '$77 / year' : '$7 / month' }}</span>
+                        </div>
+
+                        <div class="row">
+                            <span>Status</span>
+                            <span style="color: {{ $membership->status === 'active' ? '#22c55e' : '#f59e0b' }}; text-transform: capitalize;">
+                                {{ $membership->status === 'cancelling' ? 'Cancelling at period end' : 'Active' }}
+                            </span>
+                        </div>
+
+                        <div class="row">
+                            <span>Next renewal / expiry</span>
+                            <span>{{ $membership->expires_at ? $membership->expires_at->format('d M Y') : '—' }}</span>
+                        </div>
+
+                        @if($paymentMethod)
+                            <div class="row">
+                                <span>Payment method</span>
+                                <span>{{ $paymentMethod }}</span>
+                            </div>
+                        @endif
+
+                    </div>
+
+                    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+                        
+                        {{-- Change Plan Modal Trigger / Form --}}
+                        <form method="POST" action="{{ route('account.billing.change_plan') }}" style="display:inline;" onsubmit="return confirm('Do you want to switch to {{ $membership->plan === 'annual' ? 'Monthly ($7/mo)' : 'Annual ($77/yr)' }}?');">
+                            @csrf
+                            <input type="hidden" name="plan" value="{{ $membership->plan === 'annual' ? 'monthly' : 'annual' }}">
+                            <button type="submit" class="btn sm ghost">
+                                Switch to {{ $membership->plan === 'annual' ? 'Monthly' : 'Annual' }}
+                            </button>
+                        </form>
+
+                        {{-- Update Card via Stripe Portal --}}
+                        <form method="POST" action="{{ route('account.billing.portal') }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn sm ghost">
+                                Update card
+                            </button>
+                        </form>
+
+                        {{-- Cancel Membership --}}
+                        @if($membership->status !== 'cancelling')
+                            <form method="POST" action="{{ route('account.billing.cancel') }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel your membership? You will retain access until the end of your billing cycle.');">
+                                @csrf
+                                <button type="submit" class="btn sm ghost" style="color:#ef4444;border-color:rgba(239,68,68,0.4)">
+                                    Cancel membership
+                                </button>
+                            </form>
+                        @endif
+
+                    </div>
+                @else
+                    <p style="color:var(--muted);font-size:14px;margin:8px 0 16px">
+                        You currently do not have an active membership.
+                    </p>
+                    <a href="{{ url('/join-us') }}" class="btn sm">
+                        Join Membership
+                    </a>
+                @endif
+
+            </div>
+
+            <div class="card-panel">
+
+                <h3 style="margin:0 0 12px;font-size:16px">
+                    Billing history
+                </h3>
+
+                <div class="summary" style="background:transparent;border:none;padding:0">
+                    @forelse($invoices as $inv)
+                        <div class="row">
+                            <span>{{ date('d M Y', $inv->created) }} · {{ ucfirst($inv->lines->data[0]->description ?? 'Membership') }}</span>
+                            <span>
+                                ${{ number_format($inv->amount_paid / 100, 2) }} · 
+                                <a href="{{ $inv->invoice_pdf }}" target="_blank" style="color:var(--brand, #38bdf8);margin-left:6px;text-decoration:none;">PDF</a>
+                            </span>
+                        </div>
+                    @empty
+                        <p style="color:var(--muted);font-size:13px;margin:0">
+                            No invoices generated yet.
+                        </p>
+                    @endforelse
                 </div>
 
             </div>

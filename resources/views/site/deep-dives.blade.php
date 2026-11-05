@@ -64,7 +64,7 @@
         bottom: 6px !important;
         left: 6px !important;
         background: rgba(0, 0, 0, 0.85) !important;
-        color: #A9E07A !important;
+        color: #7cc242 !important;
         font-size: 9px !important;
         font-weight: 800 !important;
         padding: 2px 6px !important;
@@ -122,28 +122,69 @@
     <div class="wrap">
 
         <!-- Separate Lock Bar & Get Membership Pill -->
+        @if(!$isMember)
         <div class="lockbar">
             <span class="locknote">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
-                Membership required to watch</span>
+                Membership required to watch
+            </span>
             <a class="btn sm" href="{{ url('join-us') }}">Get Membership</a>
         </div>
+        @endif
 
         <!-- Section Title -->
-        <div class="rowhead" style="margin-bottom: 16px;">
+        {{-- <div class="rowhead" style="margin-bottom: 16px;">
             <h2><span class="bar"></span>
                 Browse the library
             </h2>
+        </div> --}}
+
+        <!-- Search Bar & Filters -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 20px;">
+            <div class="rowhead" style="margin: 0;">
+                <h2><span class="bar"></span>Browse the library</h2>
+            </div>
+
+            <!-- Search Bar Form -->
+            <form method="GET" action="{{ route('deep-dives') }}" style="display: flex; gap: 8px; max-width: 320px; width: 100%;">
+                <input type="hidden" name="category" value="{{ $categoryFilter ?? 'all' }}">
+                <div style="position: relative; width: 100%;">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ $search ?? '' }}" 
+                        placeholder="Search videos..." 
+                        style="width: 100%; padding: 8px 34px 8px 12px; background: #0d1527; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff; font-size: 13.5px;"
+                    >
+                    @if(!empty($search))
+                        <a href="{{ route('deep-dives', ['category' => $categoryFilter ?? 'all']) }}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); text-decoration: none; font-size: 16px;">&times;</a>
+                    @endif
+                </div>
+                <button type="submit" class="btn sm" style="padding: 8px 14px;">Search</button>
+            </form>
+        </div>
+
+        <!-- Filter Chips with URL Parameters -->
+        @php $cat = $categoryFilter ?? 'all'; @endphp
+        <div class="chips" id="dd-chips" style="margin-bottom: 24px;">
+            <a href="{{ route('deep-dives', array_filter(['category' => 'all', 'q' => $search ?? null])) }}" 
+               class="chip {{ $cat === 'all' ? 'on' : '' }}" style="text-decoration: none;">All</a>
+            <a href="{{ route('deep-dives', array_filter(['category' => 'deep-dive', 'q' => $search ?? null])) }}" 
+               class="chip {{ $cat === 'deep-dive' ? 'on' : '' }}" style="text-decoration: none;">Deep Dives</a>
+            <a href="{{ route('deep-dives', array_filter(['category' => 'pearls', 'q' => $search ?? null])) }}" 
+               class="chip {{ $cat === 'pearls' ? 'on' : '' }}" style="text-decoration: none;">Pearls of Wisdom</a>
+            <a href="{{ route('deep-dives', array_filter(['category' => 'qna', 'q' => $search ?? null])) }}" 
+               class="chip {{ $cat === 'qna' ? 'on' : '' }}" style="text-decoration: none;">Q&amp;A Zooms</a>
         </div>
 
         <!-- Filter Chips with Links -->
-        @php $cat = $categoryFilter ?? 'all'; @endphp
+        {{-- @php $cat = $categoryFilter ?? 'all'; @endphp
         <div class="chips" id="dd-chips">
             <span class="chip on" data-val="All">All</span>
             <span class="chip" data-val="Deep Dive">Deep Dives</span>
             <span class="chip" data-val="Pearls of Wisdom">Pearls of Wisdom</span>
             <span class="chip" data-val="Q&amp;A">Q&amp;A Zooms</span>
-        </div>
+        </div> --}}
 
         <!-- Video Catalog Grid -->
         <div class="catalog-grid">
@@ -181,21 +222,42 @@
 
                             @if($item->duration_seconds)
                                 <span class="vcard-badge-duration">
-                                    {{ floor($item->duration_seconds / 60) }}:{{ sprintf('%02d', $item->duration_seconds % 60) }}
+                                    @php
+                                        $hours = floor($item->duration_seconds / 3600);
+                                        $minutes = floor(($item->duration_seconds % 3600) / 60);
+                                        $seconds = $item->duration_seconds % 60;
+                                    @endphp
+
+                                    @if($hours > 0)
+                                        {{ $hours }}:{{ sprintf('%02d', $minutes) }}:{{ sprintf('%02d', $seconds) }}
+                                    @else
+                                        {{ $minutes }}:{{ sprintf('%02d', $seconds) }}
+                                    @endif
                                 </span>
                             @endif
 
+                            @php
+                                $user = auth()->user();
+                                $isLoggedIn = auth()->check();
+                                $isMember = $isLoggedIn && $user->hasActiveSubscription();
+
+                                $userProgressMap = [];
+                                if ($isLoggedIn) {
+                                    $userProgressMap = \App\Models\VideoProgress::where('user_id', $user->id)
+                                        ->whereIn('video_id', $videos->pluck('id')->map(fn($id) => (string)$id))
+                                        ->pluck('progress_percent', 'video_id')
+                                        ->toArray();
+                                }
+                            @endphp
+
                             @auth
                                 @php
-                                    $userProgress = \App\Models\VideoProgress::where('user_id', auth()->id())
-                                        ->where('video_id', (string) $item->id)
-                                        ->first();
-                                    $progressPercent = $userProgress ? $userProgress->progress_percent : 0;
+                                    $progressPercent = $userProgressMap[(string)$item->id] ?? 0;
                                 @endphp
 
                                 @if($progressPercent > 0)
                                     <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.2);">
-                                        <div style="width: {{ $progressPercent }}%; height: 100%; background: #68d391; transition: width 0.3s ease;"></div>
+                                        <div style="width: {{ $progressPercent }}%; height: 100%; background: #7cc242; transition: width 0.3s ease;"></div>
                                     </div>
                                 @endif
                             @endauth
@@ -219,7 +281,12 @@
                 </div>
             @empty
                 <div style="grid-column: 1 / -1; color: rgba(255,255,255,0.6); padding: 40px 0; text-align: center;">
-                    No videos found in this category.
+                    @if(!empty($search))
+                        No videos matching "<strong>{{ e($search) }}</strong>". 
+                        <a href="{{ route('deep-dives', ['category' => $categoryFilter ?? 'all']) }}" style="color: #7cc242; margin-left: 8px; text-decoration: underline;">Clear search</a>
+                    @else
+                        No videos found in this category.
+                    @endif
                 </div>
             @endforelse
         </div>

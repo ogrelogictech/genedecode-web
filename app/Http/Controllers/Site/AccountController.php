@@ -7,9 +7,142 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Stripe;
+use Stripe\BillingPortal\Session as PortalSession;
+use Stripe\Subscription;
+use Carbon\Carbon;
 
 class AccountController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = $request->user();
+        $membership = $user->activeMembership;
+        
+        $paymentMethod = null;
+        $invoices = [];
+
+        if ($user->stripe_id) {
+            try {
+                Stripe::setApiKey(config('services.stripe.secret'));
+                
+                // Default payment method
+                $customer = \Stripe\Customer::retrieve([
+                    'id' => $user->stripe_id,
+                    'expand' => ['default_source', 'invoice_settings.default_payment_method']
+                ]);
+
+                $pm = $customer->invoice_settings->default_payment_method;
+                if ($pm && is_object($pm) && isset($pm->card)) {
+                    $paymentMethod = ucfirst($pm->card->brand) . ' ending in ' . $pm->card->last4;
+                }
+
+                // Recent invoices
+                $stripeInvoices = \Stripe\Invoice::all([
+                    'customer' => $user->stripe_id,
+                    'limit' => 5,
+                ]);
+                $invoices = $stripeInvoices->data ?? [];
+
+            } catch (\Throwable $e) {
+                // Fail silently in case of network/keys issue
+            }
+        }
+
+        return view('site.account', compact('membership', 'paymentMethod', 'invoices'));
+    }
+
+    // Stripe Customer Portal Session 
+    public function customerPortal(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->stripe_id) {
+            return back()->with('error', 'No active billing record found.');
+        }
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $portalSession = PortalSession::create([
+            'customer' => $user->stripe_id,
+            'return_url' => route('account.index'),
+        ]);
+
+        return redirect($portalSession->url);
+    }
+
+    // Cancel Subscription 
+    public function cancelMembership(Request $request)
+    {
+        $user = $request->user();
+        $membership = $user->activeMembership;
+
+        if (!$membership || !$membership->stripe_subscription_id) {
+            return back()->with('error', 'No active subscription found to cancel.');
+        }
+
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            $subscription = Subscription::update($membership->stripe_subscription_id, [
+                'cancel_at_period_end' => true,
+            ]);
+
+            $membership->update([
+                'status' => 'cancelling',
+                'canceled_at' => Carbon::now(),
+            ]);
+
+            return back()->with('success', 'Your subscription will cancel at the end of your billing period.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Error cancelling subscription: ' . $e->getMessage());
+        }
+    }
+
+    // Plan switch (Monthly <-> Annual)
+    public function changePlan(Request $request)
+    {
+        $request->validate([
+            'plan' => 'required|in:monthly,annual',
+        ]);
+
+        $user = $request->user();
+        $membership = $user->activeMembership;
+
+        if (!$membership || !$membership->stripe_subscription_id) {
+            return back()->with('error', 'No active subscription found.');
+        }
+
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            $newPriceId = $request->plan === 'annual'
+                ? config('services.stripe.price_annual')
+                : config('services.stripe.price_monthly');
+
+            $subscription = Subscription::retrieve($membership->stripe_subscription_id);
+
+            Subscription::update($membership->stripe_subscription_id, [
+                'items' => [
+                    [
+                        'id' => $subscription->items->data[0]->id,
+                        'price' => $newPriceId,
+                    ],
+                ],
+                'proration_behavior' => 'create_prorations',
+            ]);
+
+            $membership->update([
+                'plan' => $request->plan,
+                'stripe_price_id' => $newPriceId,
+            ]);
+
+            return back()->with('success', 'Your subscription plan has been updated successfully!');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Could not update plan: ' . $e->getMessage());
+        }
+    }
+
     public function updateProfile(Request $request)
     {
         $user = $request->user();

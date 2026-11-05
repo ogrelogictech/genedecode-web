@@ -45,7 +45,7 @@
                         <div class="tiers" style="grid-template-columns:1fr 1fr;margin:0;max-width:none">
 
                             <!-- Monthly Plan Card -->
-                            <label class="tier" style="cursor:pointer;border-width:1px">
+                            {{-- <label class="tier" style="cursor:pointer;border-width:1px">
                                 <input 
                                     type="radio" 
                                     name="plan" 
@@ -60,10 +60,47 @@
                                         Billed monthly. Cancel anytime.
                                     </p>
                                 </div>
-                            </label>
+                            </label> --}}
 
                             <!-- Annual Plan Card (Default / Featured) -->
-                            <label class="tier" style="cursor:pointer">
+                            {{-- <label class="tier" style="cursor:pointer">
+                                <span class="badge">SAVE $7</span>
+                                <input 
+                                    type="radio" 
+                                    name="plan" 
+                                    value="annual" 
+                                    style="display:none;" 
+                                    {{ old('plan', 'annual') === 'annual' ? 'checked' : '' }}
+                                >
+                                <div class="body">
+                                    <h3>Annual</h3>
+                                    <div class="price">$77<span>/yr</span></div>
+                                    <p style="color:var(--muted);font-size:13px;margin:0">
+                                        Two months free vs monthly.
+                                    </p>
+                                </div>
+                            </label> --}}
+
+                            <!-- Monthly Plan Card -->
+                            <label class="tier" style="cursor:pointer;border-width:1px">
+                                <input 
+                                    type="radio" 
+                                    name="plan" 
+                                    value="monthly" 
+                                    style="display:none;" 
+                                    {{ old('plan') === 'monthly' ? 'checked' : '' }}
+                                >
+                                <div class="body">
+                                    <h3>Monthly</h3>
+                                    <div class="price">$7<span>/mo</span></div>
+                                    <p style="color:var(--muted);font-size:13px;margin:0">
+                                        Billed monthly. Cancel anytime.
+                                    </p>
+                                </div>
+                            </label>
+
+                            <!-- Annual Plan Card (Default Checked) -->
+                            <label class="tier" style="cursor:pointer; border-color: var(--brand, #4f46e5);">
                                 <span class="badge">SAVE $7</span>
                                 <input 
                                     type="radio" 
@@ -186,7 +223,7 @@
 
                     </div>
 
-                    <div class="card-panel">
+                    {{-- <div class="card-panel">
                         <h3 style="margin:0 0 14px;font-size:16px">
                             3. Payment
                         </h3>
@@ -214,6 +251,18 @@
                             Payments are processed securely through Stripe.
                             Your card details never touch our servers.
                         </p>
+                    </div> --}}
+                    <div class="card-panel">
+                        <h3 style="margin:0 0 14px;font-size:16px">3. Payment</h3>
+                        <div style="background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.15); border-radius: 8px; padding: 18px; text-align: center;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px; opacity:0.7"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                            <p style="font-size: 13.5px; margin: 0; color: #fff;">
+                                You will be redirected to <strong>Stripe's secure checkout</strong> to complete your card payment.
+                            </p>
+                        </div>
+                        <p style="color:var(--faint);font-size:12.5px;margin:12px 0 0">
+                            Payments are processed securely through Stripe. Your card details never touch our servers.
+                        </p>
                     </div>
 
                 </div>
@@ -231,11 +280,18 @@
 
                     <div class="field" style="margin:10px 0 6px">
                         <label>Coupon code</label>
-
                         <div style="display:flex;gap:8px">
-                            <input placeholder="Enter code">
-                            <button class="btn sm ghost" disabled>Apply</button>
+                            <input type="text" id="coupon_input" placeholder="Enter code" style="text-transform:uppercase;">
+                            <button type="button" id="btn_apply_coupon" class="btn sm ghost">Apply</button>
                         </div>
+                        <div id="coupon_msg" style="font-size:12px; margin-top:5px; display:none;"></div>
+                        <!-- Hidden input form submission ke liye -->
+                        <input type="hidden" name="stripe_promo_id" id="stripe_promo_id" value="">
+                    </div>
+
+                    <div class="row" id="discount_row" style="display:none; color:#22c55e;">
+                        <span>Discount</span>
+                        <span id="discount_amount">-$0.00</span>
                     </div>
 
                     <div class="row">
@@ -272,21 +328,113 @@
 
 @push('scripts')
 <script>
+    function getSelectedPlan() {
+        var checked = document.querySelector('input[name="plan"]:checked');
+        return checked ? checked.value : 'annual';
+    }
+
+    function updatePlanDisplay(plan) {
+        var isAnnual = plan === 'annual';
+        var basePrice = isAnnual ? 77.00 : 7.00;
+        
+        var summaryRow = document.querySelector('.summary .row:first-of-type');
+        if (summaryRow) {
+            summaryRow.children[0].textContent = isAnnual ? 'Annual membership' : 'Monthly membership';
+            summaryRow.children[1].textContent = '$' + basePrice.toFixed(2);
+        }
+
+        // Agar coupon pehle se laga hua hai toh naye plan ke hisaab se re-calculate karein
+        if (document.getElementById('stripe_promo_id').value) {
+            document.getElementById('btn_apply_coupon').click();
+        } else {
+            document.querySelector('.row.total span:last-child').textContent = '$' + basePrice.toFixed(2);
+            document.getElementById('discount_row').style.display = 'none';
+        }
+    }
+
+    // Plan selection card click
     document.querySelectorAll('.tiers .tier').forEach(function(card) {
         card.addEventListener('click', function() {
-            // Remove active highlight style from all cards
             document.querySelectorAll('.tiers .tier').forEach(function(c) {
                 c.style.borderColor = 'var(--line)';
             });
 
-            // Highlight the clicked card
             this.style.borderColor = 'var(--brand, #4f46e5)';
 
-            // Select the embedded radio button
             var radio = this.querySelector('input[type="radio"]');
             if (radio) {
                 radio.checked = true;
+                updatePlanDisplay(radio.value);
             }
+        });
+    });
+
+    // Apply Coupon Click
+    document.getElementById('btn_apply_coupon').addEventListener('click', function() {
+        var code = document.getElementById('coupon_input').value.trim();
+        var selectedPlan = getSelectedPlan();
+        var msgDiv = document.getElementById('coupon_msg');
+        var btn = this;
+
+        if (!code) {
+            msgDiv.style.display = 'block';
+            msgDiv.style.color = '#ef4444';
+            msgDiv.textContent = 'Please enter a coupon code.';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Checking...';
+
+        fetch("{{ route('coupon.validate') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ code: code, plan: selectedPlan })
+        })
+        .then(function(res) {
+            return res.json().then(function(data) {
+                return { status: res.status, body: data };
+            });
+        })
+        .then(function(result) {
+            btn.disabled = false;
+            btn.textContent = 'Apply';
+            msgDiv.style.display = 'block';
+
+            if (result.status === 200 && result.body.valid) {
+                msgDiv.style.color = '#22c55e';
+                msgDiv.textContent = result.body.message;
+
+                // Hidden field update
+                document.getElementById('stripe_promo_id').value = result.body.promo_id;
+
+                // Discount update
+                var discountRow = document.getElementById('discount_row');
+                discountRow.style.display = 'flex';
+                document.getElementById('discount_amount').textContent = '-$' + result.body.discount_amount;
+
+                // Total update
+                document.querySelector('.row.total span:last-child').textContent = '$' + result.body.new_total;
+            } else {
+                msgDiv.style.color = '#ef4444';
+                msgDiv.textContent = result.body.message || 'Invalid coupon code.';
+                document.getElementById('stripe_promo_id').value = '';
+                document.getElementById('discount_row').style.display = 'none';
+
+                var base = selectedPlan === 'annual' ? 77.00 : 7.00;
+                document.querySelector('.row.total span:last-child').textContent = '$' + base.toFixed(2);
+            }
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.textContent = 'Apply';
+            msgDiv.style.display = 'block';
+            msgDiv.style.color = '#ef4444';
+            msgDiv.textContent = 'Something went wrong. Please try again.';
         });
     });
 </script>

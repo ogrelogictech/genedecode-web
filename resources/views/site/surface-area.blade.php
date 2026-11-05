@@ -12,12 +12,34 @@
         <h1>Surface Area</h1>
         <p>A selection of Gene's free videos, open to everyone. For his full library of free interviews from across many platforms, use the box below.</p>
     </div>
+
 </section>
 
 <section>
     <div class="wrap">
         <div class="rowhead">
             <h2><span class="bar"></span>Free videos</h2>
+            
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 20px;">
+           
+            <!-- Search Bar Form -->
+            <form method="GET" action="{{ route('surface-area') }}" style="display: flex; gap: 8px; max-width: 320px; width: 100%;">
+                
+                <div style="position: relative; width: 100%;">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ $search ?? '' }}" 
+                        placeholder="Search videos..." 
+                        style="width: 100%; padding: 8px 34px 8px 12px; background: #0d1527; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff; font-size: 13.5px;"
+                    >
+                    @if(!empty($search))
+                        <a href="{{ route('surface-area') }}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); text-decoration: none; font-size: 16px;">&times;</a>
+                    @endif
+                </div>
+                <button type="submit" class="btn sm" style="padding: 8px 14px;">Search</button>
+            </form>
         </div>
         <div class="grid" id="free-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
             @forelse($freeVideos as $item)
@@ -31,13 +53,29 @@
                                 style="width: 100%; height: 100%; object-fit: cover;"
                             >
 
-                            <span style="position: absolute; bottom: 6px; left: 6px; background: rgba(0,0,0,0.85); color: #68d391; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 2px; letter-spacing: 0.5px; text-transform: uppercase;">
+                            <span style="position: absolute; bottom: 6px; left: 6px; background: rgba(0,0,0,0.85); color: #7cc242; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 2px; letter-spacing: 0.5px; text-transform: uppercase;">
                                 FREE
                             </span>
 
-                            @if($item->duration_seconds)
+                            {{-- @if($item->duration_seconds)
                                 <span style="position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.85); color: #ffffff; font-size: 10px; padding: 2px 5px; border-radius: 2px; font-weight: 600;">
                                     {{ floor($item->duration_seconds / 60) }}:{{ sprintf('%02d', $item->duration_seconds % 60) }}
+                                </span>
+                            @endif --}}
+
+                            @if($item->duration_seconds)
+                                <span class="vcard-badge-duration" style="position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.85); color: #ffffff; font-size: 10px; padding: 2px 5px; border-radius: 2px; font-weight: 600;">
+                                    @php
+                                        $hours = floor($item->duration_seconds / 3600);
+                                        $minutes = floor(($item->duration_seconds % 3600) / 60);
+                                        $seconds = $item->duration_seconds % 60;
+                                    @endphp
+
+                                    @if($hours > 0)
+                                        {{ $hours }}:{{ sprintf('%02d', $minutes) }}:{{ sprintf('%02d', $seconds) }}
+                                    @else
+                                        {{ $minutes }}:{{ sprintf('%02d', $seconds) }}
+                                    @endif
                                 </span>
                             @endif
 
@@ -52,7 +90,7 @@
 
                                 @if($progressPercent > 0)
                                     <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.2);">
-                                        <div style="width: {{ $progressPercent }}%; height: 100%; background: #68d391; transition: width 0.3s ease;"></div>
+                                        <div style="width: {{ $progressPercent }}%; height: 100%; background: #7cc242 ; transition: width 0.3s ease;"></div>
                                     </div>
                                 @endif
                             @endauth
