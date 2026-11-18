@@ -14,14 +14,19 @@ class Membership extends Model
         'stripe_price_id',
         'plan',
         'status',
+        'is_gift',
+        'gift_months',
+        'gift_session_id',
         'started_at',
         'expires_at',
         'canceled_at',
     ];
 
     protected $casts = [
-        'started_at' => 'datetime',
-        'expires_at' => 'datetime',
+        'is_gift'     => 'boolean',
+        'gift_months' => 'integer',
+        'started_at'  => 'datetime',
+        'expires_at'  => 'datetime',
         'canceled_at' => 'datetime',
     ];
 

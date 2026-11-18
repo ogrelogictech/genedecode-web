@@ -6,50 +6,72 @@
 
 @section('content')
 
+@php
+    $userProgressMap = [];
+    if (auth()->check()) {
+        $userProgressMap = \App\Models\VideoProgress::where('user_id', auth()->id())
+            ->whereIn('video_id', $videos->pluck('id')->map(fn($id) => (string)$id))
+            ->pluck('progress_percent', 'video_id')
+            ->toArray();
+    }
+    $activeFilter = $filter ?? 'all';
+@endphp
+
 <section class="pagehero">
     <div class="wrap">
-
         <span class="kicker">Free public library</span>
-
         <h1>Interviews &amp; Videos</h1>
-
         <p>
             Gene's interviews from across many platforms, free to watch.
             Topics include Current Events, DUMBs, World Government, True History,
             and more. For the full library, subscribe to Deep Dives.
         </p>
 
-        <div style="margin-top:16px">
-            <a class="btn" href="{{ url('/join-us') }}">
-                Subscribe to Deep Dives
-            </a>
-        </div>
-
+        @if(!auth()->check() || !auth()->user()->hasActiveSubscription())
+            <div style="margin-top:16px">
+                <a class="btn" href="{{ url('/join-us') }}">
+                    Subscribe to Deep Dives
+                </a>
+            </div>
+        @endif
     </div>
 </section>
 
 <section>
     <div class="wrap">
 
-        @auth
-            <div id="continue-watching-section" style="display:none; margin-bottom:40px;">
-
-                <div class="rowhead">
-                    <h2>
-                        <span class="bar"></span>
-                        Continue watching
-                    </h2>
-                </div>
-
-                <div class="rowscroll" id="row-continue"></div>
-
+        <!-- Header + Search Form -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 20px;">
+            <div class="rowhead" style="margin: 0;">
+                <h2><span class="bar"></span>Browse interviews</h2>
             </div>
-        @endauth
 
-        <div class="chips" id="iv-chips">
-            <span class="chip on" data-val="All">All</span>
-            <span class="chip" data-val="Newest">Newest</span>
-            <span class="chip" data-val="Most popular">Most popular</span>
+            <form method="GET" action="{{ route('interviews') }}" style="display: flex; gap: 8px; max-width: 320px; width: 100%;">
+                <input type="hidden" name="filter" value="{{ $activeFilter }}">
+                <div style="position: relative; width: 100%;">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ $search ?? '' }}" 
+                        placeholder="Search interviews..." 
+                        style="width: 100%; padding: 8px 34px 8px 12px; background: #0d1527; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff; font-size: 13.5px;"
+                    >
+                    @if(!empty($search))
+                        <a href="{{ route('interviews', ['filter' => $activeFilter]) }}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); text-decoration: none; font-size: 16px;">&times;</a>
+                    @endif
+                </div>
+                <button type="submit" class="btn sm" style="padding: 8px 14px;">Search</button>
+            </form>
+        </div>
+
+        <!-- Working Filter Chips -->
+        <div class="chips" id="iv-chips" style="margin-bottom: 24px;">
+            <a href="{{ route('interviews', array_filter(['filter' => 'all', 'q' => $search ?? null])) }}" 
+               class="chip {{ $activeFilter === 'all' ? 'on' : '' }}" style="text-decoration: none;">All</a>
+            <a href="{{ route('interviews', array_filter(['filter' => 'newest', 'q' => $search ?? null])) }}" 
+               class="chip {{ $activeFilter === 'newest' ? 'on' : '' }}" style="text-decoration: none;">Newest</a>
+            <a href="{{ route('interviews', array_filter(['filter' => 'oldest', 'q' => $search ?? null])) }}" 
+               class="chip {{ $activeFilter === 'oldest' ? 'on' : '' }}" style="text-decoration: none;">Oldest</a>
         </div>
 
         <div class="grid" id="grid-interviews" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
@@ -83,6 +105,15 @@
                                     @endif
                                 </span>
                             @endif
+
+                            @auth
+                                @php $progressPercent = $userProgressMap[(string)$item->id] ?? 0; @endphp
+                                @if($progressPercent > 0)
+                                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.2);">
+                                        <div style="width: {{ $progressPercent }}%; height: 100%; background: #7cc242; transition: width 0.3s ease;"></div>
+                                    </div>
+                                @endif
+                            @endauth
                         </div>
 
                         <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
@@ -103,7 +134,12 @@
                 </div>
             @empty
                 <div style="grid-column: 1 / -1; color: rgba(255,255,255,0.6); padding: 40px 0; text-align: center;">
-                    No interview videos available.
+                    @if(!empty($search))
+                        No interview videos matching "<strong>{{ e($search) }}</strong>".
+                        <a href="{{ route('interviews') }}" style="color: #7cc242; margin-left: 8px; text-decoration: underline;">Clear search</a>
+                    @else
+                        No interview videos available.
+                    @endif
                 </div>
             @endforelse
         </div>
@@ -136,81 +172,3 @@
 </section>
 
 @endsection
-
-@push('scripts')
-{{-- <script>
-    var IV = byCat("Interview");
-
-    @auth
-        fetch("{{ route('video.progress.index') }}", {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        })
-        .then(function(response) {
-            if (!response.ok) {
-                throw new Error("Unable to load Continue Watching data.");
-            }
-
-            return response.json();
-        })
-        .then(function(data) {
-            if (!data.success || !Array.isArray(data.progress)) {
-                document.getElementById("continue-watching-section").style.display = "none";
-                render("row-continue", []);
-                return;
-            }
-
-            var continueVideos = data.progress
-                .map(function(progress) {
-                    var video = VIDEOS.find(function(v) {
-                        return v.id === progress.video_id;
-                    });
-
-                    if (!video) {
-                        return null;
-                    }
-
-                    return Object.assign({}, video, {
-                        p: parseFloat(progress.progress_percent) || 0
-                    });
-                })
-                .filter(function(video) {
-                    return video !== null && video.c === "Interview";
-                });
-
-            if (continueVideos.length > 0) {
-                document.getElementById("continue-watching-section").style.display = "";
-                render("row-continue", continueVideos);
-            } else {
-                document.getElementById("continue-watching-section").style.display = "none";
-                render("row-continue", []);
-            }
-        })
-        .catch(function(error) {
-            console.error("Unable to load Continue Watching:", error);
-
-            document.getElementById("continue-watching-section").style.display = "none";
-            render("row-continue", []);
-        });
-    @endauth
-
-    var ivList = function(val) {
-        if (val === "Newest") {
-            return IV.slice().reverse();
-        }
-
-        if (val === "Most popular") {
-            return IV.slice().sort(function(a, b) {
-                return (b.p || 0) - (a.p || 0);
-            });
-        }
-
-        return IV;
-    };
-
-    render("grid-interviews", ivList("All"));
-    wireChips("#iv-chips", "grid-interviews", ivList);
-</script> --}}
-@endpush

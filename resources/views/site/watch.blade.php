@@ -4,6 +4,8 @@
 
 {{-- @section('page', request('from') === 'surface-area' ? 'surface' : (request('from') === 'deep-dives' ? 'deep-dives' : 'watch')) --}}
 @section('page', $from === 'surface-area' ? 'surface' : ($from === 'deep-dives' ? 'deep-dives' : 'watch'))
+@section('meta_description', Str::limit(strip_tags($video->description), 155))
+@section('meta_image', $video->thumbnail_url)
 
 @section('content')
 @php

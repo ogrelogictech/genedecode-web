@@ -12,6 +12,9 @@ use App\Models\UserActivity;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
+use App\Models\Membership;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
 {
@@ -73,14 +76,89 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validated = $request->validate([
+        $isGift = $request->filled('gift_ref');
+
+        $rules = [
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'plan'     => ['required', 'in:monthly,annual'],
-        ]);
+            'gift_ref' => ['nullable', 'string', 'max:255'],
+        ];
 
-        
+        if (!$isGift) {
+            $rules['plan'] = ['required', 'in:monthly,annual'];
+        }
+
+        $validated = $request->validate($rules);
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        // Gift Redemption Flow (Supports single & multi-quantity gift links)
+        if ($isGift) {
+            $giftRef = trim($validated['gift_ref']);
+
+            try {
+                $giftSession = Session::retrieve($giftRef);
+                $purchasedQty = max(1, (int) ($giftSession->metadata->quantity ?? 1));
+
+                if (
+                    ($giftSession->payment_status ?? '') !== 'paid' ||
+                    ($giftSession->metadata->type ?? '') !== 'gift_membership'
+                ) {
+                    return back()->withInput()->with('error', 'Invalid or unpaid gift membership link.');
+                }
+
+                $months = max(1, (int) ($giftSession->metadata->months ?? 1));
+            } catch (\Throwable $e) {
+                return back()->withInput()->with('error', 'Unable to verify gift link. Please check the URL or contact support.');
+            }
+
+            $redeemedCount = Membership::where('gift_session_id', $giftRef)->count();
+            if ($redeemedCount >= $purchasedQty) {
+                return back()->withInput()->with('error', 'All gift memberships from this link have already been redeemed.');
+            }
+
+            $user = \Illuminate\Support\Facades\DB::transaction(function () use ($validated, $giftRef, $purchasedQty, $months) {
+                $currentCount = Membership::where('gift_session_id', $giftRef)
+                    ->lockForUpdate()
+                    ->count();
+
+                if ($currentCount >= $purchasedQty) {
+                    return null;
+                }
+
+                $newUser = User::create([
+                    'name'     => $validated['name'],
+                    'email'    => $validated['email'],
+                    'password' => Hash::make($validated['password']),
+                ]);
+
+                Membership::create([
+                    'user_id'         => $newUser->id,
+                    'plan'            => $months >= 12 ? 'annual' : 'monthly',
+                    'status'          => 'active',
+                    'is_gift'         => true,
+                    'gift_months'     => $months,
+                    'gift_session_id' => $giftRef,
+                    'started_at'      => Carbon::now(),
+                    'expires_at'      => Carbon::now()->addMonths($months),
+                ]);
+
+                return $newUser;
+            });
+
+            if (!$user) {
+                return back()->withInput()->with('error', 'All gift memberships from this link have already been redeemed.');
+            }
+
+            Auth::login($user);
+            $request->session()->regenerate();
+            session(['ga_sign_up' => true]);
+
+            return redirect('/deep-dives')->with('success', "Welcome! Your {$months}-month gift membership is now active.");
+        }
+
+        // Standard Paid Membership Flow
         $user = User::create([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
@@ -89,9 +167,6 @@ class AuthController extends Controller
 
         Auth::login($user);
         $request->session()->regenerate();
-
-        
-        Stripe::setApiKey(config('services.stripe.secret'));
 
         $customer = Customer::create([
             'email'    => $user->email,
@@ -104,12 +179,10 @@ class AuthController extends Controller
         $user->stripe_id = $customer->id;
         $user->save();
 
-       
         $priceId = $validated['plan'] === 'monthly'
             ? config('services.stripe.price_monthly')
             : config('services.stripe.price_annual');
 
-    
         $sessionParams = [
             'customer' => $user->stripe_id,
             'line_items' => [[
@@ -126,15 +199,16 @@ class AuthController extends Controller
             ],
         ];
 
-        
         if ($request->filled('stripe_promo_id')) {
             $sessionParams['discounts'] = [[
                 'promotion_code' => $request->stripe_promo_id,
             ]];
-            unset($sessionParams['allow_promotion_codes']); 
+            unset($sessionParams['allow_promotion_codes']);
         }
 
         $session = Session::create($sessionParams);
+
+        session(['ga_sign_up' => true]);
 
         return redirect($session->url);
     }

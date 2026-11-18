@@ -10,6 +10,8 @@ use App\Models\Membership;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Stripe\PromotionCode;
+use Carbon\Carbon;
+use Stripe\Subscription;
 
 
 class SubscriptionController extends Controller
@@ -24,17 +26,22 @@ class SubscriptionController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'plan' => 'required|in:monthly,annual',
+            'plan'            => 'required|in:monthly,annual',
+            'stripe_promo_id' => 'nullable|string',
         ]);
 
         $user = Auth::user();
+        $activeMembership = $user->activeMembership;
 
-        
+
+        if ($activeMembership && !$activeMembership->is_gift && $activeMembership->stripe_subscription_id) {
+            return redirect('/account')->with('info', 'You already have an active recurring subscription.');
+        }
+
         $priceId = $request->plan === 'monthly'
             ? config('services.stripe.price_monthly')
             : config('services.stripe.price_annual');
 
-        
         if (!$user->stripe_id) {
             $customer = Customer::create([
                 'email' => $user->email,
@@ -48,31 +55,118 @@ class SubscriptionController extends Controller
             $user->save();
         }
 
-        
-        $session = Session::create([
+        $sessionParams = [
             'customer' => $user->stripe_id,
             'line_items' => [[
                 'price' => $priceId,
                 'quantity' => 1,
             ]],
             'mode' => 'subscription',
-            'allow_promotion_codes' => true, 
+            'allow_promotion_codes' => true,
             'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url'  => route('subscription.cancel'),
             'metadata' => [
                 'user_id' => $user->id,
                 'plan'    => $request->plan,
             ],
-        ]);
+        ];
 
         
+        if ($activeMembership && $activeMembership->is_gift && $activeMembership->expires_at && $activeMembership->expires_at->isFuture()) {
+            $sessionParams['subscription_data'] = [
+                'trial_end' => $activeMembership->expires_at->timestamp,
+                'metadata'  => [
+                    'user_id' => $user->id,
+                    'plan'    => $request->plan,
+                    'from_gift_id' => $activeMembership->id,
+                ],
+            ];
+        }
+
+        if ($request->filled('stripe_promo_id')) {
+            $sessionParams['discounts'] = [[
+                'promotion_code' => $request->stripe_promo_id,
+            ]];
+            unset($sessionParams['allow_promotion_codes']);
+        }
+
+        $session = Session::create($sessionParams);
+
         return redirect($session->url);
     }
 
    
     public function success(Request $request)
     {
-        return view('site.subscriptionsuccess');
+        $sessionId = $request->query('session_id');
+        $transactionData = null;
+        $isScheduledFromGift = false;
+        $billingStartDate = null;
+
+        if ($sessionId) {
+            try {
+                $session = Session::retrieve($sessionId);
+                $plan = $session->metadata->plan ?? 'monthly';
+                $amountPaid = isset($session->amount_total)
+                    ? ($session->amount_total / 100)
+                    : ($plan === 'annual' ? 77.00 : 7.00);
+
+                $transactionData = [
+                    'transaction_id' => $session->id,
+                    'value'          => (float) $amountPaid,
+                    'currency'       => strtoupper($session->currency ?? 'USD'),
+                    'plan_name'      => $plan === 'annual' ? 'Annual Membership' : 'Monthly Membership',
+                    'plan_id'        => $plan,
+                ];
+
+                // Sync membership immediately when returning from Stripe Checkout
+                if (!empty($session->subscription) && Auth::check()) {
+                    $stripeSub = Subscription::retrieve($session->subscription);
+                    $subItem = $stripeSub->items->data[0] ?? null;
+                    $priceId = $subItem->price->id ?? null;
+
+                    $hasFutureTrial = isset($stripeSub->trial_end) && $stripeSub->trial_end && $stripeSub->trial_end > time();
+                    $trialEnd = $hasFutureTrial
+                        ? \Carbon\Carbon::createFromTimestamp($stripeSub->trial_end)
+                        : \Carbon\Carbon::now();
+
+                    if ($hasFutureTrial) {
+                        $isScheduledFromGift = true;
+                        $billingStartDate = $trialEnd->format('d M Y');
+
+                        // Gift expiry (trial_end) ke baad naya plan 1 year ya 1 month chalega
+                        $expiresAt = $plan === 'annual'
+                            ? $trialEnd->copy()->addYear()
+                            : $trialEnd->copy()->addMonth();
+                    } else {
+                        $periodEndTs = $stripeSub->current_period_end
+                            ?? ($subItem->current_period_end ?? null);
+
+                        $expiresAt = $periodEndTs
+                            ? \Carbon\Carbon::createFromTimestamp($periodEndTs)
+                            : ($plan === 'annual' ? \Carbon\Carbon::now()->addYear() : \Carbon\Carbon::now()->addMonth());
+                    }
+
+                    Membership::updateOrCreate(
+                        ['stripe_subscription_id' => $stripeSub->id],
+                        [
+                            'user_id'         => Auth::id(),
+                            'stripe_price_id' => $priceId,
+                            'plan'            => $plan,
+                            'status'          => 'active',
+                            'is_gift'         => false,
+                            'started_at'      => $trialEnd,
+                            'expires_at'      => $expiresAt,
+                            'canceled_at'     => null,
+                        ]
+                    );
+                }
+            } catch (\Throwable $e) {
+                // Silent fallback if session_id is invalid or already expired
+            }
+        }
+
+        return view('site.subscriptionsuccess', compact('transactionData', 'isScheduledFromGift', 'billingStartDate'));
     }
 
 

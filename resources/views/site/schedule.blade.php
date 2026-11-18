@@ -103,14 +103,19 @@
             </p>
 
             <div class="news">
-                <input
-                    class="field"
-                    placeholder="you@email.com"
-                >
-
-                <button class="btn">
-                    Sign up
-                </button>
+                <form method="POST" action="{{ route('newsletter.subscribe') }}" class="news">
+                    @csrf
+                    <input
+                        class="field"
+                        type="email"
+                        name="email"
+                        placeholder="you@email.com"
+                        required
+                    >
+                    <button type="submit" class="btn">
+                        Sign up
+                    </button>
+                </form>
             </div>
 
         </div>

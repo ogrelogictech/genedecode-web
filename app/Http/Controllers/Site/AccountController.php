@@ -11,13 +11,35 @@ use Stripe\Stripe;
 use Stripe\BillingPortal\Session as PortalSession;
 use Stripe\Subscription;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MembershipCancelledMail;
+use App\Mail\PlanChangedMail;
 
 class AccountController extends Controller
 {
     public function index(Request $request)
     {
         $user = $request->user();
-        $membership = $user->activeMembership;
+
+        // Check if user has an active gift membership
+        $giftMembership = $user->memberships()
+            ->where('is_gift', true)
+            ->where('status', 'active')
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->latest()
+            ->first();
+
+        // Check if user has a paid/scheduled Stripe subscription
+        $paidMembership = $user->memberships()
+            ->where('is_gift', false)
+            ->whereIn('status', ['active', 'cancelling'])
+            ->latest()
+            ->first();
+
+        $membership = $giftMembership ?? $paidMembership;
+        $upcomingSubscription = ($giftMembership && $paidMembership) ? $paidMembership : null;
         
         $paymentMethod = null;
         $invoices = [];
@@ -26,7 +48,6 @@ class AccountController extends Controller
             try {
                 Stripe::setApiKey(config('services.stripe.secret'));
                 
-                // Default payment method
                 $customer = \Stripe\Customer::retrieve([
                     'id' => $user->stripe_id,
                     'expand' => ['default_source', 'invoice_settings.default_payment_method']
@@ -37,7 +58,6 @@ class AccountController extends Controller
                     $paymentMethod = ucfirst($pm->card->brand) . ' ending in ' . $pm->card->last4;
                 }
 
-                // Recent invoices
                 $stripeInvoices = \Stripe\Invoice::all([
                     'customer' => $user->stripe_id,
                     'limit' => 5,
@@ -45,11 +65,11 @@ class AccountController extends Controller
                 $invoices = $stripeInvoices->data ?? [];
 
             } catch (\Throwable $e) {
-                // Fail silently in case of network/keys issue
+                // Fail silently
             }
         }
 
-        return view('site.account', compact('membership', 'paymentMethod', 'invoices'));
+        return view('site.account', compact('membership', 'upcomingSubscription', 'paymentMethod', 'invoices'));
     }
 
     // Stripe Customer Portal Session 
@@ -75,16 +95,20 @@ class AccountController extends Controller
     public function cancelMembership(Request $request)
     {
         $user = $request->user();
-        $membership = $user->activeMembership;
+        $membership = $user->memberships()
+            ->where('is_gift', false)
+            ->whereIn('status', ['active', 'cancelling'])
+            ->latest()
+            ->first();
 
         if (!$membership || !$membership->stripe_subscription_id) {
-            return back()->with('error', 'No active subscription found to cancel.');
+            return back()->with('error', 'No active recurring subscription found to cancel.');
         }
 
         try {
             Stripe::setApiKey(config('services.stripe.secret'));
 
-            $subscription = Subscription::update($membership->stripe_subscription_id, [
+            Subscription::update($membership->stripe_subscription_id, [
                 'cancel_at_period_end' => true,
             ]);
 
@@ -92,6 +116,12 @@ class AccountController extends Controller
                 'status' => 'cancelling',
                 'canceled_at' => Carbon::now(),
             ]);
+
+            try {
+                Mail::to($user->email)->send(new MembershipCancelledMail($user, $membership, false));
+            } catch (\Throwable $mailErr) {
+                // Silent fail for email
+            }
 
             return back()->with('success', 'Your subscription will cancel at the end of your billing period.');
         } catch (\Throwable $e) {
@@ -107,10 +137,14 @@ class AccountController extends Controller
         ]);
 
         $user = $request->user();
-        $membership = $user->activeMembership;
+        $membership = $user->memberships()
+            ->where('is_gift', false)
+            ->whereIn('status', ['active', 'cancelling'])
+            ->latest()
+            ->first();
 
         if (!$membership || !$membership->stripe_subscription_id) {
-            return back()->with('error', 'No active subscription found.');
+            return back()->with('error', 'No active recurring subscription found.');
         }
 
         try {
@@ -136,6 +170,12 @@ class AccountController extends Controller
                 'plan' => $request->plan,
                 'stripe_price_id' => $newPriceId,
             ]);
+
+            try {
+                Mail::to($user->email)->send(new PlanChangedMail($user, $membership));
+            } catch (\Throwable $mailErr) {
+                // Silent fail for email
+            }
 
             return back()->with('success', 'Your subscription plan has been updated successfully!');
         } catch (\Throwable $e) {

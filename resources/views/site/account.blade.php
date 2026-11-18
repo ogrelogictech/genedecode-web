@@ -364,6 +364,7 @@
 
             </div>
         </div> --}}
+        
         {{-- Purchases & Billing --}}
         <div data-panel="purchases" style="display:none">
 
@@ -386,64 +387,150 @@
                 </h3>
 
                 @if($membership && in_array($membership->status, ['active', 'cancelling']))
-                    <div class="summary" style="background:transparent;border:none;padding:0">
+                    @if($membership->is_gift)
+                        {{-- Gifted Membership View --}}
+                        @php
+                            $giftMonths = (int) ($membership->gift_months ?: ($membership->plan === 'annual' ? 12 : 1));
+                            $giftDurationLabel = $giftMonths === 12
+                                ? '1 Year'
+                                : $giftMonths . ' ' . ($giftMonths === 1 ? 'Month' : 'Months');
+                        @endphp
 
-                        <div class="row">
-                            <span>Plan</span>
-                            <span>{{ ucfirst($membership->plan) }} · {{ $membership->plan === 'annual' ? '$77 / year' : '$7 / month' }}</span>
-                        </div>
+                        <div class="summary" style="background:transparent;border:none;padding:0">
 
-                        <div class="row">
-                            <span>Status</span>
-                            <span style="color: {{ $membership->status === 'active' ? '#22c55e' : '#f59e0b' }}; text-transform: capitalize;">
-                                {{ $membership->status === 'cancelling' ? 'Cancelling at period end' : 'Active' }}
-                            </span>
-                        </div>
-
-                        <div class="row">
-                            <span>Next renewal / expiry</span>
-                            <span>{{ $membership->expires_at ? $membership->expires_at->format('d M Y') : '—' }}</span>
-                        </div>
-
-                        @if($paymentMethod)
                             <div class="row">
-                                <span>Payment method</span>
-                                <span>{{ $paymentMethod }}</span>
+                                <span>Current Plan</span>
+                                <span>Gift Membership · {{ $giftDurationLabel }}</span>
+                            </div>
+
+                            <div class="row">
+                                <span>Status</span>
+                                <span style="color: #22c55e;">Active (Pre-paid Gift)</span>
+                            </div>
+
+                            <div class="row">
+                                <span>Gift access expires on</span>
+                                <span>{{ $membership->expires_at ? $membership->expires_at->format('d M Y') : '—' }}</span>
+                            </div>
+
+                        </div>
+
+                        @if(!empty($upcomingSubscription))
+                            <div style="margin-top:16px; padding:14px 16px; border-radius:8px; background:rgba(124,194,66,0.1); border:1px solid rgba(124,194,66,0.35);">
+                                <div style="font-size:12px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:#7cc242; margin-bottom:4px;">
+                                    Scheduled Next Plan
+                                </div>
+                                <div style="font-size:14px; color:#fff; line-height:1.5;">
+                                    Your <strong>{{ ucfirst($upcomingSubscription->plan) }} ({{ $upcomingSubscription->plan === 'annual' ? '$77 / year' : '$7 / month' }})</strong> subscription will automatically start on
+                                    <strong>{{ $membership->expires_at ? $membership->expires_at->format('d M Y') : 'expiry' }}</strong>
+                                    @if($upcomingSubscription->status === 'cancelling')
+                                        <span style="color:#f59e0b;">(Scheduled to cancel)</span>
+                                    @endif.
+                                </div>
+                                @if($paymentMethod)
+                                    <div style="font-size:12.5px; color:var(--muted); margin-top:4px;">
+                                        Payment method on file: {{ $paymentMethod }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+                                <form method="POST" action="{{ route('account.billing.change_plan') }}" style="display:inline;" onsubmit="return confirm('Switch your upcoming plan to {{ $upcomingSubscription->plan === 'annual' ? 'Monthly ($7/mo)' : 'Annual ($77/yr)' }}?');">
+                                    @csrf
+                                    <input type="hidden" name="plan" value="{{ $upcomingSubscription->plan === 'annual' ? 'monthly' : 'annual' }}">
+                                    <button type="submit" class="btn sm ghost">
+                                        Switch upcoming to {{ $upcomingSubscription->plan === 'annual' ? 'Monthly' : 'Annual' }}
+                                    </button>
+                                </form>
+
+                                <form method="POST" action="{{ route('account.billing.portal') }}" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn sm ghost">
+                                        Update card
+                                    </button>
+                                </form>
+
+                                @if($upcomingSubscription->status !== 'cancelling')
+                                    <form method="POST" action="{{ route('account.billing.cancel') }}" style="display:inline;" onsubmit="return confirm('Cancel your upcoming auto-renewal? Your current gift access will remain active until {{ $membership->expires_at?->format('d M Y') }}.');">
+                                        @csrf
+                                        <button type="submit" class="btn sm ghost" style="color:#ef4444;border-color:rgba(239,68,68,0.4)">
+                                            Cancel upcoming renewal
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @else
+                            <p style="color:var(--muted);font-size:13px;margin:14px 0 14px">
+                                This is a pre-paid gift membership and will not auto-renew.
+                            </p>
+
+                            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                                <a href="{{ url('/join-us') }}" class="btn sm ghost">
+                                    Subscribe to continue after expiry
+                                </a>
                             </div>
                         @endif
+                    @else
+                        {{-- Standard Paid Stripe Subscription View --}}
+                        <div class="summary" style="background:transparent;border:none;padding:0">
 
-                    </div>
+                            <div class="row">
+                                <span>Plan</span>
+                                <span>{{ ucfirst($membership->plan) }} · {{ $membership->plan === 'annual' ? '$77 / year' : '$7 / month' }}</span>
+                            </div>
 
-                    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-                        
-                        {{-- Change Plan Modal Trigger / Form --}}
-                        <form method="POST" action="{{ route('account.billing.change_plan') }}" style="display:inline;" onsubmit="return confirm('Do you want to switch to {{ $membership->plan === 'annual' ? 'Monthly ($7/mo)' : 'Annual ($77/yr)' }}?');">
-                            @csrf
-                            <input type="hidden" name="plan" value="{{ $membership->plan === 'annual' ? 'monthly' : 'annual' }}">
-                            <button type="submit" class="btn sm ghost">
-                                Switch to {{ $membership->plan === 'annual' ? 'Monthly' : 'Annual' }}
-                            </button>
-                        </form>
+                            <div class="row">
+                                <span>Status</span>
+                                <span style="color: {{ $membership->status === 'active' ? '#22c55e' : '#f59e0b' }}; text-transform: capitalize;">
+                                    {{ $membership->status === 'cancelling' ? 'Cancelling at period end' : 'Active' }}
+                                </span>
+                            </div>
 
-                        {{-- Update Card via Stripe Portal --}}
-                        <form method="POST" action="{{ route('account.billing.portal') }}" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn sm ghost">
-                                Update card
-                            </button>
-                        </form>
+                            <div class="row">
+                                <span>Next renewal / expiry</span>
+                                <span>{{ $membership->expires_at ? $membership->expires_at->format('d M Y') : '—' }}</span>
+                            </div>
 
-                        {{-- Cancel Membership --}}
-                        @if($membership->status !== 'cancelling')
-                            <form method="POST" action="{{ route('account.billing.cancel') }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel your membership? You will retain access until the end of your billing cycle.');">
+                            @if($paymentMethod)
+                                <div class="row">
+                                    <span>Payment method</span>
+                                    <span>{{ $paymentMethod }}</span>
+                                </div>
+                            @endif
+
+                        </div>
+
+                        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+                            
+                            {{-- Change Plan Form --}}
+                            <form method="POST" action="{{ route('account.billing.change_plan') }}" style="display:inline;" onsubmit="return confirm('Do you want to switch to {{ $membership->plan === 'annual' ? 'Monthly ($7/mo)' : 'Annual ($77/yr)' }}?');">
                                 @csrf
-                                <button type="submit" class="btn sm ghost" style="color:#ef4444;border-color:rgba(239,68,68,0.4)">
-                                    Cancel membership
+                                <input type="hidden" name="plan" value="{{ $membership->plan === 'annual' ? 'monthly' : 'annual' }}">
+                                <button type="submit" class="btn sm ghost">
+                                    Switch to {{ $membership->plan === 'annual' ? 'Monthly' : 'Annual' }}
                                 </button>
                             </form>
-                        @endif
 
-                    </div>
+                            {{-- Update Card via Stripe Portal --}}
+                            <form method="POST" action="{{ route('account.billing.portal') }}" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn sm ghost">
+                                    Update card
+                                </button>
+                            </form>
+
+                            {{-- Cancel Membership --}}
+                            @if($membership->status !== 'cancelling')
+                                <form method="POST" action="{{ route('account.billing.cancel') }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel your membership? You will retain access until the end of your billing cycle.');">
+                                    @csrf
+                                    <button type="submit" class="btn sm ghost" style="color:#ef4444;border-color:rgba(239,68,68,0.4)">
+                                        Cancel membership
+                                    </button>
+                                </form>
+                            @endif
+
+                        </div>
+                    @endif
                 @else
                     <p style="color:var(--muted);font-size:14px;margin:8px 0 16px">
                         You currently do not have an active membership.
@@ -462,19 +549,25 @@
                 </h3>
 
                 <div class="summary" style="background:transparent;border:none;padding:0">
-                    @forelse($invoices as $inv)
-                        <div class="row">
-                            <span>{{ date('d M Y', $inv->created) }} · {{ ucfirst($inv->lines->data[0]->description ?? 'Membership') }}</span>
-                            <span>
-                                ${{ number_format($inv->amount_paid / 100, 2) }} · 
-                                <a href="{{ $inv->invoice_pdf }}" target="_blank" style="color:var(--brand, #38bdf8);margin-left:6px;text-decoration:none;">PDF</a>
-                            </span>
-                        </div>
-                    @empty
+                    @if($membership && $membership->is_gift && empty($invoices))
                         <p style="color:var(--muted);font-size:13px;margin:0">
-                            No invoices generated yet.
+                            Gifted membership — paid in full by the sender.
                         </p>
-                    @endforelse
+                    @else
+                        @forelse($invoices as $inv)
+                            <div class="row">
+                                <span>{{ date('d M Y', $inv->created) }} · {{ ucfirst($inv->lines->data[0]->description ?? 'Membership') }}</span>
+                                <span>
+                                    ${{ number_format($inv->amount_paid / 100, 2) }} · 
+                                    <a href="{{ $inv->invoice_pdf }}" target="_blank" style="color:var(--brand, #38bdf8);margin-left:6px;text-decoration:none;">PDF</a>
+                                </span>
+                            </div>
+                        @empty
+                            <p style="color:var(--muted);font-size:13px;margin:0">
+                                No invoices generated yet.
+                            </p>
+                        @endforelse
+                    @endif
                 </div>
 
             </div>

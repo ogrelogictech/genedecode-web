@@ -9,6 +9,14 @@
     $user = auth()->user();
     $isLoggedIn = auth()->check();
     $isMember = $isLoggedIn && $user->hasActiveSubscription();
+
+    $userProgressMap = [];
+    if ($isLoggedIn) {
+        $userProgressMap = \App\Models\VideoProgress::where('user_id', $user->id)
+            ->whereIn('video_id', $videos->pluck('id')->map(fn($id) => (string)$id))
+            ->pluck('progress_percent', 'video_id')
+            ->toArray();
+    }
 @endphp
 
 
@@ -235,20 +243,6 @@
                                     @endif
                                 </span>
                             @endif
-
-                            @php
-                                $user = auth()->user();
-                                $isLoggedIn = auth()->check();
-                                $isMember = $isLoggedIn && $user->hasActiveSubscription();
-
-                                $userProgressMap = [];
-                                if ($isLoggedIn) {
-                                    $userProgressMap = \App\Models\VideoProgress::where('user_id', $user->id)
-                                        ->whereIn('video_id', $videos->pluck('id')->map(fn($id) => (string)$id))
-                                        ->pluck('progress_percent', 'video_id')
-                                        ->toArray();
-                                }
-                            @endphp
 
                             @auth
                                 @php

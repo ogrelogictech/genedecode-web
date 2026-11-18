@@ -36,12 +36,15 @@
                 Donate on Ko-fi
             </a>
 
-            <div style="border-top:1px solid var(--line);margin:22px 0 0;padding-top:18px;color:var(--muted);font-size:14px">
+            {{-- <div style="border-top:1px solid var(--line);margin:22px 0 0;padding-top:18px;color:var(--muted);font-size:14px">
                 Prefer to send a check or money order? Mail to:<br>
 
                 <b style="color:var(--text)">
                     gene Decode · PO Box 0000 · Your City, ST 00000
                 </b>
+            </div> --}}
+            <div style="border-top:1px solid var(--line);margin:22px 0 0;padding-top:18px;color:var(--muted);font-size:14px">
+                Prefer to send a check or money order? <a href="{{ url('/contact') }}" style="color:var(--green-l);text-decoration:underline;">Contact our team</a> for mailing details.
             </div>
 
             <p style="margin-top:18px">

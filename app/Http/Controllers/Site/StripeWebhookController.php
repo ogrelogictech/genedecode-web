@@ -9,6 +9,12 @@ use App\Models\Membership;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MembershipActivatedMail;
+use App\Mail\PaymentFailedMail;
+use App\Mail\MembershipCancelledMail;
+use Stripe\Stripe;
+use Stripe\Subscription;
 
 class StripeWebhookController extends Controller
 {
@@ -59,6 +65,11 @@ class StripeWebhookController extends Controller
 
     protected function handleCheckoutCompleted($session)
     {
+        if (($session->mode ?? '') === 'payment' || ($session->metadata->type ?? '') === 'gift_membership') {
+            Log::info("Gift checkout completed (awaiting recipient redemption): {$session->id}");
+            return;
+        }
+
         $userId = $session->metadata->user_id ?? null;
         $plan = $session->metadata->plan ?? 'monthly';
         $stripeSubscriptionId = $session->subscription ?? null;
@@ -68,34 +79,67 @@ class StripeWebhookController extends Controller
             $userId = $user ? $user->id : null;
         }
 
-        if ($userId) {
-            $expiresAt = $plan === 'annual' 
-                ? Carbon::now()->addYear() 
+        if ($userId && $stripeSubscriptionId) {
+            $startedAt = Carbon::now();
+            $expiresAt = $plan === 'annual'
+                ? Carbon::now()->addYear()
                 : Carbon::now()->addMonth();
+
+            
+            try {
+                Stripe::setApiKey(config('services.stripe.secret'));
+                $stripeSub = Subscription::retrieve($stripeSubscriptionId);
+                $subItem = $stripeSub->items->data[0] ?? null;
+
+                if (!empty($stripeSub->trial_end) && $stripeSub->trial_end > time()) {
+                    $startedAt = Carbon::createFromTimestamp($stripeSub->trial_end);
+                    $expiresAt = $plan === 'annual'
+                        ? $startedAt->copy()->addYear()
+                        : $startedAt->copy()->addMonth();
+                } else {
+                    $periodEndTs = $stripeSub->current_period_end ?? ($subItem->current_period_end ?? null);
+                    if ($periodEndTs) {
+                        $expiresAt = Carbon::createFromTimestamp($periodEndTs);
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::warning("Could not retrieve Stripe subscription {$stripeSubscriptionId} in webhook: " . $e->getMessage());
+            }
 
             $stripePriceId = null;
             if (isset($session->line_items->data[0]->price->id)) {
                 $stripePriceId = $session->line_items->data[0]->price->id;
             } else {
-                $stripePriceId = $plan === 'annual' 
-                    ? config('services.stripe.price_annual') 
+                $stripePriceId = $plan === 'annual'
+                    ? config('services.stripe.price_annual')
                     : config('services.stripe.price_monthly');
             }
 
-            Membership::updateOrCreate(
-                ['user_id' => $userId],
+            
+            $membership = Membership::updateOrCreate(
+                ['stripe_subscription_id' => $stripeSubscriptionId],
                 [
-                    'plan'                   => $plan,
-                    'status'                 => 'active',
-                    'stripe_subscription_id' => $stripeSubscriptionId,
-                    'stripe_price_id'        => $stripePriceId,
-                    'started_at'             => Carbon::now(),
-                    'expires_at'             => $expiresAt,
-                    'canceled_at'            => null,
+                    'user_id'         => $userId,
+                    'plan'            => $plan,
+                    'status'          => 'active',
+                    'is_gift'         => false,
+                    'stripe_price_id' => $stripePriceId,
+                    'started_at'      => $startedAt,
+                    'expires_at'      => $expiresAt,
+                    'canceled_at'     => null,
                 ]
             );
 
-            Log::info("Membership activated for User ID: {$userId}");
+            $user = User::find($userId);
+            if ($user) {
+                try {
+                    Mail::to($user->email)->send(new MembershipActivatedMail($user, $membership));
+                } catch (\Throwable $e) {
+                    Log::error("Welcome email failed for User ID {$userId}: " . $e->getMessage());
+                }
+            }
+
+            Log::info("Membership activated/scheduled for User ID: {$userId}");
         }
     }
 
@@ -132,6 +176,14 @@ class StripeWebhookController extends Controller
                     'status' => 'past_due',
                 ]);
 
+                if ($membership->user) {
+                    try {
+                        Mail::to($membership->user->email)->send(new PaymentFailedMail($membership->user, $membership));
+                    } catch (\Throwable $e) {
+                        Log::error("Payment failed email error for User ID {$membership->user_id}: " . $e->getMessage());
+                    }
+                }
+
                 Log::warning("Payment failed (dunning triggered) for User ID: {$membership->user_id}");
             }
         }
@@ -146,6 +198,14 @@ class StripeWebhookController extends Controller
                 'status'      => 'cancelled',
                 'canceled_at' => Carbon::now(),
             ]);
+
+            if ($membership->user) {
+                try {
+                    Mail::to($membership->user->email)->send(new MembershipCancelledMail($membership->user, $membership, true));
+                } catch (\Throwable $e) {
+                    Log::error("Cancellation ended email error for User ID {$membership->user_id}: " . $e->getMessage());
+                }
+            }
 
             Log::info("Membership cancelled for User ID: {$membership->user_id}");
         }

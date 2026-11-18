@@ -5,18 +5,28 @@
 
 @section('content')
 
+@php
+    $giftRef = request('gift_ref');
+    $isGiftRedemption = !empty($giftRef);
+@endphp
+
 <section class="pagehero">
     <div class="wrap">
-        <span class="kicker">Membership</span>
-        <h1>Join gene Decode Deep Dives</h1>
+        <span class="kicker">{{ $isGiftRedemption ? 'Gift Redemption' : 'Membership' }}</span>
+        <h1>{{ $isGiftRedemption ? 'Redeem Your Gift Membership' : 'Join gene Decode Deep Dives' }}</h1>
         <p>
-            Choose a plan, create your account, and get instant access to the full library,
-            the monthly content, live Q&amp;A Zooms, and the community.
+            @if($isGiftRedemption)
+                Someone gifted you full access to gene Decode Deep Dives! Create your account below to unlock the library at no cost.
+            @else
+                Choose a plan, create your account, and get instant access to the full library,
+                the monthly content, live Q&amp;A Zooms, and the community.
+            @endif
         </p>
     </div>
 </section>
 
-<section style="padding-top:10">
+@if(!$isGiftRedemption)
+<section style="padding-top:10px">
     <div class="wrap">
         <div class="linkbox">
             <div class="lb-ic"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8V21M12 8S9.5 3.5 7.5 5s1 3 4.5 3M12 8s2.5-4.5 4.5-3-1 3-4.5 3"/></svg></div>
@@ -28,294 +38,281 @@
         </div>
     </div>
 </section>
+@endif
 
 <section style="padding-top:0">
     <div class="wrap">
-        <form method="POST" action="{{ route('register.store') }}">
+        <form method="POST" action="{{ auth()->check() && !$isGiftRedemption ? route('subscription.checkout') : route('register.store') }}">
             @csrf
+            @if($isGiftRedemption)
+                <input type="hidden" name="gift_ref" value="{{ $giftRef }}">
+            @endif
+
             <div class="checkout">
 
                 <div>
 
-                    <div class="card-panel" style="margin-bottom:18px">
-                        <h3 style="margin:0 0 14px;font-size:16px">
-                            1. Choose your plan
-                        </h3>
-
-                        <div class="tiers" style="grid-template-columns:1fr 1fr;margin:0;max-width:none">
-
-                            <!-- Monthly Plan Card -->
-                            {{-- <label class="tier" style="cursor:pointer;border-width:1px">
-                                <input 
-                                    type="radio" 
-                                    name="plan" 
-                                    value="monthly" 
-                                    style="display:none;" 
-                                    {{ old('plan', 'monthly') === 'monthly' ? 'checked' : '' }}
-                                >
-                                <div class="body">
-                                    <h3>Monthly</h3>
-                                    <div class="price">$7<span>/mo</span></div>
-                                    <p style="color:var(--muted);font-size:13px;margin:0">
-                                        Billed monthly. Cancel anytime.
-                                    </p>
-                                </div>
-                            </label> --}}
-
-                            <!-- Annual Plan Card (Default / Featured) -->
-                            {{-- <label class="tier" style="cursor:pointer">
-                                <span class="badge">SAVE $7</span>
-                                <input 
-                                    type="radio" 
-                                    name="plan" 
-                                    value="annual" 
-                                    style="display:none;" 
-                                    {{ old('plan', 'annual') === 'annual' ? 'checked' : '' }}
-                                >
-                                <div class="body">
-                                    <h3>Annual</h3>
-                                    <div class="price">$77<span>/yr</span></div>
-                                    <p style="color:var(--muted);font-size:13px;margin:0">
-                                        Two months free vs monthly.
-                                    </p>
-                                </div>
-                            </label> --}}
-
-                            <!-- Monthly Plan Card -->
-                            <label class="tier" style="cursor:pointer;border-width:1px">
-                                <input 
-                                    type="radio" 
-                                    name="plan" 
-                                    value="monthly" 
-                                    style="display:none;" 
-                                    {{ old('plan') === 'monthly' ? 'checked' : '' }}
-                                >
-                                <div class="body">
-                                    <h3>Monthly</h3>
-                                    <div class="price">$7<span>/mo</span></div>
-                                    <p style="color:var(--muted);font-size:13px;margin:0">
-                                        Billed monthly. Cancel anytime.
-                                    </p>
-                                </div>
-                            </label>
-
-                            <!-- Annual Plan Card (Default Checked) -->
-                            <label class="tier" style="cursor:pointer; border-color: var(--brand, #4f46e5);">
-                                <span class="badge">SAVE $7</span>
-                                <input 
-                                    type="radio" 
-                                    name="plan" 
-                                    value="annual" 
-                                    style="display:none;" 
-                                    {{ old('plan', 'annual') === 'annual' ? 'checked' : '' }}
-                                >
-                                <div class="body">
-                                    <h3>Annual</h3>
-                                    <div class="price">$77<span>/yr</span></div>
-                                    <p style="color:var(--muted);font-size:13px;margin:0">
-                                        Two months free vs monthly.
-                                    </p>
-                                </div>
-                            </label>
-
-                        </div>
-                    </div>
-
-                    <div class="card-panel" style="margin-bottom:18px">
-                        <h3 style="margin:0 0 14px;font-size:16px">
-                            2. Create your account
-                        </h3>
-
-                        <div class="acct-grid">
-
-                            <div class="field">
-                                <label for="name">Full name</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    placeholder="Your name"
-                                    value="{{ old('name') }}"
-                                    autocomplete="name"
-                                    required
-                                    oninput="this.value = this.value.replace(/^\s+/, '')"
-                                >
-                            </div>
-
-                            <div class="field">
-                                <label for="email">Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    placeholder="you@email.com"
-                                    value="{{ old('email') }}"
-                                    autocomplete="email"
-                                    required
-                                    oninput="this.value = this.value.replace(/\s/g, '')"
-                                >
-                            </div>
-
-                        </div>
-
-                        <div class="acct-grid">
-                            <div class="field password-field">
-                                <label for="password">Password</label>
-
-                                <div class="password-input-wrapper">
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        name="password"
-                                        placeholder="Create a password"
-                                        autocomplete="new-password"
-                                        required
-                                        oninput="this.value = this.value.replace(/\s/g, '')"
-                                    >
-
-                                    <button
-                                        type="button"
-                                        class="password-toggle"
-                                        onclick="togglePassword('password', this)"
-                                        aria-label="Show password"
-                                    >
-                                        <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M3 3l18 18"/>
-                                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
-                                            <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
-                                            <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="field password-field">
-                                <label for="password_confirmation">Confirm Password</label>
-                                <div class="password-input-wrapper">
-                                    <input
-                                        type="password"
-                                        id="password_confirmation"
-                                        name="password_confirmation"
-                                        placeholder="Confirm your password"
-                                        autocomplete="new-password"
-                                        required
-                                        oninput="this.value = this.value.replace(/\s/g, '')"
-                                    >
-                                    <button
-                                        type="button"
-                                        class="password-toggle"
-                                        onclick="togglePassword('password_confirmation', this)"
-                                        aria-label="Show password"
-                                    >
-                                        <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M3 3l18 18"/>
-                                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
-                                            <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
-                                            <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    {{-- <div class="card-panel">
-                        <h3 style="margin:0 0 14px;font-size:16px">
-                            3. Payment
-                        </h3>
-
-                        <div class="field">
-                            <label>Card number</label>
-                            <input placeholder="1234 1234 1234 1234">
-                        </div>
-
-                        <div class="acct-grid">
-
-                            <div class="field">
-                                <label>Expiry</label>
-                                <input placeholder="MM / YY">
-                            </div>
-
-                            <div class="field">
-                                <label>CVC</label>
-                                <input placeholder="CVC">
-                            </div>
-
-                        </div>
-
-                        <p style="color:var(--faint);font-size:12.5px;margin:4px 0 0">
-                            Payments are processed securely through Stripe.
-                            Your card details never touch our servers.
-                        </p>
-                    </div> --}}
-                    <div class="card-panel">
-                        <h3 style="margin:0 0 14px;font-size:16px">3. Payment</h3>
-                        <div style="background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.15); border-radius: 8px; padding: 18px; text-align: center;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px; opacity:0.7"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                            <p style="font-size: 13.5px; margin: 0; color: #fff;">
-                                You will be redirected to <strong>Stripe's secure checkout</strong> to complete your card payment.
+                    @if($isGiftRedemption)
+                        <div class="card-panel" style="margin-bottom:18px; margin-top:18px; border-color: rgba(124,194,66,0.45);">
+                            <span class="kicker" style="color:#7cc242;">Pre-paid Gift Link</span>
+                            <h3 style="margin:6px 0 6px;font-size:18px;color:#fff">Your membership is already paid for</h3>
+                            <p style="color:var(--muted);font-size:14px;margin:0">
+                                Complete step 1 below to set up your login credentials and start watching immediately.
                             </p>
                         </div>
-                        <p style="color:var(--faint);font-size:12.5px;margin:12px 0 0">
-                            Payments are processed securely through Stripe. Your card details never touch our servers.
-                        </p>
-                    </div>
+                    @else
+                        <div class="card-panel" style="margin-bottom:18px">
+                            <h3 style="margin:0 0 14px;font-size:16px">
+                                1. Choose your plan
+                            </h3>
+
+                            <div class="tiers" style="grid-template-columns:1fr 1fr;margin:0;max-width:none">
+
+                                <!-- Monthly Plan Card -->
+                                <label class="tier" style="cursor:pointer;border-width:1px">
+                                    <input 
+                                        type="radio" 
+                                        name="plan" 
+                                        value="monthly" 
+                                        style="display:none;" 
+                                        {{ old('plan') === 'monthly' ? 'checked' : '' }}
+                                    >
+                                    <div class="body">
+                                        <h3>Monthly</h3>
+                                        <div class="price">$7<span>/mo</span></div>
+                                        <p style="color:var(--muted);font-size:13px;margin:0">
+                                            Billed monthly. Cancel anytime.
+                                        </p>
+                                    </div>
+                                </label>
+
+                                <!-- Annual Plan Card (Default Checked) -->
+                                <label class="tier" style="cursor:pointer; border-color: var(--brand, #4f46e5);">
+                                    <span class="badge">SAVE $7</span>
+                                    <input 
+                                        type="radio" 
+                                        name="plan" 
+                                        value="annual" 
+                                        style="display:none;" 
+                                        {{ old('plan', 'annual') === 'annual' ? 'checked' : '' }}
+                                    >
+                                    <div class="body">
+                                        <h3>Annual</h3>
+                                        <div class="price">$77<span>/yr</span></div>
+                                        <p style="color:var(--muted);font-size:13px;margin:0">
+                                            Two months free vs monthly.
+                                        </p>
+                                    </div>
+                                </label>
+
+                            </div>
+                        </div>
+                    @endif
+
+                    @auth
+                        <div class="card-panel" style="margin-bottom:18px">
+                            <h3 style="margin:0 0 8px;font-size:16px">
+                                2. Account
+                            </h3>
+                            <p style="color:var(--muted);font-size:14px;margin:0;line-height:1.6">
+                                Signed in as <strong style="color:#fff">{{ auth()->user()->name }}</strong> ({{ auth()->user()->email }}).
+                                @if(auth()->user()->activeMembership?->is_gift && auth()->user()->activeMembership?->expires_at)
+                                    <br><span style="color:#7cc242;font-size:13px;">Your gift access is valid until {{ auth()->user()->activeMembership->expires_at->format('d M Y') }}. Your recurring billing will begin after your gift period ends.</span>
+                                @endif
+                            </p>
+                        </div>
+                    @else
+                        <div class="card-panel" style="margin-bottom:18px">
+                            <h3 style="margin:0 0 14px;font-size:16px">
+                                {{ $isGiftRedemption ? '1. Create your account' : '2. Create your account' }}
+                            </h3>
+
+                            <div class="acct-grid">
+
+                                <div class="field">
+                                    <label for="name">Full name</label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        name="name"
+                                        placeholder="Your name"
+                                        value="{{ old('name') }}"
+                                        autocomplete="name"
+                                        required
+                                        oninput="this.value = this.value.replace(/^\s+/, '')"
+                                    >
+                                </div>
+
+                                <div class="field">
+                                    <label for="email">Email</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        placeholder="you@email.com"
+                                        value="{{ old('email') }}"
+                                        autocomplete="email"
+                                        required
+                                        oninput="this.value = this.value.replace(/\s/g, '')"
+                                    >
+                                </div>
+
+                            </div>
+
+                            <div class="acct-grid">
+                                <div class="field password-field">
+                                    <label for="password">Password</label>
+
+                                    <div class="password-input-wrapper">
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            name="password"
+                                            placeholder="Create a password"
+                                            autocomplete="new-password"
+                                            required
+                                            oninput="this.value = this.value.replace(/\s/g, '')"
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="password-toggle"
+                                            onclick="togglePassword('password', this)"
+                                            aria-label="Show password"
+                                        >
+                                            <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M3 3l18 18"/>
+                                                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                                                <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
+                                                <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="field password-field">
+                                    <label for="password_confirmation">Confirm Password</label>
+                                    <div class="password-input-wrapper">
+                                        <input
+                                            type="password"
+                                            id="password_confirmation"
+                                            name="password_confirmation"
+                                            placeholder="Confirm your password"
+                                            autocomplete="new-password"
+                                            required
+                                            oninput="this.value = this.value.replace(/\s/g, '')"
+                                        >
+                                        <button
+                                            type="button"
+                                            class="password-toggle"
+                                            onclick="togglePassword('password_confirmation', this)"
+                                            aria-label="Show password"
+                                        >
+                                            <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M3 3l18 18"/>
+                                                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                                                <path d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a17.4 17.4 0 0 1-3.1 4.4"/>
+                                                <path d="M6.6 6.6C3.7 8.5 2 12 2 12s3.5 8 10 8a10.7 10.7 0 0 0 2.1-.2"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    @endauth
+
+                    @if(!$isGiftRedemption)
+                        <div class="card-panel">
+                            <h3 style="margin:0 0 14px;font-size:16px">3. Payment</h3>
+                            <div style="background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.15); border-radius: 8px; padding: 18px; text-align: center;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px; opacity:0.7"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                                <p style="font-size: 13.5px; margin: 0; color: #fff;">
+                                    You will be redirected to <strong>Stripe's secure checkout</strong> to complete your card payment.
+                                </p>
+                            </div>
+                            <p style="color:var(--faint);font-size:12.5px;margin:12px 0 0">
+                                Payments are processed securely through Stripe. Your card details never touch our servers.
+                            </p>
+                        </div>
+                    @endif
 
                 </div>
 
-                <div class="summary">
+                <div class="summary" style="margin-top:18px;">
 
                     <h3 style="margin:0 0 14px;font-size:16px">
                         Order summary
                     </h3>
 
-                    <div class="row">
-                        <span>Annual membership</span>
-                        <span>$77.00</span>
-                    </div>
-
-                    <div class="field" style="margin:10px 0 6px">
-                        <label>Coupon code</label>
-                        <div style="display:flex;gap:8px">
-                            <input type="text" id="coupon_input" placeholder="Enter code" style="text-transform:uppercase;">
-                            <button type="button" id="btn_apply_coupon" class="btn sm ghost">Apply</button>
+                    @if($isGiftRedemption)
+                        <div class="row">
+                            <span>Gift membership</span>
+                            <span style="color:#7cc242;">Pre-paid</span>
                         </div>
-                        <div id="coupon_msg" style="font-size:12px; margin-top:5px; display:none;"></div>
-                        <!-- Hidden input form submission ke liye -->
-                        <input type="hidden" name="stripe_promo_id" id="stripe_promo_id" value="">
-                    </div>
 
-                    <div class="row" id="discount_row" style="display:none; color:#22c55e;">
-                        <span>Discount</span>
-                        <span id="discount_amount">-$0.00</span>
-                    </div>
+                        <div class="row total">
+                            <span>Total due today</span>
+                            <span>$0.00</span>
+                        </div>
 
-                    <div class="row">
-                        <span>Tax</span>
-                        <span>$0.00</span>
-                    </div>
+                        <button
+                            type="submit"
+                            class="btn"
+                            style="width:100%;justify-content:center;margin-top:16px">
+                            Activate gift membership
+                        </button>
 
-                    <div class="row total">
-                        <span>Total due today</span>
-                        <span>$77.00</span>
-                    </div>
+                        <p style="color:var(--faint);font-size:12px;margin:12px 0 0">
+                            By activating you agree to the Terms &amp; Conditions and Subscriber Agreement. No credit card required.
+                        </p>
+                    @else
+                        <div class="row">
+                            <span>Annual membership</span>
+                            <span>$77.00</span>
+                        </div>
 
-                    <button
-                        type="submit"
-                        class="btn"
-                        style="width:100%;justify-content:center;margin-top:16px">
-                        Start membership
-                    </button>
+                        <div class="field" style="margin:10px 0 6px">
+                            <label>Coupon code</label>
+                            <div style="display:flex;gap:8px">
+                                <input type="text" id="coupon_input" placeholder="Enter code" style="text-transform:uppercase;">
+                                <button type="button" id="btn_apply_coupon" class="btn sm ghost">Apply</button>
+                            </div>
+                            <div id="coupon_msg" style="font-size:12px; margin-top:5px; display:none;"></div>
+                            <input type="hidden" name="stripe_promo_id" id="stripe_promo_id" value="">
+                        </div>
 
-                    <p style="color:var(--faint);font-size:12px;margin:12px 0 0">
-                        By subscribing you agree to the Terms &amp; Conditions and the
-                        Subscriber Agreement. Renews automatically; cancel anytime from
-                        your account.
-                    </p>
+                        <div class="row" id="discount_row" style="display:none; color:#22c55e;">
+                            <span>Discount</span>
+                            <span id="discount_amount">-$0.00</span>
+                        </div>
+
+                        <div class="row">
+                            <span>Tax</span>
+                            <span>$0.00</span>
+                        </div>
+
+                        <div class="row total">
+                            <span>Total due today</span>
+                            <span>$77.00</span>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn"
+                            style="width:100%;justify-content:center;margin-top:16px">
+                            Start membership
+                        </button>
+
+                        <p style="color:var(--faint);font-size:12px;margin:12px 0 0">
+                            By subscribing you agree to the Terms &amp; Conditions and the
+                            Subscriber Agreement. Renews automatically; cancel anytime from
+                            your account.
+                        </p>
+                    @endif
 
                 </div>
 
@@ -327,6 +324,7 @@
 @endsection
 
 @push('scripts')
+@if(!$isGiftRedemption)
 <script>
     function getSelectedPlan() {
         var checked = document.querySelector('input[name="plan"]:checked');
@@ -343,7 +341,6 @@
             summaryRow.children[1].textContent = '$' + basePrice.toFixed(2);
         }
 
-        // Agar coupon pehle se laga hua hai toh naye plan ke hisaab se re-calculate karein
         if (document.getElementById('stripe_promo_id').value) {
             document.getElementById('btn_apply_coupon').click();
         } else {
@@ -352,7 +349,6 @@
         }
     }
 
-    // Plan selection card click
     document.querySelectorAll('.tiers .tier').forEach(function(card) {
         card.addEventListener('click', function() {
             document.querySelectorAll('.tiers .tier').forEach(function(c) {
@@ -369,7 +365,6 @@
         });
     });
 
-    // Apply Coupon Click
     document.getElementById('btn_apply_coupon').addEventListener('click', function() {
         var code = document.getElementById('coupon_input').value.trim();
         var selectedPlan = getSelectedPlan();
@@ -409,15 +404,12 @@
                 msgDiv.style.color = '#22c55e';
                 msgDiv.textContent = result.body.message;
 
-                // Hidden field update
                 document.getElementById('stripe_promo_id').value = result.body.promo_id;
 
-                // Discount update
                 var discountRow = document.getElementById('discount_row');
                 discountRow.style.display = 'flex';
                 document.getElementById('discount_amount').textContent = '-$' + result.body.discount_amount;
 
-                // Total update
                 document.querySelector('.row.total span:last-child').textContent = '$' + result.body.new_total;
             } else {
                 msgDiv.style.color = '#ef4444';
@@ -438,4 +430,5 @@
         });
     });
 </script>
+@endif
 @endpush

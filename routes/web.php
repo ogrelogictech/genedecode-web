@@ -9,7 +9,7 @@ use App\Http\Controllers\Site\CatalogController;
 use App\Http\Controllers\Site\BunnyWebhookController;
 use App\Http\Controllers\Site\SubscriptionController;
 use App\Http\Controllers\Site\StripeWebhookController;
-
+use App\Http\Controllers\Site\PublicPageController;
 
 
 
@@ -79,9 +79,7 @@ Route::get('/', function () {
     return view('site.home');
 });
 
-Route::get('/gift', function () {
-    return view('site.gift');
-});
+
 
 Route::get('/about', function () {
     return view('site.about');
@@ -126,10 +124,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::get('/contact', function () {return view('site.contact');});
+Route::post('/contact', [PublicPageController::class, 'sendContact'])->name('contact.send');
+Route::post('/newsletter/subscribe', [PublicPageController::class, 'subscribeNewsletter'])->name('newsletter.subscribe');
+Route::get('/gift', function () {return view('site.gift');});
+Route::post('/gift/checkout', [PublicPageController::class, 'giftCheckout'])->name('gift.checkout');
 
-Route::get('/contact', function () {
-    return view('site.contact');
-});
 
 Route::get('/live', function () {
     return view('site.live');
