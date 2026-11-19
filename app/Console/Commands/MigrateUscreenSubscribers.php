@@ -65,7 +65,7 @@ class MigrateUscreenSubscribers extends Command
 
             $processedRecords++;
             $membershipStatus = match ($subscriber->subscription_status) {
-                'Active' => 'active',
+                'Active' => !empty($subscriber->canceled_at) ? 'cancelling' : 'active',
                 'On Hold' => 'on_hold',
                 'Paused' => 'paused',
                 default => 'active',
@@ -127,7 +127,7 @@ class MigrateUscreenSubscribers extends Command
                                 'plan' => $membershipPlan,
                                 'status' => $membershipStatus,
                                 'started_at' => $subscriber->subscription_start_date,
-                                'expires_at' => null,
+                                'expires_at' => $subscriber->next_invoice_at,
                                 'canceled_at' => $subscriber->canceled_at,
                                 'uscreen_subscription_id' => $subscriber->uscreen_subscription_id,
                             ]);

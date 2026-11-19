@@ -41,12 +41,12 @@ class StripeWebhookController extends Controller
                     $this->handleInvoicePaymentSucceeded($event->data->object);
                     break;
 
-                // 1. Dunning Logic: Payment fail hone par status 'past_due' mark karein
+                
                 case 'invoice.payment_failed':
                     $this->handleInvoicePaymentFailed($event->data->object);
                     break;
 
-                // 2. Cancellation Logic: Stripe subscription delete hone par status 'cancelled' mark karein
+                
                 case 'customer.subscription.deleted':
                     $this->handleSubscriptionDeleted($event->data->object);
                     break;

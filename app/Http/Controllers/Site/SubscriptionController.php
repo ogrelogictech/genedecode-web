@@ -134,7 +134,7 @@ class SubscriptionController extends Controller
                         $isScheduledFromGift = true;
                         $billingStartDate = $trialEnd->format('d M Y');
 
-                        // Gift expiry (trial_end) ke baad naya plan 1 year ya 1 month chalega
+                        
                         $expiresAt = $plan === 'annual'
                             ? $trialEnd->copy()->addYear()
                             : $trialEnd->copy()->addMonth();
